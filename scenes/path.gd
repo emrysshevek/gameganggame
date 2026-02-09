@@ -2,7 +2,7 @@ class_name path extends Node2D
 
 #region properties
 var blocked:bool = false
-var connections:Array 
+var connections:Array[tile]
 #endregion
 
 #region methods
@@ -15,7 +15,7 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-func add_connections(tile0:tile, tile1:tile):
+func set_connections(tile0:tile, tile1:tile):
 	connections.clear()
 	connections.append(tile0)
 	connections.append(tile1)

@@ -35,9 +35,11 @@ func is_reachable(): ##dummy
 func get_reachable_tiles(range:int): #dummy
 	#only works for range 0 currently
 	var return_array = []
-	for each_tile in paths:
-		if each_tile != null:
-			return_array.append(each_tile)
+	for each_path in paths:
+		if each_path != null:
+			for each_connection in each_path.connections:
+				if each_connection != self: #so that the tile doesn't return itself as reachable over and over
+					return_array.append(each_connection)
 	return return_array
 
 func get_distance(): #dummy
