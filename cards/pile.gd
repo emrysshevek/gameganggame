@@ -71,7 +71,7 @@ func _reposition_cards() -> void:
 		area_offset = Vector2(size.x / 2.0, 0)
 		spacing = Vector2(0, size.y / float(count + 1))
 	if area == Vector2.ZERO:
-		spacing.y += 1
+		spacing.y -= 2
 	
 	var curr_pos := global_position + area_offset - card_offset
 	for card in cards:
