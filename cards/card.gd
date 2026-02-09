@@ -9,7 +9,7 @@ signal card_discarded(which_card)
 
 
 #region Properties
-@export var cost: int = 0
+@export var cost: Dictionary
 @export var description: String = ""
 @export var deck: Deck = null
 #endregion
