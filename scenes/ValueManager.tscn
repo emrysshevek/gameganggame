@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ck6os832o7j48"]
 
-[ext_resource type="Script" uid="uid://db0lgta8equuu" path="res://scenes/game/value_manager.gd" id="1_hjgeb"]
+[ext_resource type="Script" uid="uid://db0lgta8equuu" path="res://scenes/value_manager.gd" id="1_hjgeb"]
+
 
 [node name="ValueManager" type="Node" unique_id=323409287]
 script = ExtResource("1_hjgeb")

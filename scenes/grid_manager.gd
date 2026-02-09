@@ -2,6 +2,8 @@ class_name grid_manager extends Node2D
 
 signal map_generated()
 
+enum directions{north, east, south, west}
+
 var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors 
 var floor:int = 0 #dummy
 var map_width:int
@@ -24,5 +26,6 @@ func generate_map(floor:int):
 	for each_tile in floor_maps[floor]:
 		each_tile.get_reachable_tiles(1)
 		
-func import_pre_baked_map_section():
+		
+func _import_pre_baked_map_section():
 	pass

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_3dk36"]
 [ext_resource type="Texture2D" uid="uid://brscntajivhbh" path="res://icon.svg" id="2_ywnoi"]
 
+
 [node name="Tile" type="Node2D" unique_id=477134848]
 script = ExtResource("1_3dk36")
 

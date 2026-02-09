@@ -5,9 +5,6 @@ signal tile_explored(which_tile)
 signal tile_entered(which_tile)
 signal tile_exited(which_tile)
 
-enum directions{north, east, south, west}
-enum creature_values{adaptability, bravery, curiousity, dependability, empathy}
-
 var grid_coordinates:Vector2
 var explore_value:int
 var is_tile_explored:bool = false
@@ -16,16 +13,16 @@ var paths:Dictionary
 var path_lines:Dictionary
 
 func _ready() -> void:
-		paths[directions.north] = null
-		paths[directions.east] = null
-		paths[directions.south] = null
-		paths[directions.west] = null
-		path_lines[directions.north] = $Tile_Bkgd/North_Path
-		path_lines[directions.east] = $Tile_Bkgd/East_Path
-		path_lines[directions.south] = $Tile_Bkgd/South_Path
-		path_lines[directions.west] = $Tile_Bkgd/West_Path
+		paths[grid_manager.directions.north] = null
+		paths[grid_manager.directions.east] = null
+		paths[grid_manager.directions.south] = null
+		paths[grid_manager.directions.west] = null
+		path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
+		path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
+		path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
+		path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
 		$Tile_Bkgd.self_modulate = Color("000000c0")
-		set_random_explore_value()
+		_set_random_explore_value()
 
 func is_reachable(): ##dummy
 	return false
@@ -51,7 +48,7 @@ func reveal():
 	is_tile_revealed = true
 	tile_revealed.emit(self)
 	$Tile_Bkgd.self_modulate = Color("ffffff")
-	for each_direction in directions:
+	for each_direction in grid_manager.directions:
 		if paths[each_direction] != null:
 			path_lines[each_direction].visible = true
 			
@@ -63,8 +60,8 @@ func exit(): #dummy
 	tile_exited.emit(self)
 	pass
 	
-func set_random_explore_value():
-	var values_list = [creature_values.adaptability, creature_values.bravery, creature_values.curiousity,creature_values.dependability, creature_values.empathy]
+func _set_random_explore_value():
+	var values_list = [ValueManager.CreatureValue.ADAPTABILITY, ValueManager.CreatureValue.BRAVERY, ValueManager.CreatureValue.CURIOSITY,ValueManager.CreatureValue.DEPENDABILITY, ValueManager.CreatureValue.EMPATHY]
 	explore_value = values_list.pick_random()
 	
 func set_path_tile(direction:int, path_leads_to_tile:tile):
