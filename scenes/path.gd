@@ -1,7 +1,7 @@
 class_name path extends Node2D
 
 #region properties
-var blocked:bool = false
+var blocked:bool = false #determines if A* will see this as a valid path
 var connections:Array[tile]
 #endregion
 

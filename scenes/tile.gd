@@ -14,6 +14,7 @@ var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
 var path_lines:Dictionary
+var a_star_id:int #used by A* for identifying tile
 #endregion
 
 #region methods
@@ -28,22 +29,6 @@ func _ready() -> void:
 		path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
 		#$Tile_Bkgd.self_modulate = Color("000000c0")
 		_set_random_explore_value()
-
-func is_reachable(): ##dummy
-	return false
-	
-func get_reachable_tiles(range:int): #dummy
-	#only works for range 0 currently
-	var return_array = []
-	for each_path in paths:
-		if each_path != null:
-			for each_connection in each_path.connections:
-				if each_connection != self: #so that the tile doesn't return itself as reachable over and over
-					return_array.append(each_connection)
-	return return_array
-
-func get_distance(): #dummy
-	return 1
 
 func explore():
 	if is_tile_revealed == false:
