@@ -3,9 +3,9 @@ extends Control
 
 
 #region Signals
-signal card_played(which_card)
-signal card_discarded(which_card)
-signal card_flipped(which_card)
+signal played()
+signal discarded()
+signal flipped()
 #endregion
 
 
@@ -50,16 +50,18 @@ func flip() -> void:
 		_frontside.show()
 		_backside.hide()
 	is_faceup = !is_faceup
+	flipped.emit()
+	
 
 
 func play() -> void:
 	_trigger_play_ability()
-	card_played.emit(self)
+	played.emit()
 
 
 func discard() -> void:
 	_trigger_discard_ability()
-	card_discarded.emit(self)
+	discarded.emit()
 #endregion
 
 
