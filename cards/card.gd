@@ -15,10 +15,10 @@ signal flipped()
 @export var deck: Deck = null
 var is_faceup: bool = true
 
-@onready var _backside: Node = $Back
-@onready var _frontside: Node = $Front
-@onready var _description_label: Label = $Front/MarginContainer/VBoxContainer/Description
-@onready var _costs_hbox: HBoxContainer = $Front/MarginContainer/VBoxContainer/Costs
+@export var _backside: Node
+@export var _frontside: Node
+@export var _description_label: Label
+@export var _costs_hbox: HBoxContainer
 #endregion
 
 
