@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dw0fkomkoklma"]
+
+[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_3dk36"]
+[ext_resource type="Texture2D" uid="uid://brscntajivhbh" path="res://icon.svg" id="2_ywnoi"]
+
+[node name="Tile" type="Node2D" unique_id=477134848]
+script = ExtResource("1_3dk36")
+
+[node name="Tile_Bkgd" type="Sprite2D" parent="." unique_id=107649264]
+texture = ExtResource("2_ywnoi")
+centered = false
+
+[node name="North_Path" type="Line2D" parent="Tile_Bkgd" unique_id=1296578233]
+visible = false
+points = PackedVector2Array(65, 62, 65, 2)
+default_color = Color(0.16862746, 1, 0.25490198, 1)
+
+[node name="South_Path" type="Line2D" parent="Tile_Bkgd" unique_id=169237817]
+visible = false
+position = Vector2(1, 32)
+points = PackedVector2Array(64, 29, 64, 93)
+default_color = Color(0.16862746, 1, 0.25490198, 1)
+
+[node name="West_Path" type="Line2D" parent="Tile_Bkgd" unique_id=993803757]
+visible = false
+points = PackedVector2Array(65, 60, 2, 60)
+default_color = Color(0.16862746, 1, 0.25490198, 1)
+
+[node name="East_Path" type="Line2D" parent="Tile_Bkgd" unique_id=783189110]
+visible = false
+points = PackedVector2Array(65, 60, 125, 60)
+default_color = Color(0.16862746, 1, 0.25490198, 1)
