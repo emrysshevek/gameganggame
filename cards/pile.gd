@@ -3,9 +3,9 @@ extends Control
 
 
 #region Signals
-signal shuffled(which_pile: Pile)
-signal card_added(which_pile: Pile, which_card: Card)
-signal card_removed(which_pile: Pile, which_card: Card)
+signal shuffled()
+signal card_added(card: Card)
+signal card_removed(card: Card)
 #endregion
 
 
@@ -26,16 +26,16 @@ func shuffle() -> void:
 
 	
 func flip() -> void:
-	push_warning("Function not implemented")
+	is_faceup = !is_faceup
 	pass
 	
 
-func add_card(which_card: Card) -> void:
+func add_card(_card: Card) -> void:
 	push_warning("Function not implemented")
 	pass
 
 
-func remove_card(which_card: Card) -> void:
+func remove_card(_card: Card) -> void:
 	push_warning("Function not implemented")
 	pass
 #endregion
