@@ -18,8 +18,8 @@ enum CreatureValue {
 }
 
 #region Properties
-var creature_values: Array[CreatureValue] = [0,0,0,0,0]
-var value_names: Array[String] = [
+static var creature_values: Array[CreatureValue] = [0,0,0,0,0]
+static var value_names: Array[String] = [
 	"adaptability",
 	"bravery",
 	"curiosity",

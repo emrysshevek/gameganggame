@@ -9,6 +9,10 @@ anchors_preset = 0
 offset_right = 100.0
 offset_bottom = 150.0
 script = ExtResource("1_ivai2")
+cost = Dictionary[int, int]({
+0: 3,
+1: 1
+})
 
 [node name="Back" type="ColorRect" parent="." unique_id=698116195]
 visible = false
@@ -44,7 +48,6 @@ theme_override_constants/margin_bottom = 5
 layout_mode = 2
 
 [node name="Costs" type="HBoxContainer" parent="Front/MarginContainer/VBoxContainer" unique_id=1616601441]
-visible = false
 layout_mode = 2
 
 [node name="Description" type="Label" parent="Front/MarginContainer/VBoxContainer" unique_id=236576993]
