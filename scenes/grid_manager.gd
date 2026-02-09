@@ -23,6 +23,9 @@ func _ready() -> void:
 	_direction_opposites[directions.east] = directions.west
 	_direction_opposites[directions.south] = directions.north
 	_direction_opposites[directions.west] = directions.east
+	#initializing A* for map
+	_a_star_floor_map[level] = AStar2D.new()
+	#
 	#initialize blank map grid
 	var new_map_grid = []
 	for x in range(map_width):
@@ -33,13 +36,15 @@ func _ready() -> void:
 			self.add_child(new_tile)
 			new_map_grid[x].append([])
 			new_map_grid[x][y]=new_tile
+			#setup tile for A*. need to modiy this for multi-floors later, as it requires the level to be entered currently
+			var a_star_point_id = _a_star_floor_map[0].get_available_point_id()
+			_a_star_floor_map[0].add_point(a_star_point_id, Vector2(new_tile.grid_coordinates.x, new_tile.grid_coordinates.y), 0)
+			new_tile.a_star_id = a_star_point_id
+			#
 			#testing visibility
 			new_tile.grid_coordinates = Vector2(x,y)
 			new_tile.global_position = Vector2(x * 120, y * 120)
 			#
-	#initializing A* for map
-	_a_star_floor_map[level] = AStar2D.new()
-	#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
 	reveal_full_map()
@@ -53,12 +58,8 @@ func _get_all_tiles(level:int):
 	
 func generate_map(level:int):
 	for each_tile in _get_all_tiles(0):
-		#setup tile for A*
-		var a_star_point_id = _a_star_floor_map[level].get_available_point_id()
-		_a_star_floor_map[level].add_point(a_star_point_id, Vector2(each_tile.grid_coordinates.x, each_tile.grid_coordinates.y), 0)
-		each_tile.a_star_id = a_star_point_id
-		#
 		var possible_tile_connections_by_path:Dictionary
+		#check which directions could have new paths added to them
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
 			possible_tile_connections_by_path[directions.west] = floor_maps[level][each_tile.grid_coordinates.x - 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != 0 && each_tile.paths.keys().has(directions.north) == false:
@@ -70,6 +71,7 @@ func generate_map(level:int):
 		var possible_new_path_num = possible_tile_connections_by_path.size()
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
+				#new paths are added if a random 'roll' is within a set range
 				var roll_for_new_path = randi_range(1,100)
 				if roll_for_new_path <= _path_number_odds[4 - possible_new_path_num]:
 					var new_path = path.new()
@@ -77,26 +79,49 @@ func generate_map(level:int):
 					new_path.set_connections(each_tile, possible_tile_connections_by_path[new_path_direction_from_this_tile])
 					each_tile.set_path(new_path_direction_from_this_tile, new_path)
 					possible_tile_connections_by_path[new_path_direction_from_this_tile].set_path(_direction_opposites[new_path_direction_from_this_tile], new_path)
-					_a_star_floor_map[level].connect_points(each_tile.a_star_id, possible_tile_connections_by_path[new_path_direction_from_this_tile].a_star_id,true)
+					if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
+						_a_star_floor_map[level].connect_points(each_tile.a_star_id, possible_tile_connections_by_path[new_path_direction_from_this_tile].a_star_id,true)
 				else:
 					possible_new_path_num = 0
-					#roll for new path failed, so process to check for creating new paths ends here
+					#roll for new path failed, so process to check for creating new paths for current tile ends here
 	map_generated.emit()
 
-func is_reachable(from_tile:tile, to_tile:tile): ##dummy
-	return false
+func is_reachable(floor:int, from_tile:tile, to_tile:tile): ##dummy
+	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile, to_tile, false)
+	if path_between_points.is_empty() == true:
+		return false
+	else:
+		return true
 	
-func get_reachable_tiles(from_tile:tile, range:int): #dummy
-	#only works for range 0 currently
-	var return_array = []
-	for each_path in from_tile.paths:
-		if each_path != null:
-			for each_connection in each_path.connections:
-				if each_connection != self: #so that the tile doesn't return itself as reachable over and over
-					return_array.append(each_connection)
+func get_reachable_tiles(level:int, starting_tile:tile, range:int): #dummy
+	#get all tiles within range 1 of starting tile, add them to checking_tiles
+	if range <= 0 || range >= map_width || range >= map_height:
+		#eventually change this to just filter the input to a valid max or min value
+		print("can't get reachable tiles for range: " + str(range))
+		assert(false)
+	var return_array:Array[tile]
+	var reachable_tile_ids:Array[int]
+	#get the 4 or less tile ids surrounding the starting tile
+	var starting_tile_ids:Array[int] = _a_star_floor_map[level].get_point_connections(starting_tile.a_star_id)
+	for i in range:
+		var new_reachable_tile_ids:Array[int]
+		#for each of the 4 or less tiles around the starting tile get all of their tile connections
+		for each_point_id in starting_tile_ids:
+			new_reachable_tile_ids.append_array(_a_star_floor_map[level].get_point_connections(each_point_id))
+		#save the newly reached tiles to the array that will be converted to tiles then returned by the function
+		reachable_tile_ids.append_array(new_reachable_tile_ids)
+		#clear the list of tiles to be checked over in the next round
+		starting_tile_ids.clear()
+		#add the just-found tiles to be checked for adjacents in the next step
+		starting_tile_ids.append_array(new_reachable_tile_ids)
+		#clear the tiles for the next round
+		new_reachable_tile_ids.clear()
+	for each_tile in _get_all_tiles(level):
+		if reachable_tile_ids.has(each_tile.a_star_id):
+			return_array.append(each_tile)
 	return return_array
 
-func get_distance(from_tile:tile, to_tile:tile):
+func get_distance(floor:int, from_tile:tile, to_tile:tile):
 	return 1
 		
 #region testing functions
