@@ -9,16 +9,16 @@ signal card_discarded(which_card)
 
 
 #region Properties
-@export var cost: int
-@export var description: String
-var deck
+@export var cost: int = 0
+@export var description: String = ""
+@export var deck: Deck = null
 #endregion
 
 
 func play() -> void:
-	push_warning("Card.play function not implemented")
+	push_warning("function not implemented")
 	pass
 	
 func discard() -> void:
-	push_warning("Card.discard function not implemented")
+	push_warning("function not implemented")
 	pass
