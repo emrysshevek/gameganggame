@@ -3,9 +3,7 @@ extends Control
 
 
 #region Signals
-signal played()
-signal discarded()
-signal flipped()
+signal request_discard(_card: Card)
 #endregion
 
 
@@ -49,19 +47,17 @@ func flip() -> void:
 	else:
 		_frontside.show()
 		_backside.hide()
-	is_faceup = !is_faceup
-	flipped.emit()
-	
+	is_faceup = !is_faceup	
 
 
 func play() -> void:
 	_trigger_play_ability()
-	played.emit()
+	request_discard.emit()
 
 
 func discard() -> void:
 	_trigger_discard_ability()
-	discarded.emit()
+	request_discard.emit()
 #endregion
 
 
