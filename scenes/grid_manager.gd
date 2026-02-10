@@ -48,7 +48,7 @@ func _ready() -> void:
 	floor_maps[level] = new_map_grid
 	generate_map(0)
 	#reveal_full_map()
-	testing_map_distance_algorithm(Vector2(3,3), 3, 0)
+	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
 func add_path(tile1:tile, connection_direction_from_tile1:directions, tile2:tile):
 	var new_path = path.new()
