@@ -17,13 +17,13 @@ var count: int:
 @export var deck: Deck = null
 @export var is_faceup: bool = true
 
-@onready var ordered_cards: Array[Card] = cards
+@onready var ordered_cards: Array[Card] = cards.duplicate()
 #endregion
 
 
 #region Godot Built-in Methods
 func _ready() -> void:
-	_reposition_cards()
+	_reposition()
 #endregion
 
 
@@ -44,20 +44,31 @@ func add_card(_card: Card, _position:int=-1) -> void:
 	# cards are added to bottom of pile by default
 	# to insert to a specific index, set value of position
 	assert(_card not in cards)
+	if count == 0:
+		_position = 0
 	cards.append(_card)
 	ordered_cards.insert(_position, _card)
+	_reposition()
 	card_added.emit(_card)
 
 
 func remove_card(_card: Card) -> void:
+	print(_card.name)
 	assert(_card in cards)
 	cards.erase(_card)
 	ordered_cards.erase(_card)
+	_reposition()
 	card_removed.emit()
+	
+
+func move(_global_position: Vector2, _size: Vector2) -> void:
+	global_position = _global_position
+	size = _size
+	_reposition()
 #endregion
 
 
-func _reposition_cards() -> void:
+func _reposition() -> void:
 	if count == 0:
 		return
 		
@@ -74,7 +85,9 @@ func _reposition_cards() -> void:
 		spacing.y -= 2
 	
 	var curr_pos := global_position + area_offset - card_offset
-	for card in cards:
+	for i in len(cards):
+		var card := cards[i]
 		curr_pos += spacing
+		card._description_label.text = str(i)
 		card.global_position = curr_pos
-		
+		card.z_index = i

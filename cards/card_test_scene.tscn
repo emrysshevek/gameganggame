@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://c7y4bhyyqogiw"]
 
 [ext_resource type="PackedScene" uid="uid://b7371rgat236l" path="res://cards/Pile.tscn" id="1_cthd1"]
-[ext_resource type="Script" path="res://cards/card_test_scene.gd" id="1_sv2hw"]
+[ext_resource type="Script" uid="uid://ykkwkg16lmt0" path="res://cards/card_test_scene.gd" id="1_sv2hw"]
 [ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="2_sv2hw"]
 
-[node name="CardTestScene" type="Control" unique_id=252083493]
+[node name="CardTestScene" type="Control" unique_id=252083493 node_paths=PackedStringArray("pile")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sv2hw")
+pile = NodePath("Pile")
 metadata/_edit_lock_ = true
 
 [node name="Pile" parent="." unique_id=614346643 node_paths=PackedStringArray("cards") instance=ExtResource("1_cthd1")]
@@ -20,7 +21,7 @@ offset_left = 236.0
 offset_top = 250.0
 offset_right = -916.0
 offset_bottom = -398.0
-cards = [NodePath("Card"), NodePath("Card2"), NodePath("Card3"), NodePath("Card4"), NodePath("Card5"), NodePath("Card6"), NodePath("Card7"), NodePath("Card8"), NodePath("Card9")]
+cards = [NodePath("Card")]
 
 [node name="ColorRect" type="ColorRect" parent="Pile" unique_id=1727720866]
 layout_mode = 1
@@ -33,28 +34,4 @@ color = Color(0.654902, 1, 0.65882355, 0.64705884)
 metadata/_edit_lock_ = true
 
 [node name="Card" parent="Pile" unique_id=693299294 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card2" parent="Pile" unique_id=135678034 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card3" parent="Pile" unique_id=1759937214 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card4" parent="Pile" unique_id=477796413 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card5" parent="Pile" unique_id=1204215981 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card6" parent="Pile" unique_id=1621377046 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card7" parent="Pile" unique_id=2117316967 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card8" parent="Pile" unique_id=1033319978 instance=ExtResource("2_sv2hw")]
-layout_mode = 0
-
-[node name="Card9" parent="Pile" unique_id=1518051097 instance=ExtResource("2_sv2hw")]
 layout_mode = 0

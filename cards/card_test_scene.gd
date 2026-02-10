@@ -1,11 +1,34 @@
 extends Control
 
+@export var pile: Pile
+var start_pos := Vector2.ZERO
+var end_pos := Vector2.ZERO
+var mouse_is_pressed := false
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+var card_scene := preload("res://cards/card.tscn")
+
+func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("debug_f"):
+		pile.flip()
+	if Input.is_action_just_pressed("debug_up"):
+		var card: Card = card_scene.instantiate()
+		pile.add_child(card)
+		pile.add_card(card)
+	if pile.count > 0 and Input.is_action_just_pressed("debug_down"):
+		var card: Card = pile.get_children()[-1]
+		pile.remove_card(card)
+		card.queue_free()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var button_event := event as InputEventMouseButton
+		if button_event.pressed and not mouse_is_pressed:
+			mouse_is_pressed = true
+			start_pos = get_global_mouse_position()
+			print("start: ", start_pos)
+		elif not button_event.pressed and mouse_is_pressed:
+			mouse_is_pressed = false
+			end_pos = get_global_mouse_position()
+			pile.move(start_pos, abs(start_pos - end_pos))
+			print("end: ", end_pos)
