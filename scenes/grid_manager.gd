@@ -43,12 +43,12 @@ func _ready() -> void:
 			#
 			#testing visibility
 			new_tile.set_coordinates(Vector2(x,y))
-			new_tile.global_position = Vector2(x * 120, y * 120)
+			new_tile.global_position = Vector2(x * 60, y * 60)
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
 	#reveal_full_map()
-	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
+	testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
 func add_path(tile1:tile, connection_direction_from_tile1:directions, tile2:tile):
 	var new_path = path.new()
