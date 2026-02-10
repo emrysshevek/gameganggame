@@ -13,23 +13,27 @@ var explore_value:int
 var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
-var path_lines:Dictionary
+var _path_lines:Dictionary
 var a_star_id:int #used by A* for identifying tile
 #endregion
 
 #region methods
 func _ready() -> void:
-		#paths[grid_manager.directions.north] = null
-		#paths[grid_manager.directions.east] = null
-		#paths[grid_manager.directions.south] = null
-		#paths[grid_manager.directions.west] = null
-		path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
-		path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
-		path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
-		path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
-		#$Tile_Bkgd.self_modulate = Color("000000c0")
+		_path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
+		_path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
+		_path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
+		_path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
 		_set_random_explore_value()
 
+func set_coordinates(coords:Vector2):
+	grid_coordinates = coords
+	name = "Tile" + str(grid_coordinates)
+	
+func reset_to_hidden():
+	is_tile_explored = false
+	is_tile_revealed = false
+	$Tile_Bkgd.self_modulate = Color("000000c0")
+	
 func explore():
 	if is_tile_revealed == false:
 		reveal()
@@ -42,14 +46,14 @@ func reveal():
 	$Tile_Bkgd.self_modulate = Color("ffffff")
 	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
 		if paths.keys().has(each_direction):
-			path_lines[each_direction].visible = true
+			_path_lines[each_direction].visible = true
 			
-func enter(): #dummy
+func enter():
 	explore()
 	tile_entered.emit(self)
 	pass
 	
-func exit(): #dummy
+func exit():
 	tile_exited.emit(self)
 	pass
 	
