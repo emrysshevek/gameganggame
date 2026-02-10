@@ -109,7 +109,9 @@ func get_reachable_tiles(level:int, starting_tile:tile, range:int): #dummy
 		for each_point_id in starting_tile_ids:
 			new_reachable_tile_ids.append_array(_a_star_floor_map[level].get_point_connections(each_point_id))
 		#save the newly reached tiles to the array that will be converted to tiles then returned by the function
-		reachable_tile_ids.append_array(new_reachable_tile_ids)
+		for each_new_reachable_tile_id in new_reachable_tile_ids:
+			if reachable_tile_ids.has(each_new_reachable_tile_id) == false:
+				reachable_tile_ids.append(each_new_reachable_tile_id)
 		#clear the list of tiles to be checked over in the next round
 		starting_tile_ids.clear()
 		#add the just-found tiles to be checked for adjacents in the next step
@@ -122,7 +124,8 @@ func get_reachable_tiles(level:int, starting_tile:tile, range:int): #dummy
 	return return_array
 
 func get_distance(floor:int, from_tile:tile, to_tile:tile):
-	return 1
+	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile, to_tile, false)
+	return path_between_points.size()
 		
 #region testing functions
 func reveal_full_map():

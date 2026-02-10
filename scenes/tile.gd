@@ -45,6 +45,7 @@ func reveal():
 			path_lines[each_direction].visible = true
 			
 func enter(): #dummy
+	explore()
 	tile_entered.emit(self)
 	pass
 	
