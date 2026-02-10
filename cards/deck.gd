@@ -13,7 +13,7 @@ signal card_removed(which_card: Card)
 var count: int:
 	get:
 		return len(cards)
-var player = null
+@export var player = null
 #endregion
 
 
