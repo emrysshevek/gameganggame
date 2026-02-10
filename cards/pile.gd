@@ -1,5 +1,5 @@
 class_name Pile
-extends Control
+extends Node2D
 
 
 #region Signals
@@ -10,6 +10,7 @@ signal card_removed(card: Card)
 
 
 #region Properties
+@export var area: Rect2 = Rect2(Vector2.ZERO, Vector2.ZERO)
 @export var cards: Array[Card] = []
 var count: int:
 	get:
@@ -62,8 +63,8 @@ func remove_card(_card: Card) -> void:
 	
 
 func move(_global_position: Vector2, _size: Vector2) -> void:
-	global_position = _global_position
-	size = _size
+	area.position = _global_position
+	area.size = _size
 	_reposition()
 #endregion
 
@@ -72,19 +73,18 @@ func _reposition() -> void:
 	if count == 0:
 		return
 		
-	var area := size
-	var is_horizontal := size.x >= size.y
-	var spacing := Vector2(size.x / float(count + 1), 0)
-	var area_offset := Vector2(0, size.y / 2.0)
+	var is_horizontal := area.size.x >= area.size.y
+	var spacing := Vector2(area.size.x / float(count + 1), 0)
+	var area_offset := Vector2(0, area.size.y / 2.0)
 	var card_offset := cards[0].size / 2.0
 	
 	if not is_horizontal:
-		area_offset = Vector2(size.x / 2.0, 0)
-		spacing = Vector2(0, size.y / float(count + 1))
-	if area == Vector2.ZERO:
+		area_offset = Vector2(area.size.x / 2.0, 0)
+		spacing = Vector2(0, area.size.y / float(count + 1))
+	if area.size == Vector2.ZERO:
 		spacing.y -= 2
 	
-	var curr_pos := global_position + area_offset - card_offset
+	var curr_pos := area.position + area_offset - card_offset
 	for i in len(cards):
 		var card := cards[i]
 		curr_pos += spacing
