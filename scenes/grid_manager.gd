@@ -138,14 +138,14 @@ func get_distance(floor:int, from_tile:tile, to_tile:tile):
 	return path_between_points.size()
 		
 #region testing functions
-func reveal_full_map():
-	for each_tile in _get_all_tiles(0):
-		each_tile.reveal()
-		
-func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
-	var reached_tiles = get_reachable_tiles(level, floor_maps[level][starting_tile_coords.x][starting_tile_coords.y], range)
-	for each_tile in reached_tiles:
-		each_tile.reveal()
+#func reveal_full_map():
+	#for each_tile in _get_all_tiles(0):
+		#each_tile.reveal()
+		#
+#func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
+	#var reached_tiles = get_reachable_tiles(level, floor_maps[level][starting_tile_coords.x][starting_tile_coords.y], range)
+	#for each_tile in reached_tiles:
+		#each_tile.reveal()
 #endregion
 		
 func _import_pre_baked_map_section():

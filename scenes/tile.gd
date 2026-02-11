@@ -9,7 +9,7 @@ signal tile_exited(which_tile, which_player)
 
 #region properties
 var grid_coordinates:Vector2
-var explore_value:int
+var explore_value:String
 var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
@@ -34,32 +34,31 @@ func reset_to_hidden():
 	is_tile_revealed = false
 	$Tile_Bkgd.self_modulate = Color("000000c0")
 	
-func explore():
+func explore(which_player:player):
 	if is_tile_revealed == false:
-		reveal()
+		reveal(which_player)
 	is_tile_explored = true
-	tile_explored.emit(self)
+	tile_explored.emit(self, which_player)
 	
-func reveal():
+func reveal(which_player:player):
 	is_tile_revealed = true
-	tile_revealed.emit(self)
+	tile_revealed.emit(self, which_player)
 	$Tile_Bkgd.self_modulate = Color("ffffff")
 	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			
-func enter():
-	explore()
-	tile_entered.emit(self)
+func enter(which_player:player):
+	explore(which_player)
+	tile_entered.emit(self, which_player)
 	pass
 	
-func exit():
-	tile_exited.emit(self)
+func exit(which_player:player):
+	tile_exited.emit(self, which_player)
 	pass
 	
 func _set_random_explore_value():
-	var values_list = [ValueManager.CreatureValue.ADAPTABILITY, ValueManager.CreatureValue.BRAVERY, ValueManager.CreatureValue.CURIOSITY,ValueManager.CreatureValue.DEPENDABILITY, ValueManager.CreatureValue.EMPATHY]
-	explore_value = values_list.pick_random()
+	explore_value = ValueManager.value_names.pick_random()
 	
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
