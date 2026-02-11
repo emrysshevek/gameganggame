@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b7371rgat236l"]
+
+[ext_resource type="Script" uid="uid://c4yig64yuewvl" path="res://cards/pile.gd" id="1_nhxhl"]
+
+[node name="Pile" type="Node2D" unique_id=1350698498]
+script = ExtResource("1_nhxhl")
