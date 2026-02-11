@@ -57,11 +57,13 @@ func flip() -> void:
 func play() -> void:
 	_trigger_play_ability()
 	played.emit()
+	Events.card_played.emit(self)
 
 
 func discard() -> void:
 	_trigger_discard_ability()
 	discarded.emit()
+	Events.card_discarded.emit(self)
 #endregion
 
 
