@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://n7um4vrrgeci"]
+
+[ext_resource type="Script" uid="uid://ucpg14v1g2fr" path="res://scenes/test/input_test.gd" id="1_mnpmb"]
+
+[node name="ControllerTest" type="Control" unique_id=262037049]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=267119207]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ColorRect" type="ColorRect" parent="HBoxContainer" unique_id=1198671665]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_mnpmb")
+player_id = 0
+
+[node name="ColorRect2" type="ColorRect" parent="HBoxContainer" unique_id=228418078]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_mnpmb")
+player_id = 1
