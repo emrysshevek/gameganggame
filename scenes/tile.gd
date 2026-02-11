@@ -1,10 +1,10 @@
 class_name tile extends Node2D
 
 #region signals
-signal tile_revealed(which_tile)
-signal tile_explored(which_tile)
-signal tile_entered(which_tile)
-signal tile_exited(which_tile)
+signal tile_revealed(which_tile, which_player)
+signal tile_explored(which_tile, which_player)
+signal tile_entered(which_tile, which_player)
+signal tile_exited(which_tile, which_player)
 #endregion
 
 #region properties
