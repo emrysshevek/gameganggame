@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://yovmcage7tff"]
 
-[ext_resource type="Script" uid="uid://b3ivlbcctk37a" path="res://scenes/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b3ivlbcctk37a" path="res://entities/player.gd" id="1_3vyb7"]
 [ext_resource type="Texture2D" uid="uid://ch5dw4jabx4om" path="res://art/test_cat.png" id="2_g2els"]
 
 [node name="Player" type="Node2D" unique_id=2004547568]
