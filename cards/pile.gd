@@ -6,6 +6,7 @@ extends Node2D
 signal shuffled()
 signal card_added(card: Card)
 signal card_removed(card: Card)
+signal emptied()
 #endregion
 
 
@@ -15,7 +16,6 @@ signal card_removed(card: Card)
 var count: int:
 	get:
 		return cards.size()
-@export var deck: Deck = null
 @export var is_faceup: bool = true
 
 @onready var ordered_cards: Array[Card] = cards.duplicate()
@@ -29,6 +29,18 @@ func _ready() -> void:
 
 
 #region Methods
+func get_top_card() -> Card:
+	var card = cards[0]
+	remove_card(cards[0])
+	return card
+	
+
+func get_bottom_card() -> Card:
+	var card = cards[-1]
+	remove_card(card)
+	return card
+
+	
 func shuffle() -> void:
 	ordered_cards.shuffle()
 	shuffled.emit()
@@ -41,7 +53,7 @@ func flip() -> void:
 			card.flip()
 	
 
-func add_card(_card: Card, _position:int=-1) -> void:
+func add_card(_card: Card, _position:int=-1, _shuffle=false) -> void:
 	# cards are added to bottom of pile by default
 	# to insert to a specific index, set value of position
 	assert(_card not in cards)
@@ -49,11 +61,18 @@ func add_card(_card: Card, _position:int=-1) -> void:
 		_position = 0
 	cards.append(_card)
 	ordered_cards.insert(_position, _card)
+	
 	if _card.get_parent() == null:
 		add_child(_card)
 	else:
 		_card.reparent(self)
+	_card.pile = self
+	
+	if _shuffle:
+		shuffle()
+		
 	_reposition()
+	
 	card_added.emit(_card)
 
 
@@ -63,7 +82,10 @@ func remove_card(_card: Card) -> void:
 	cards.erase(_card)
 	ordered_cards.erase(_card)
 	_reposition()
+	_card.pile = null
 	card_removed.emit()
+	if count == 0:
+		emptied.emit()
 	
 
 func move(_global_position: Vector2, _size: Vector2) -> void:
@@ -89,8 +111,8 @@ func _reposition() -> void:
 		spacing.y -= 2
 	
 	var curr_pos := area.position + area_offset - card_offset
-	for i in len(cards):
-		var card := cards[i]
+	for i in len(ordered_cards):
+		var card := ordered_cards[i]
 		curr_pos += spacing
 		card._description_label.text = str(i)
 		card.global_position = curr_pos

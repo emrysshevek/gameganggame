@@ -13,7 +13,7 @@ signal card_removed(_card: Card)
 var count: int:
 	get:
 		return len(cards)
-@export var player = null
+@export var player: Player = null
 
 @export var cards_node: Node2D
 @export var deck_view: CanvasLayer
@@ -34,8 +34,8 @@ func add_card(_card: Card) -> void:
 
 func remove_card(_card: Card) -> void:
 	assert(_card in cards)
-	cards.erase(_card)
 	card_removed.emit(_card)
+	cards.erase(_card)
 	
 
 func toggle_display() -> void:

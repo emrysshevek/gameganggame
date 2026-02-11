@@ -11,6 +11,7 @@ signal request_discard(_card: Card)
 @export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
 @export var deck: Deck = null
+@export var pile: Pile = null
 var is_faceup: bool = true
 
 @export var _backside: Node
@@ -73,5 +74,5 @@ func _trigger_discard_ability() -> void:
 
 #region Signal Connections
 func _on_button_pressed() -> void:
-	flip()
+	request_discard.emit()
 #endregion
