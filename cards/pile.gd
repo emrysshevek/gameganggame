@@ -14,7 +14,7 @@ signal card_removed(card: Card)
 @export var cards: Array[Card] = []
 var count: int:
 	get:
-		return len(cards)
+		return cards.size()
 @export var deck: Deck = null
 @export var is_faceup: bool = true
 
@@ -49,6 +49,10 @@ func add_card(_card: Card, _position:int=-1) -> void:
 		_position = 0
 	cards.append(_card)
 	ordered_cards.insert(_position, _card)
+	if _card.get_parent() == null:
+		add_child(_card)
+	else:
+		_card.reparent(self)
 	_reposition()
 	card_added.emit(_card)
 

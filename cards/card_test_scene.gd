@@ -1,6 +1,8 @@
 extends Control
 
 @export var pile: Pile
+@export var deck: Deck
+
 var start_pos := Vector2.ZERO
 var end_pos := Vector2.ZERO
 var mouse_is_pressed := false
@@ -12,11 +14,14 @@ func _input(_event: InputEvent) -> void:
 		pile.flip()
 	if Input.is_action_just_pressed("debug_up"):
 		var card: Card = card_scene.instantiate()
-		pile.add_child(card)
+		deck.add_card(card)
 		pile.add_card(card)
+	if Input.is_action_just_pressed("debug_v"):
+		deck.toggle_display()
 	if pile.count > 0 and Input.is_action_just_pressed("debug_down"):
 		var card: Card = pile.get_children()[-1]
 		pile.remove_card(card)
+		deck.remove_card(card)
 		card.queue_free()
 
 
