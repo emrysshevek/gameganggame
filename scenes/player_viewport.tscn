@@ -1,9 +1,8 @@
 [gd_scene format=3 uid="uid://dxpo0yea3rw7f"]
 
 [ext_resource type="Script" uid="uid://c4oiush7vlfij" path="res://scenes/player_viewport.gd" id="1_4kjjs"]
-[ext_resource type="Texture2D" uid="uid://brscntajivhbh" path="res://icon.svg" id="2_0qr5i"]
 [ext_resource type="PackedScene" uid="uid://bu60hcp1y8o6" path="res://scenes/grid_manager.tscn" id="2_m3hbk"]
-[ext_resource type="PackedScene" uid="uid://dw0fkomkoklma" path="res://scenes/tile.tscn" id="3_ujy8g"]
+[ext_resource type="PackedScene" uid="uid://yovmcage7tff" path="res://entities/player.tscn" id="3_ujy8g"]
 
 [node name="PlayerViewport" type="Node2D" unique_id=1737952139]
 script = ExtResource("1_4kjjs")
@@ -11,6 +10,8 @@ script = ExtResource("1_4kjjs")
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1359933730]
 offset_right = 1153.0
 offset_bottom = 653.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="HBoxContainer" unique_id=415882657]
@@ -22,7 +23,6 @@ stretch = true
 disable_3d = true
 handle_input_locally = false
 size = Vector2i(500, 653)
-size_2d_override = Vector2i(200, 200)
 render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="HBoxContainer/SubViewportContainer/SubViewport" unique_id=1123846088]
@@ -30,12 +30,8 @@ position = Vector2(576, -17)
 
 [node name="GridManager" parent="HBoxContainer/SubViewportContainer/SubViewport" unique_id=1720207153 instance=ExtResource("2_m3hbk")]
 
-[node name="Tile" parent="HBoxContainer/SubViewportContainer/SubViewport" unique_id=477134848 instance=ExtResource("3_ujy8g")]
-position = Vector2(376, 0)
-
-[node name="Sprite2D" type="Sprite2D" parent="HBoxContainer/SubViewportContainer/SubViewport" unique_id=1854886976]
-position = Vector2(263, 145)
-texture = ExtResource("2_0qr5i")
+[node name="Player" parent="HBoxContainer/SubViewportContainer/SubViewport" unique_id=2004547568 instance=ExtResource("3_ujy8g")]
+position = Vector2(432, 0)
 
 [node name="SubViewportContainer2" type="SubViewportContainer" parent="HBoxContainer" unique_id=1859478379]
 custom_minimum_size = Vector2(500, 500)
@@ -50,4 +46,3 @@ render_target_update_mode = 4
 
 [node name="Camera2D" type="Camera2D" parent="HBoxContainer/SubViewportContainer2/SubViewport" unique_id=974794555]
 position = Vector2(576, -17)
-zoom = Vector2(2, 2)
