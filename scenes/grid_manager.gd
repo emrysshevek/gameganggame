@@ -43,7 +43,7 @@ func _ready() -> void:
 			#
 			#testing visibility
 			new_tile.set_coordinates(Vector2(x,y))
-			new_tile.global_position = Vector2(x * 60, y * 60)
+			new_tile.position = Vector2(x * 60, y * 60)
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
