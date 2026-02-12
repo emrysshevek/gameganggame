@@ -47,7 +47,7 @@ func _ready() -> void:
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
-	reveal_full_map()
+	#reveal_full_map()
 	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
 func add_path(tile1:tile, connection_direction_from_tile1:directions, tile2:tile):
@@ -142,10 +142,10 @@ func reveal_full_map():
 	for each_tile in _get_all_tiles(0):
 		each_tile.reveal(null)
 		
-#func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
-	#var reached_tiles = get_reachable_tiles(level, floor_maps[level][starting_tile_coords.x][starting_tile_coords.y], range)
-	#for each_tile in reached_tiles:
-		#each_tile.reveal()
+func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
+	var reached_tiles = get_reachable_tiles(level, floor_maps[level][starting_tile_coords.x][starting_tile_coords.y], range)
+	for each_tile in reached_tiles:
+		each_tile.reveal(null)
 #endregion
 		
 func _import_pre_baked_map_section():

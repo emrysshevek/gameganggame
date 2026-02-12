@@ -12,12 +12,13 @@ var _viewport_organizer_vertical:VBoxContainer
 var _viewport_organizer_top_horizontal:HBoxContainer
 var _viewport_organizer_bottom_horizontal:HBoxContainer
 var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
-var _minimap_size:Vector2 = Vector2(200,200)
+var _minimap_size:Vector2 #= Vector2(200,200)
 var _player_view_zoom:Vector2 = Vector2(1.3,1.3)
-var _minimap_coord_1p:Vector2 = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
-var _minimap_coord_2p:Vector2 = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
-var _minimap_coord_4p:Vector2 = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
+var _minimap_coord_1p:Vector2# = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, 0)
+var _minimap_coord_2p:Vector2# = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
+var _minimap_coord_4p:Vector2# = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 var _camera_limits:Dictionary[String,int]
+var _testing_tile_size:Vector2 = Vector2(60,60)
 #endregion
 
 #region methods
@@ -32,6 +33,7 @@ func _ready() -> void:
 	viewports[viewport_names.p2] = $P2ViewportContainer/P2Viewport
 	viewports[viewport_names.p3] = $P3ViewportContainer/P3Viewport
 	viewports[viewport_names.p4] = $P4ViewportContainer/P4Viewport
+	viewport_containers[viewport_names.origin] = $OriginViewportContainer
 	viewport_containers[viewport_names.minimap] = $MinimapViewportContainer
 	viewport_containers[viewport_names.p1] = $P1ViewportContainer
 	viewport_containers[viewport_names.p2] = $P2ViewportContainer
@@ -53,10 +55,15 @@ func _ready() -> void:
 		_cameras[each_camera].limit_bottom = _camera_limits["Bottom"]
 	grid_man = $OriginViewportContainer/OriginViewport/GridManager
 	grid_man.generate_map(0)
+	_minimap_size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
+	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, 0)
+	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
+	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	setup_viewports([0,1,2,3])
 
 func setup_viewports(players:Array):
-	_world = $OriginViewportContainer/OriginViewport.find_world_2d()
+	#viewport_containers[viewport_names.origin].size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
+	_world = viewports[viewport_names.origin].find_world_2d()
 	viewports[viewport_names.minimap].world_2d = _world
 	viewports[viewport_names.p1].world_2d = _world
 	viewports[viewport_names.p2].world_2d = _world
@@ -64,6 +71,7 @@ func setup_viewports(players:Array):
 	viewports[viewport_names.p4].world_2d = _world
 	viewports[viewport_names.minimap].world_2d = _world
 	viewport_containers[viewport_names.minimap].visible = true
+	viewport_containers[viewport_names.minimap].size = _minimap_size
 	_cameras[viewport_names.minimap].zoom = Vector2(_minimap_zoom)
 	_cameras[viewport_names.p1].zoom = Vector2(_player_view_zoom)
 	_cameras[viewport_names.p2].zoom = Vector2(_player_view_zoom)
@@ -107,10 +115,14 @@ func setup_viewports(players:Array):
 		print("invalid number of players:" + str(players.size()))
 		assert(false)
 	var grid_man_origin = grid_man.global_position
+	var test_players = [$OriginViewportContainer/OriginViewport/Player1, $OriginViewportContainer/OriginViewport/Player2, $OriginViewportContainer/OriginViewport/Player3, $OriginViewportContainer/OriginViewport/Player4]
 	for each_player in players:
 		var player_viewports = [viewport_names.p1, viewport_names.p2, viewport_names.p3, viewport_names.p4]
 		var test_player_coords:Array = [Vector2(1,1), Vector2(15,5), Vector2(6,14), Vector2(12,18)]
-		var tile_size = Vector2(60,60)
+		var tile_size = _testing_tile_size
+		grid_man.testing_map_distance_algorithm(Vector2(test_player_coords[each_player]),3,0)
+		test_players[each_player].visible = true
+		test_players[each_player].position = grid_man_origin + Vector2(test_player_coords[each_player].x * tile_size.x, test_player_coords[each_player].y * tile_size.y)
 		_cameras[player_viewports[each_player]].position = grid_man_origin + Vector2(test_player_coords[each_player].x * tile_size.x, test_player_coords[each_player].y * tile_size.y)
 		
 #endregion

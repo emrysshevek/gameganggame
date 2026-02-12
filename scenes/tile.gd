@@ -43,7 +43,7 @@ func explore(which_player:player):
 func reveal(which_player:player):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
-	$Tile_Bkgd.self_modulate = Color("ffffff")
+	$Tile_Bkgd.self_modulate = Color("fffff0")
 	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
