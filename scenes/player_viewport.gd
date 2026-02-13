@@ -1,4 +1,4 @@
-class_name player_viewport extends Node
+class_name PlayerViewport extends Node
 
 enum viewport_names{origin, minimap, p1, p2, p3, p4}
 
@@ -7,7 +7,7 @@ var viewports:Dictionary[viewport_names, SubViewport]
 var viewport_containers:Dictionary[viewport_names, SubViewportContainer]
 var _cameras:Dictionary[viewport_names, Camera2D]
 var _world:World2D
-var grid_man:grid_manager
+var grid_man:GridManager
 var _viewport_organizer_vertical:VBoxContainer
 var _viewport_organizer_top_horizontal:HBoxContainer
 var _viewport_organizer_bottom_horizontal:HBoxContainer

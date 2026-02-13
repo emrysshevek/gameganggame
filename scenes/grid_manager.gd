@@ -1,4 +1,4 @@
-class_name grid_manager extends Node2D
+class_name GridManager extends Node2D
 
 #region signals
 signal map_generated()

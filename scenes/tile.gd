@@ -1,4 +1,4 @@
-class_name tile extends Node2D
+class_name Tile extends Node2D
 
 #region signals
 signal tile_revealed(which_tile, which_player)
@@ -19,10 +19,10 @@ var a_star_id:int #used by A* for identifying tile
 
 #region methods
 func _ready() -> void:
-		_path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
-		_path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
-		_path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
-		_path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
+		_path_lines[GridManager.directions.north] = $Tile_Bkgd/North_Path
+		_path_lines[GridManager.directions.east] = $Tile_Bkgd/East_Path
+		_path_lines[GridManager.directions.south] = $Tile_Bkgd/South_Path
+		_path_lines[GridManager.directions.west] = $Tile_Bkgd/West_Path
 		_set_random_explore_value()
 
 func set_coordinates(coords:Vector2):
@@ -44,7 +44,7 @@ func reveal(which_player:player):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
 	$Tile_Bkgd.self_modulate = Color("fffff0")
-	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
+	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			
