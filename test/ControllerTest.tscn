@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://n7um4vrrgeci"]
 
-[ext_resource type="Script" uid="uid://ucpg14v1g2fr" path="res://scenes/test/input_test.gd" id="1_mnpmb"]
+[ext_resource type="Script" uid="uid://ucpg14v1g2fr" path="res://test/input_test.gd" id="1_mnpmb"]
 
 [node name="ControllerTest" type="Control" unique_id=262037049]
 layout_mode = 3
