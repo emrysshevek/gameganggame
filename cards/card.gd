@@ -3,7 +3,7 @@ extends Control
 
 
 #region Signals
-signal request_discard(_card: Card)
+signal clicked()
 #endregion
 
 
@@ -53,12 +53,10 @@ func flip() -> void:
 
 func play() -> void:
 	_trigger_play_ability()
-	request_discard.emit()
 
 
 func discard() -> void:
 	_trigger_discard_ability()
-	request_discard.emit()
 #endregion
 
 
@@ -74,5 +72,6 @@ func _trigger_discard_ability() -> void:
 
 #region Signal Connections
 func _on_button_pressed() -> void:
-	request_discard.emit()
+	play()
+	clicked.emit()
 #endregion

@@ -15,7 +15,7 @@ extends Control
 func _ready() -> void:
 	deck.card_added.connect(_on_deck_card_added)
 	for card in deck.cards:
-		card.request_discard.connect(func():_on_card_requested_discard(card))
+		card.clicked.connect(func(): _on_card_clicked(card))
 #endregion
 
 
@@ -29,6 +29,12 @@ func draw(_count:=1) -> void:
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
 	discard_pile.add_card(_card)
+	
+	
+func refill_draw() -> void:
+	discard_pile.shuffle()
+	for i in discard_pile.count:
+		draw_pile.add_card(discard_pile.get_top_card())
 	
 	
 func return_discard() -> void:
@@ -45,7 +51,7 @@ func shuffle_draw() -> void:
 
 #region Signal Connections	
 func _on_deck_card_added(_card) -> void:
-	_card.request_discard.connect(func():_on_card_requested_discard(_card))
+	_card.clicked.connect(func():_on_card_clicked(_card))
 	draw_pile.add_card(_card, 0, true) # add and shuffle
 	
 	
@@ -53,18 +59,19 @@ func _on_deck_card_removed(_card) -> void:
 	_card.pile.remove_card(_card)
 	
 	
-func _on_card_requested_discard(_card) -> void:
+func _on_card_clicked(_card) -> void:
 	if _card.pile == hand_pile:
 		discard(_card)
-	if _card.pile == draw_pile:
+	elif _card.pile == draw_pile:
 		draw()
+	elif _card.pile == discard_pile:
+		pass
 
 
-#func _on_refill_draw_button_pressed() -> void:
-	#if draw_pile.count == 0:
-		#discard_pile.shuffle()
-		#for i in discard_pile.count:
-			#draw_pile.add_card(discard_pile.get_top_card())
+func _on_draw_button_pressed() -> void:
+	if draw_pile.count == 0:
+		refill_draw()
 #endregion
+	
 	
 	
