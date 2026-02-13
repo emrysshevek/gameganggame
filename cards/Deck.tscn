@@ -12,6 +12,7 @@ vbox = NodePath("DeckView/Control/MarginContainer/ScrollContainer/VBoxContainer"
 visible = false
 
 [node name="DeckView" type="CanvasLayer" parent="." unique_id=51572081]
+visible = false
 
 [node name="Control" type="Control" parent="DeckView" unique_id=880766469]
 layout_mode = 3

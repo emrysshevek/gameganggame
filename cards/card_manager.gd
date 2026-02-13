@@ -8,28 +8,19 @@ extends Control
 @export var discard_pile: Pile
 @export var hand_pile: Pile
 @export var player: Player
-
-@export var draw_marker: Control
-@export var hand_marker: Control
-@export var discard_marker: Control
 #endregion
 
 
 #region Built-ins
 func _ready() -> void:
-	draw_pile.area = Rect2(draw_marker.global_position, draw_marker.size)
-	hand_pile.area = Rect2(hand_marker.global_position, hand_marker.size)
-	discard_pile.area = Rect2(discard_marker.global_position, discard_marker.size)
-
-	draw_pile.emptied.connect(_on_draw_pile_emptied)
 	deck.card_added.connect(_on_deck_card_added)
 	for card in deck.cards:
-		card.request_discard.connect(_on_card_requested_discard)
+		card.request_discard.connect(func():_on_card_requested_discard(card))
 #endregion
 
 
 #region Public Methods
-func draw(_count:=0) -> void:
+func draw(_count:=1) -> void:			
 	for i in _count:
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
@@ -52,12 +43,9 @@ func shuffle_draw() -> void:
 #endregion
 	
 
-#region Signal Connections
-func _on_draw_pile_emptied() -> void:
-	return_discard()
-	
-	
+#region Signal Connections	
 func _on_deck_card_added(_card) -> void:
+	_card.request_discard.connect(func():_on_card_requested_discard(_card))
 	draw_pile.add_card(_card, 0, true) # add and shuffle
 	
 	
@@ -70,6 +58,13 @@ func _on_card_requested_discard(_card) -> void:
 		discard(_card)
 	if _card.pile == draw_pile:
 		draw()
+
+
+#func _on_refill_draw_button_pressed() -> void:
+	#if draw_pile.count == 0:
+		#discard_pile.shuffle()
+		#for i in discard_pile.count:
+			#draw_pile.add_card(discard_pile.get_top_card())
 #endregion
 	
 	

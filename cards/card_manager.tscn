@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bfeck0s4jjehn" path="res://cards/card_manager.gd" id="1_de166"]
 [ext_resource type="PackedScene" uid="uid://b7371rgat236l" path="res://cards/Pile.tscn" id="2_vmpa3"]
 
-[node name="CardManager" type="Control" unique_id=810966713 node_paths=PackedStringArray("draw_pile", "discard_pile", "hand_pile", "draw_marker", "hand_marker", "discard_marker")]
+[node name="CardManager" type="Control" unique_id=810966713 node_paths=PackedStringArray("draw_pile", "discard_pile", "hand_pile")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,12 +11,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_de166")
-draw_pile = NodePath("DrawPile")
-discard_pile = NodePath("HandPile")
-hand_pile = NodePath("DiscardPile")
-draw_marker = NodePath("Layout/HBoxContainer/DrawArea/DrawMarker")
-hand_marker = NodePath("Layout/HBoxContainer/HandArea/HandMarker")
-discard_marker = NodePath("Layout/HBoxContainer/DiscardArea/DiscardMarker")
+draw_pile = NodePath("Layout/HBoxContainer/DrawPile")
+discard_pile = NodePath("Layout/HBoxContainer/DiscardPile")
+hand_pile = NodePath("Layout/HBoxContainer/HandPile")
 
 [node name="Layout" type="MarginContainer" parent="." unique_id=109818275]
 layout_mode = 1
@@ -39,72 +36,32 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="DrawArea" type="ColorRect" parent="Layout/HBoxContainer" unique_id=1331273431]
-custom_minimum_size = Vector2(100, 150)
+[node name="DrawPile" parent="Layout/HBoxContainer" unique_id=1350698498 instance=ExtResource("2_vmpa3")]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-color = Color(0.8352941, 0.13333334, 0.29803923, 1)
-
-[node name="DrawMarker" type="Control" parent="Layout/HBoxContainer/DrawArea" unique_id=96855263]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
+is_faceup = false
 
 [node name="spacer4" type="Control" parent="Layout/HBoxContainer" unique_id=921878017]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="HandArea" type="ColorRect" parent="Layout/HBoxContainer" unique_id=344322895]
+[node name="HandPile" parent="Layout/HBoxContainer" unique_id=1066738121 instance=ExtResource("2_vmpa3")]
 custom_minimum_size = Vector2(700, 150)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-color = Color(0.11764706, 0.6745098, 0.105882354, 1)
-
-[node name="HandMarker" type="Control" parent="Layout/HBoxContainer/HandArea" unique_id=1776404221]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="spacer2" type="Control" parent="Layout/HBoxContainer" unique_id=676037695]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 
-[node name="DiscardArea" type="ColorRect" parent="Layout/HBoxContainer" unique_id=837107395]
-custom_minimum_size = Vector2(100, 150)
+[node name="DiscardPile" parent="Layout/HBoxContainer" unique_id=471589333 instance=ExtResource("2_vmpa3")]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-color = Color(0.15686275, 0.22352941, 1, 1)
-
-[node name="DiscardMarker" type="Control" parent="Layout/HBoxContainer/DiscardArea" unique_id=1698229132]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="spacer" type="Control" parent="Layout/HBoxContainer" unique_id=1997233733]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-
-[node name="DrawPile" parent="." unique_id=1350698498 instance=ExtResource("2_vmpa3")]
-
-[node name="HandPile" parent="." unique_id=1066738121 instance=ExtResource("2_vmpa3")]
-
-[node name="DiscardPile" parent="." unique_id=471589333 instance=ExtResource("2_vmpa3")]

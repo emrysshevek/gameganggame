@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://duhdi243d2mpq" path="res://cards/card_manager.tscn" id="2_sv2hw"]
 [ext_resource type="PackedScene" uid="uid://c5egmq5hekfcm" path="res://cards/Deck.tscn" id="3_sv2hw"]
 
-[node name="CardTestScene" type="Control" unique_id=252083493 node_paths=PackedStringArray("deck")]
+[node name="CardTestScene" type="Control" unique_id=252083493 node_paths=PackedStringArray("card_manager", "deck")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,6 +12,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sv2hw")
+card_manager = NodePath("CardManager")
 deck = NodePath("Deck")
 metadata/_edit_lock_ = true
 

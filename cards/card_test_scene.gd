@@ -9,6 +9,11 @@ var mouse_is_pressed := false
 
 var card_scene := preload("res://cards/card.tscn")
 
+
+func _ready() -> void:
+	card_manager.deck = deck
+	
+
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("debug_up"):
 		var card: Card = card_scene.instantiate()
