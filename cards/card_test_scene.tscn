@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://c7y4bhyyqogiw"]
 
-[ext_resource type="PackedScene" uid="uid://b7371rgat236l" path="res://cards/Pile.tscn" id="1_cthd1"]
 [ext_resource type="Script" uid="uid://ykkwkg16lmt0" path="res://cards/card_test_scene.gd" id="1_sv2hw"]
-[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="2_sv2hw"]
+[ext_resource type="PackedScene" uid="uid://duhdi243d2mpq" path="res://cards/card_manager.tscn" id="2_sv2hw"]
+[ext_resource type="PackedScene" uid="uid://c5egmq5hekfcm" path="res://cards/Deck.tscn" id="3_sv2hw"]
 
-[node name="CardTestScene" type="Control" unique_id=252083493 node_paths=PackedStringArray("pile")]
+[node name="CardTestScene" type="Control" unique_id=252083493 node_paths=PackedStringArray("card_manager", "deck")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,19 +12,12 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_sv2hw")
-pile = NodePath("Pile")
+card_manager = NodePath("CardManager")
+deck = NodePath("Deck")
 metadata/_edit_lock_ = true
 
-[node name="Pile" parent="." unique_id=614346643 node_paths=PackedStringArray("cards") instance=ExtResource("1_cthd1")]
-cards = [NodePath("Card")]
+[node name="CardManager" parent="." unique_id=810966713 node_paths=PackedStringArray("deck") instance=ExtResource("2_sv2hw")]
+layout_mode = 1
+deck = NodePath("../Deck")
 
-[node name="ColorRect" type="ColorRect" parent="Pile" unique_id=1727720866]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.654902, 1, 0.65882355, 0.64705884)
-metadata/_edit_lock_ = true
-
-[node name="Card" parent="Pile" unique_id=693299294 instance=ExtResource("2_sv2hw")]
+[node name="Deck" parent="." unique_id=1175242253 instance=ExtResource("3_sv2hw")]

@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://duhdi243d2mpq"]
+
+[ext_resource type="Script" uid="uid://bfeck0s4jjehn" path="res://cards/card_manager.gd" id="1_de166"]
+[ext_resource type="PackedScene" uid="uid://b7371rgat236l" path="res://cards/Pile.tscn" id="2_vmpa3"]
+
+[node name="CardManager" type="Control" unique_id=810966713 node_paths=PackedStringArray("draw_pile", "discard_pile", "hand_pile")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_de166")
+draw_pile = NodePath("Layout/HBoxContainer/DrawPile")
+discard_pile = NodePath("Layout/HBoxContainer/DiscardPile")
+hand_pile = NodePath("Layout/HBoxContainer/HandPile")
+
+[node name="Layout" type="MarginContainer" parent="." unique_id=109818275]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Layout" unique_id=1366182083]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="spacer3" type="Control" parent="Layout/HBoxContainer" unique_id=880297745]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="DrawPile" parent="Layout/HBoxContainer" unique_id=1350698498 instance=ExtResource("2_vmpa3")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+is_faceup = false
+
+[node name="DrawButton" type="Button" parent="Layout/HBoxContainer/DrawPile" unique_id=2122441720]
+custom_minimum_size = Vector2(100, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -75.0
+offset_right = 50.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Draw"
+
+[node name="spacer4" type="Control" parent="Layout/HBoxContainer" unique_id=921878017]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="HandPile" parent="Layout/HBoxContainer" unique_id=1066738121 instance=ExtResource("2_vmpa3")]
+custom_minimum_size = Vector2(700, 150)
+layout_mode = 2
+
+[node name="spacer2" type="Control" parent="Layout/HBoxContainer" unique_id=676037695]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="DiscardPile" parent="Layout/HBoxContainer" unique_id=471589333 instance=ExtResource("2_vmpa3")]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="DiscardButton" type="Button" parent="Layout/HBoxContainer/DiscardPile" unique_id=121422502]
+custom_minimum_size = Vector2(100, 150)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -75.0
+offset_right = 50.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Discard"
+
+[node name="spacer" type="Control" parent="Layout/HBoxContainer" unique_id=1997233733]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[connection signal="pressed" from="Layout/HBoxContainer/DrawPile/DrawButton" to="." method="_on_draw_button_pressed"]
