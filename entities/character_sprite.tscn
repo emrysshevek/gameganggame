@@ -3,4 +3,5 @@
 [ext_resource type="Script" uid="uid://c74ipaoogsrvg" path="res://entities/character_sprite.gd" id="1_wqaic"]
 
 [node name="CharacterSprite" type="Sprite2D" unique_id=85664507]
+centered = false
 script = ExtResource("1_wqaic")

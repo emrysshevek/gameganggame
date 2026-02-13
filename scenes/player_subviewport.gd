@@ -19,5 +19,9 @@ func set_camera_limits(left:int, top:int, right:int, bottom:int):
 	camera.limit_bottom = bottom
 	
 func move_camera(coords:Vector2):
-	camera.position = coords
+	camera.global_position = coords
+	
+func set_bounds(bounds:Vector2):
+	custom_minimum_size = bounds
+	size = bounds
 #endregion

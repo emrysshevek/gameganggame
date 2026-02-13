@@ -9,5 +9,5 @@ func set_visual_position(coords:Vector2):
 	position = coords
 	
 func set_sprite():
-	texture = _sprite_texture
+	texture = load("res://art/test_cat.png")
 #endregion
