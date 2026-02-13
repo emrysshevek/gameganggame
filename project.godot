@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 InputManager="*uid://c612av0ph1tm1"
 Model="*uid://bmv4ybs8mmkw1"
 Config="*uid://3wwk5qnqpwkg"
+Events="*uid://bwamg20gc1fhk"
 
 [input]
 
