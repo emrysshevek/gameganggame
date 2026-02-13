@@ -34,13 +34,13 @@ func reset_to_hidden():
 	is_tile_revealed = false
 	$Tile_Bkgd.self_modulate = Color("000000c0")
 	
-func explore(which_player:player):
+func explore(which_player:Player):
 	if is_tile_revealed == false:
 		reveal(which_player)
 	is_tile_explored = true
 	tile_explored.emit(self, which_player)
 	
-func reveal(which_player:player):
+func reveal(which_player:Player):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
 	$Tile_Bkgd.self_modulate = Color("ffffff")
@@ -48,12 +48,12 @@ func reveal(which_player:player):
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			
-func enter(which_player:player):
+func enter(which_player:Player):
 	explore(which_player)
 	tile_entered.emit(self, which_player)
 	pass
 	
-func exit(which_player:player):
+func exit(which_player:Player):
 	tile_exited.emit(self, which_player)
 	pass
 	

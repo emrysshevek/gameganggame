@@ -3,9 +3,7 @@ extends Control
 
 
 #region Signals
-signal played()
-signal discarded()
-signal flipped()
+signal clicked()
 #endregion
 
 
@@ -13,6 +11,7 @@ signal flipped()
 @export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
 @export var deck: Deck = null
+@export var pile: Pile = null
 var is_faceup: bool = true
 
 @export var _backside: Node
@@ -49,20 +48,16 @@ func flip() -> void:
 	else:
 		_frontside.show()
 		_backside.hide()
-	is_faceup = !is_faceup
-	flipped.emit()
-	
+	is_faceup = !is_faceup	
 
 
 func play() -> void:
 	_trigger_play_ability()
-	played.emit()
 	Events.card_played.emit(self)
 
 
 func discard() -> void:
 	_trigger_discard_ability()
-	discarded.emit()
 	Events.card_discarded.emit(self)
 #endregion
 
@@ -79,5 +74,6 @@ func _trigger_discard_ability() -> void:
 
 #region Signal Connections
 func _on_button_pressed() -> void:
-	flip()
+	play()
+	clicked.emit()
 #endregion

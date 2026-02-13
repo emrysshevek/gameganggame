@@ -1,4 +1,4 @@
-class_name player extends Node2D
+class_name Player extends Node2D
 
 #region signals
 signal health_changed(which_player, old_value, new_value)
