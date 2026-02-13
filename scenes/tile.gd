@@ -1,10 +1,10 @@
-class_name Tile extends Node2D
+class_name tile extends Node2D
 
 #region signals
-signal tile_revealed(which_tile, which_character)
-signal tile_explored(which_tile, which_character)
-signal tile_entered(which_tile, which_character)
-signal tile_exited(which_tile, which_character)
+signal tile_revealed(which_tile, which_player)
+signal tile_explored(which_tile, which_player)
+signal tile_entered(which_tile, which_player)
+signal tile_exited(which_tile, which_player)
 #endregion
 
 #region properties
@@ -19,10 +19,10 @@ var a_star_id:int #used by A* for identifying tile
 
 #region methods
 func _ready() -> void:
-		_path_lines[GridManager.directions.north] = $Tile_Bkgd/North_Path
-		_path_lines[GridManager.directions.east] = $Tile_Bkgd/East_Path
-		_path_lines[GridManager.directions.south] = $Tile_Bkgd/South_Path
-		_path_lines[GridManager.directions.west] = $Tile_Bkgd/West_Path
+		_path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
+		_path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
+		_path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
+		_path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
 		_set_random_explore_value()
 
 func set_coordinates(coords:Vector2):
@@ -34,27 +34,27 @@ func reset_to_hidden():
 	is_tile_revealed = false
 	$Tile_Bkgd.self_modulate = Color("000000c0")
 	
-func explore(which_character:Character):
+func explore(which_player:Player):
 	if is_tile_revealed == false:
-		reveal(which_character)
+		reveal(which_player)
 	is_tile_explored = true
-	tile_explored.emit(self, which_character)
+	tile_explored.emit(self, which_player)
 	
-func reveal(which_character:Character):
+func reveal(which_player:Player):
 	is_tile_revealed = true
-	tile_revealed.emit(self, which_character)
-	$Tile_Bkgd.self_modulate = Color("fffff0")
-	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
+	tile_revealed.emit(self, which_player)
+	$Tile_Bkgd.self_modulate = Color("ffffff")
+	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			
-func enter(which_character:Character):
-	explore(which_character)
-	tile_entered.emit(self, which_character)
+func enter(which_player:Player):
+	explore(which_player)
+	tile_entered.emit(self, which_player)
 	pass
 	
-func exit(which_character:Character):
-	tile_exited.emit(self, which_character)
+func exit(which_player:Player):
+	tile_exited.emit(self, which_player)
 	pass
 	
 func _set_random_explore_value():
