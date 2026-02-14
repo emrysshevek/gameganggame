@@ -1,68 +1,65 @@
 class_name tile extends Node2D
 
-signal tile_revealed(which_tile)
-signal tile_explored(which_tile)
-signal tile_entered(which_tile)
-signal tile_exited(which_tile)
+#region signals
+signal tile_revealed(which_tile, which_player)
+signal tile_explored(which_tile, which_player)
+signal tile_entered(which_tile, which_player)
+signal tile_exited(which_tile, which_player)
+#endregion
 
+#region properties
 var grid_coordinates:Vector2
-var explore_value:int
+var explore_value:String
 var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
-var path_lines:Dictionary
+var _path_lines:Dictionary
+var a_star_id:int #used by A* for identifying tile
+#endregion
 
+#region methods
 func _ready() -> void:
-		paths[grid_manager.directions.north] = null
-		paths[grid_manager.directions.east] = null
-		paths[grid_manager.directions.south] = null
-		paths[grid_manager.directions.west] = null
-		path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
-		path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
-		path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
-		path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
-		$Tile_Bkgd.self_modulate = Color("000000c0")
+		_path_lines[grid_manager.directions.north] = $Tile_Bkgd/North_Path
+		_path_lines[grid_manager.directions.east] = $Tile_Bkgd/East_Path
+		_path_lines[grid_manager.directions.south] = $Tile_Bkgd/South_Path
+		_path_lines[grid_manager.directions.west] = $Tile_Bkgd/West_Path
 		_set_random_explore_value()
 
-func is_reachable(): ##dummy
-	return false
+func set_coordinates(coords:Vector2):
+	grid_coordinates = coords
+	name = "Tile" + str(grid_coordinates)
 	
-func get_reachable_tiles(range:int): #dummy
-	#only works for range 0 currently
-	var return_array = []
-	for each_tile in paths:
-		if each_tile != null:
-			return_array.append(each_tile)
-	return return_array
-
-func get_distance(): #dummy
-	return 1
-
-func explore():
+func reset_to_hidden():
+	is_tile_explored = false
+	is_tile_revealed = false
+	$Tile_Bkgd.self_modulate = Color("000000c0")
+	
+func explore(which_player:Player):
 	if is_tile_revealed == false:
-		reveal()
+		reveal(which_player)
 	is_tile_explored = true
-	tile_explored.emit(self)
+	tile_explored.emit(self, which_player)
 	
-func reveal():
+func reveal(which_player:Player):
 	is_tile_revealed = true
-	tile_revealed.emit(self)
+	tile_revealed.emit(self, which_player)
 	$Tile_Bkgd.self_modulate = Color("ffffff")
-	for each_direction in grid_manager.directions:
-		if paths[each_direction] != null:
-			path_lines[each_direction].visible = true
+	for each_direction in [grid_manager.directions.north, grid_manager.directions.east, grid_manager.directions.south, grid_manager.directions.west]:
+		if paths.keys().has(each_direction):
+			_path_lines[each_direction].visible = true
 			
-func enter(): #dummy
-	tile_entered.emit(self)
+func enter(which_player:Player):
+	explore(which_player)
+	tile_entered.emit(self, which_player)
 	pass
 	
-func exit(): #dummy
-	tile_exited.emit(self)
+func exit(which_player:Player):
+	tile_exited.emit(self, which_player)
 	pass
 	
 func _set_random_explore_value():
-	var values_list = [ValueManager.CreatureValue.ADAPTABILITY, ValueManager.CreatureValue.BRAVERY, ValueManager.CreatureValue.CURIOSITY,ValueManager.CreatureValue.DEPENDABILITY, ValueManager.CreatureValue.EMPATHY]
-	explore_value = values_list.pick_random()
+	explore_value = ValueManager.value_names.pick_random()
 	
-func set_path_tile(direction:int, path_leads_to_tile:tile):
-	paths[direction] = path_leads_to_tile
+func set_path(direction:int, path_obj:path):
+	paths[direction] = path_obj
+#endregion
