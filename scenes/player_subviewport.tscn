@@ -6,6 +6,12 @@
 stretch = true
 script = ExtResource("1_u10n8")
 
+[node name="Background" type="ColorRect" parent="." unique_id=904722274]
+visible = false
+show_behind_parent = true
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
 [node name="PlayerSubViewport" type="SubViewport" parent="." unique_id=634398456]
 disable_3d = true
 handle_input_locally = false

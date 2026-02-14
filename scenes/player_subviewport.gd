@@ -24,4 +24,12 @@ func move_camera(coords:Vector2):
 func set_bounds(bounds:Vector2):
 	custom_minimum_size = bounds
 	size = bounds
+	
+func toggle_background():
+	$Background.visible = true
+	$Background.position = Vector2(-10,-10)
+	$Background.custom_minimum_size = custom_minimum_size + Vector2(20,20)
+	
+func set_fade(percent:float):
+	modulate.a = percent
 #endregion

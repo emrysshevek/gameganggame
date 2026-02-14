@@ -19,7 +19,7 @@ var _minimap_coord_2p:Vector2
 var _minimap_coord_4p:Vector2
 var _camera_limits:Dictionary[String,int]
 @onready var _testing_tile_size:Vector2 = Vector2(60,60)
-@onready var _player_viewport_size:Vector2 = Vector2(500,300)
+@onready var _player_viewport_size:Vector2 = Vector2(DisplayServer.window_get_size().x / 2,DisplayServer.window_get_size().y / 2)
 var number_of_players:int
 var character_sprites:Array
 #endregion
@@ -31,8 +31,9 @@ func _ready() -> void:
 	_viewport_organizer_vertical = $VertViewportOrganizer
 	_viewport_organizer_top_horizontal = $VertViewportOrganizer/TopHorViewportOrganizer
 	_viewport_organizer_bottom_horizontal = $VertViewportOrganizer/BotHorViewportOrganizer
+	#_viewport_organizer_vertical.custom_minimum_size = DisplayServer.window_get_size()
 	_camera_limits["Left"] = 0
-	_camera_limits["Top"] = -1 * (grid_man.map_height * _testing_tile_size.y)
+	_camera_limits["Top"] = 0
 	_camera_limits["Right"] = (grid_man.map_width * _testing_tile_size.x)
 	_camera_limits["Bottom"] = (grid_man.map_height * _testing_tile_size.y)
 	_minimap_size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
@@ -43,7 +44,7 @@ func _ready() -> void:
 	setup_player_testing()
 
 func setup_viewports(players:Array):
-	number_of_players = 3
+	number_of_players = 4
 	#1 player drawing minimap off side
 	#2 players drawing minimap off side
 	#3 minimap sizing + placement
@@ -54,6 +55,8 @@ func setup_viewports(players:Array):
 	minimap_viewport.set_viewport_world(_world)
 	minimap_viewport.set_bounds(_minimap_size)
 	minimap_viewport.set_zoom(_minimap_zoom)
+	minimap_viewport.toggle_background()
+	minimap_viewport.set_fade(0.7)
 	var minimap_camera_center_position = Vector2((grid_man.map_width * _testing_tile_size.x) / 2, ( (grid_man.map_height * _testing_tile_size.y)) / 2)
 	minimap_viewport.move_camera(minimap_camera_center_position)
 	_player_sub_viewports[viewport_names.minimap] = minimap_viewport
@@ -109,7 +112,7 @@ func setup_viewports(players:Array):
 func setup_player_testing():
 	var grid_man_origin = grid_man.global_position
 	var player_viewport_names = [viewport_names.p1, viewport_names.p2, viewport_names.p3, viewport_names.p4]
-	var test_player_coords:Array = [Vector2(1,1), Vector2(15,5), Vector2(6,14), Vector2(12,18)]
+	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
 	var tile_size = _testing_tile_size
 	for each_player in number_of_players:
 		grid_man.testing_map_distance_algorithm(Vector2(test_player_coords[each_player]),3,0)

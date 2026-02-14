@@ -23,15 +23,19 @@ render_target_update_mode = 4
 [node name="VertViewportOrganizer" type="VBoxContainer" parent="." unique_id=118837462]
 offset_right = 1153.0
 offset_bottom = 653.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
 [node name="TopHorViewportOrganizer" type="HBoxContainer" parent="VertViewportOrganizer" unique_id=1359933730]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 alignment = 1
 
 [node name="BotHorViewportOrganizer" type="HBoxContainer" parent="VertViewportOrganizer" unique_id=1891703897]
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 alignment = 1
