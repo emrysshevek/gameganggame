@@ -3,6 +3,13 @@
 [ext_resource type="Script" uid="uid://dv4h7scl85k7d" path="res://scenes/player_subviewport.gd" id="1_u10n8"]
 
 [node name="PlayerSubViewportContainer" type="SubViewportContainer" unique_id=456104485]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 stretch = true
 script = ExtResource("1_u10n8")
 
@@ -15,7 +22,7 @@ color = Color(0, 0, 0, 1)
 [node name="PlayerSubViewport" type="SubViewport" parent="." unique_id=634398456]
 disable_3d = true
 handle_input_locally = false
-size = Vector2i(2, 2)
+size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="PlayerCamera" type="Camera2D" parent="PlayerSubViewport" unique_id=861333128]

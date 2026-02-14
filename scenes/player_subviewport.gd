@@ -26,7 +26,7 @@ func set_bounds(bounds:Vector2):
 	size = bounds
 	
 func toggle_background():
-	$Background.visible = true
+	$Background.visible = !$Background.visible
 	$Background.position = Vector2(-10,-10)
 	$Background.custom_minimum_size = custom_minimum_size + Vector2(20,20)
 	

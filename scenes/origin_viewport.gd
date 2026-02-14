@@ -19,7 +19,7 @@ var _minimap_coord_2p:Vector2
 var _minimap_coord_4p:Vector2
 var _camera_limits:Dictionary[String,int]
 @onready var _testing_tile_size:Vector2 = Vector2(60,60)
-@onready var _player_viewport_size:Vector2 = Vector2(DisplayServer.window_get_size().x / 2,DisplayServer.window_get_size().y / 2)
+@onready var _player_viewport_size:Vector2# = Vector2(100,100)#Vector2(DisplayServer.window_get_size().x / 2,DisplayServer.window_get_size().y / 2)
 var number_of_players:int
 var character_sprites:Array
 #endregion
@@ -37,14 +37,14 @@ func _ready() -> void:
 	_camera_limits["Right"] = (grid_man.map_width * _testing_tile_size.x)
 	_camera_limits["Bottom"] = (grid_man.map_height * _testing_tile_size.y)
 	_minimap_size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
-	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, 0)
-	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
+	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
+	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	setup_viewports([0,1,2,3])
 	setup_player_testing()
 
 func setup_viewports(players:Array):
-	number_of_players = 4
+	number_of_players = 2
 	#1 player drawing minimap off side
 	#2 players drawing minimap off side
 	#3 minimap sizing + placement
@@ -85,6 +85,7 @@ func setup_viewports(players:Array):
 		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p2])
 		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p3])
 		_player_sub_viewports[viewport_names.minimap].reparent(_viewport_organizer_top_horizontal)
+		_player_sub_viewports[viewport_names.minimap].toggle_background()
 		#_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.minimap])
 	elif number_of_players == 4:
 		_viewport_organizer_top_horizontal.visible = true
@@ -99,7 +100,7 @@ func setup_viewports(players:Array):
 		assert(false)
 	#making camera/viewport changes after they're in the scene
 	for each_num in number_of_players:
-		_player_sub_viewports[player_viewport_names[each_num]].set_bounds(_player_viewport_size)
+		#_player_sub_viewports[player_viewport_names[each_num]].set_bounds(_player_viewport_size)
 		_player_sub_viewports[player_viewport_names[each_num]].set_viewport_world(_world)
 		_player_sub_viewports[player_viewport_names[each_num]].set_zoom(_player_view_zoom)
 		_player_sub_viewports[player_viewport_names[each_num]].set_camera_limits(_camera_limits["Left"], _camera_limits["Top"], _camera_limits["Right"], _camera_limits["Bottom"])
