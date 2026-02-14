@@ -53,9 +53,9 @@ func is_action_pressed(action: StringName) -> bool:
 #endregion
 
 
-#region Helpers
+#region Utilities
 ## Flattens the output of Input.get_vector to the nearest cardinal direction.
-## If no current input, will return Direction.None
+## If no current input, will return Direction.None.
 func get_direction() -> Model.Direction:
 	var input = get_vector()
 	if input.x == 0 and input.y == 0:

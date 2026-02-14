@@ -17,6 +17,9 @@ var _controller_events = [
 
 ## Format string to create per-player actions.
 var _custom_action_format = '%s_%d'
+
+## Array to track which players have been allocated.
+var _player_is_active = [false, false, false, false]
 #endregion
 
 
@@ -43,8 +46,15 @@ func _ready() -> void:
 
 
 #region Utilities
-func get_controller_manager(player_id: int) -> PlayerInputManager:
-	return PlayerInputManager.new(player_id)
+func get_controller_manager() -> PlayerInputManager:
+	for i in range(Config.MAX_PLAYER_COUNT):
+		if not _player_is_active[i]:
+			_player_is_active[i] = true
+			return PlayerInputManager.new(i)
+
+	## We should never hit this code, crash the game (since this is a prototype)
+	assert(false)
+	return PlayerInputManager.new(-1)
 
 func adapt_action(action: StringName, player_id: int) -> StringName:
 	return _custom_action_format % [action, player_id]

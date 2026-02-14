@@ -2,11 +2,8 @@ class_name InputTest
 extends ColorRect
 
 
-@export
-var player_id := -1
-
 @onready
-var _input_manager: PlayerInputManager = InputManager.get_controller_manager(player_id)
+var _input_manager: PlayerInputManager = InputManager.get_controller_manager()
 
 
 func _physics_process(_delta: float) -> void:
