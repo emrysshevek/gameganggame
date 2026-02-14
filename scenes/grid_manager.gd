@@ -91,14 +91,17 @@ func generate_map(level:int):
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 
-func is_reachable(floor:int, from_tile:Tile, to_tile:Tile): ##dummy
-	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile, to_tile, false)
+func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
+	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
+	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	if path_between_points.is_empty() == true:
 		return false
 	else:
 		return true
 	
-func get_reachable_tiles(level:int, starting_tile:Tile, range:int): #dummy
+func get_reachable_tiles(level:int, starting_tile_coords:Vector2, range:int):
+	var starting_tile = floor_maps[level][starting_tile_coords.x][starting_tile_coords.y]
 	#get all tiles within range 1 of starting Tile, add them to checking_tiles
 	if range <= 0 || range >= map_width || range >= map_height:
 		#eventually change this to just filter the input to a valid max or min value
@@ -133,9 +136,26 @@ func get_reachable_tiles(level:int, starting_tile:Tile, range:int): #dummy
 	return_array.append(starting_tile)
 	return return_array
 
-func get_distance(floor:int, from_tile:Tile, to_tile:Tile):
-	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile, to_tile, false)
+func get_distance(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
+	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
+	#returns distance required to move between the tiles, not as the crow flies
+	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	return path_between_points.size()
+		
+func is_directly_connected(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
+	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
+	var point_connections = _a_star_floor_map[floor].get_point_connections(from_tile.a_star_id)
+	print(str(point_connections))
+	if point_connections.has(to_tile.a_star_id):
+		return true
+	else:
+		return false
+
+func _on_character_moved(character_id:int, new_tile_position:Vector2):
+	var testing_player = Player.new()
+	floor_maps[level][new_tile_position.x][new_tile_position.y].explore(testing_player)
 		
 #region testing functions
 func reveal_full_map():
@@ -143,7 +163,7 @@ func reveal_full_map():
 		each_tile.reveal(null)
 		
 func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
-	var reached_tiles = get_reachable_tiles(level, floor_maps[level][starting_tile_coords.x][starting_tile_coords.y], range)
+	var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
 	for each_tile in reached_tiles:
 		each_tile.reveal(null)
 #endregion

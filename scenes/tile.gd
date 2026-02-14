@@ -15,6 +15,7 @@ var is_tile_revealed:bool = false
 var paths:Dictionary
 var _path_lines:Dictionary
 var a_star_id:int #used by A* for identifying tile
+var tile_size:Vector2
 #endregion
 
 #region methods

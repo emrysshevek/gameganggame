@@ -32,10 +32,12 @@ func _ready() -> void:
 	_viewport_organizer_top_horizontal = $VertViewportOrganizer/TopHorViewportOrganizer
 	_viewport_organizer_bottom_horizontal = $VertViewportOrganizer/BotHorViewportOrganizer
 	#_viewport_organizer_vertical.custom_minimum_size = DisplayServer.window_get_size()
+	#setting up camera limits so that they aren't able to move too far out of the game area
 	_camera_limits["Left"] = 0
 	_camera_limits["Top"] = 0
 	_camera_limits["Right"] = (grid_man.map_width * _testing_tile_size.x)
 	_camera_limits["Bottom"] = (grid_man.map_height * _testing_tile_size.y)
+	#minimap placement and size configuration
 	_minimap_size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
 	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
 	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
@@ -44,11 +46,7 @@ func _ready() -> void:
 	setup_player_testing()
 
 func setup_viewports(players:Array):
-	number_of_players = 2
-	#1 player drawing minimap off side
-	#2 players drawing minimap off side
-	#3 minimap sizing + placement
-	#viewport_containers[viewport_names.origin].size = Vector2(((grid_man.map_width * _testing_tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _testing_tile_size.y) * _minimap_zoom.y))
+	number_of_players = 4 #testing for easy config of # of players
 	#setting up the minimap viewport
 	var minimap_viewport = player_viewport.instantiate()
 	add_child(minimap_viewport)
@@ -69,6 +67,7 @@ func setup_viewports(players:Array):
 		new_character_sprite.set_sprite()
 		grid_man.add_child(new_character_sprite)
 		character_sprites.append(new_character_sprite)
+	##configuration of containers and viewports based on number of players
 	if number_of_players == 1:
 		_viewport_organizer_vertical.add_child(_player_sub_viewports[viewport_names.p1])
 		_player_sub_viewports[viewport_names.minimap].global_position = _minimap_coord_1p
@@ -85,8 +84,8 @@ func setup_viewports(players:Array):
 		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p2])
 		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p3])
 		_player_sub_viewports[viewport_names.minimap].reparent(_viewport_organizer_top_horizontal)
+		#toggling background off for minimap as it will be one of the four screen tiles with 3 players
 		_player_sub_viewports[viewport_names.minimap].toggle_background()
-		#_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.minimap])
 	elif number_of_players == 4:
 		_viewport_organizer_top_horizontal.visible = true
 		_viewport_organizer_bottom_horizontal.visible = true
@@ -100,15 +99,25 @@ func setup_viewports(players:Array):
 		assert(false)
 	#making camera/viewport changes after they're in the scene
 	for each_num in number_of_players:
-		#_player_sub_viewports[player_viewport_names[each_num]].set_bounds(_player_viewport_size)
 		_player_sub_viewports[player_viewport_names[each_num]].set_viewport_world(_world)
 		_player_sub_viewports[player_viewport_names[each_num]].set_zoom(_player_view_zoom)
 		_player_sub_viewports[player_viewport_names[each_num]].set_camera_limits(_camera_limits["Left"], _camera_limits["Top"], _camera_limits["Right"], _camera_limits["Bottom"])
-	#_viewport_organizer_vertical.reset_size()
-	#_viewport_organizer_top_horizontal.reset_size()
-	#_viewport_organizer_bottom_horizontal.reset_size()
 		
 #region testing methods
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_released("move_up"):
+		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y - 1)) == true:
+			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y - 1), Vector2(0,-1 * _testing_tile_size.y))
+	elif Input.is_action_just_released("move_right"):
+		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x + 1, character_sprites[0].grid_coordinates.y)) == true:
+			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x + 1, character_sprites[0].grid_coordinates.y), Vector2(_testing_tile_size.x, 0))
+	elif Input.is_action_just_released("move_down"):
+		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y + 1)) == true:
+			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y + 1), Vector2(0,_testing_tile_size.y))
+	elif Input.is_action_just_released("move_left"):
+		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x - 1, character_sprites[0].grid_coordinates.y)) == true:
+			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x - 1, character_sprites[0].grid_coordinates.y), Vector2(_testing_tile_size.x * -1, 0))
 
 func setup_player_testing():
 	var grid_man_origin = grid_man.global_position
@@ -117,9 +126,11 @@ func setup_player_testing():
 	var tile_size = _testing_tile_size
 	for each_player in number_of_players:
 		grid_man.testing_map_distance_algorithm(Vector2(test_player_coords[each_player]),3,0)
+		character_sprites[each_player].grid_coordinates = test_player_coords[each_player]
 		_player_sub_viewports[player_viewport_names[each_player]].visible = true
 		character_sprites[each_player].set_visual_position(Vector2(test_player_coords[each_player].x * tile_size.x, test_player_coords[each_player].y * tile_size.y))
 		_player_sub_viewports[player_viewport_names[each_player]].move_camera(grid_man_origin + Vector2(test_player_coords[each_player].x * tile_size.x, test_player_coords[each_player].y * tile_size.y))
+		character_sprites[each_player].moved.connect(grid_man._on_character_moved)
 #endregion
 		
 #endregion
