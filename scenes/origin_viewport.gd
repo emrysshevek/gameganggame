@@ -109,15 +109,19 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_released("move_up"):
 		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y - 1)) == true:
 			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y - 1), Vector2(0,-1 * _testing_tile_size.y))
+			_player_sub_viewports[viewport_names.p1].move_camera(Vector2(character_sprites[0].grid_coordinates.x * _testing_tile_size.x, character_sprites[0].grid_coordinates.y * _testing_tile_size.y))
 	elif Input.is_action_just_released("move_right"):
 		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x + 1, character_sprites[0].grid_coordinates.y)) == true:
 			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x + 1, character_sprites[0].grid_coordinates.y), Vector2(_testing_tile_size.x, 0))
+			_player_sub_viewports[viewport_names.p1].move_camera(Vector2(character_sprites[0].grid_coordinates.x * _testing_tile_size.x, character_sprites[0].grid_coordinates.y * _testing_tile_size.y))
 	elif Input.is_action_just_released("move_down"):
 		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y + 1)) == true:
 			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x, character_sprites[0].grid_coordinates.y + 1), Vector2(0,_testing_tile_size.y))
+			_player_sub_viewports[viewport_names.p1].move_camera(Vector2(character_sprites[0].grid_coordinates.x * _testing_tile_size.x, character_sprites[0].grid_coordinates.y * _testing_tile_size.y))
 	elif Input.is_action_just_released("move_left"):
 		if grid_man.is_directly_connected(0, character_sprites[0].grid_coordinates, Vector2(character_sprites[0].grid_coordinates.x - 1, character_sprites[0].grid_coordinates.y)) == true:
 			character_sprites[0].move(Vector2(character_sprites[0].grid_coordinates.x - 1, character_sprites[0].grid_coordinates.y), Vector2(_testing_tile_size.x * -1, 0))
+			_player_sub_viewports[viewport_names.p1].move_camera(Vector2(character_sprites[0].grid_coordinates.x * _testing_tile_size.x, character_sprites[0].grid_coordinates.y * _testing_tile_size.y))
 
 func setup_player_testing():
 	var grid_man_origin = grid_man.global_position
