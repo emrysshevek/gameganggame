@@ -26,4 +26,5 @@ size = Vector2i(1152, 648)
 render_target_update_mode = 4
 
 [node name="PlayerCamera" type="Camera2D" parent="PlayerSubViewport" unique_id=861333128]
+position_smoothing_enabled = true
 editor_draw_limits = true
