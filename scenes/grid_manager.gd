@@ -147,12 +147,25 @@ func is_directly_connected(floor:int, from_tile_coords:Vector2, to_tile_coords:V
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
 	var point_connections = _a_star_floor_map[floor].get_point_connections(from_tile.a_star_id)
-	print(str(point_connections))
+	#print(str(point_connections))
 	if point_connections.has(to_tile.a_star_id):
 		return true
 	else:
 		return false
 
+func check_in_bounds(position_to_check:Vector2):
+	#checks and fixes any attempts to get a position on the grid that is not valid/out of bounds
+	var return_position:Vector2 = position_to_check
+	if position_to_check.x < 0:
+		return_position.x = 0
+	if position_to_check.x > (map_width - 1):
+		return_position.x = map_width - 1
+	if return_position.y < 0:
+		return_position.y = 0
+	if position_to_check.y > (map_height - 1):
+		return_position.y = map_height - 1
+	return return_position
+		
 func _on_character_moved(character_id:int, new_tile_position:Vector2):
 	var testing_player = Player.new()
 	floor_maps[level][new_tile_position.x][new_tile_position.y].explore(testing_player)
