@@ -15,6 +15,7 @@ var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors
 var level:int = 0 #dummy
 var map_width:int = 20
 var map_height:int = 20
+@onready var tile_size:Vector2 = Vector2(64,64)
 #endregion
 
 #region methods
@@ -43,7 +44,7 @@ func _ready() -> void:
 			#
 			#testing visibility
 			new_tile.set_coordinates(Vector2(x,y))
-			new_tile.position = Vector2(x * 60, y * 60)
+			new_tile.position = Vector2(x * 64, y * 64)
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
