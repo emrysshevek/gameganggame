@@ -63,4 +63,10 @@ func _set_random_explore_value():
 	
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
+	
+func set_highlight(on:bool):
+	if on == true:
+		$Tile_Bkgd.self_modulate = Color("#db9718")
+	else:
+		$Tile_Bkgd.self_modulate = Color("ffffff")
 #endregion

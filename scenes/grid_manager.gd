@@ -153,18 +153,25 @@ func is_directly_connected(floor:int, from_tile_coords:Vector2, to_tile_coords:V
 	else:
 		return false
 
-func check_in_bounds(position_to_check:Vector2):
-	#checks and fixes any attempts to get a position on the grid that is not valid/out of bounds
-	var return_position:Vector2 = position_to_check
+func is_in_bounds(position_to_check:Vector2):
+	#checks if position is in bounds for the grid
 	if position_to_check.x < 0:
-		return_position.x = 0
+		return false
 	if position_to_check.x > (map_width - 1):
-		return_position.x = map_width - 1
-	if return_position.y < 0:
-		return_position.y = 0
+		return false
+	if position_to_check.y < 0:
+		return false
 	if position_to_check.y > (map_height - 1):
-		return_position.y = map_height - 1
-	return return_position
+		return false
+	return true
+		
+func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unrevealed:bool):
+	for each_tile in tiles:
+		if include_unrevealed == false:
+			if each_tile.is_tile_revealed == true:
+				each_tile.set_highlight(highlight_on)
+		else:
+			each_tile.set_highlight(highlight_on)
 		
 func _on_character_moved(character_id:int, new_tile_position:Vector2):
 	var testing_player = Player.new()
