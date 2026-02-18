@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://0fcgjmn4sw4a"]
+
+[ext_resource type="Script" uid="uid://d4aab2bq15kxj" path="res://entities/grid_sprite.gd" id="1_phhpt"]
+
+[node name="GridSprite" type="Sprite2D" unique_id=1586050464]
+centered = false
+script = ExtResource("1_phhpt")

@@ -15,6 +15,7 @@ var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors
 var level:int = 0 #dummy
 var map_width:int = 20
 var map_height:int = 20
+@onready var tile_size:Vector2 = Vector2(64,64)
 #endregion
 
 #region methods
@@ -43,7 +44,7 @@ func _ready() -> void:
 			#
 			#testing visibility
 			new_tile.set_coordinates(Vector2(x,y))
-			new_tile.position = Vector2(x * 60, y * 60)
+			new_tile.position = Vector2(x * 64, y * 64)
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
@@ -147,12 +148,32 @@ func is_directly_connected(floor:int, from_tile_coords:Vector2, to_tile_coords:V
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
 	var point_connections = _a_star_floor_map[floor].get_point_connections(from_tile.a_star_id)
-	print(str(point_connections))
+	#print(str(point_connections))
 	if point_connections.has(to_tile.a_star_id):
 		return true
 	else:
 		return false
 
+func is_in_bounds(position_to_check:Vector2):
+	#checks if position is in bounds for the grid
+	if position_to_check.x < 0:
+		return false
+	if position_to_check.x > (map_width - 1):
+		return false
+	if position_to_check.y < 0:
+		return false
+	if position_to_check.y > (map_height - 1):
+		return false
+	return true
+		
+func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unrevealed:bool):
+	for each_tile in tiles:
+		if include_unrevealed == false:
+			if each_tile.is_tile_revealed == true:
+				each_tile.set_highlight(highlight_on)
+		else:
+			each_tile.set_highlight(highlight_on)
+		
 func _on_character_moved(character_id:int, new_tile_position:Vector2):
 	var testing_player = Player.new()
 	floor_maps[level][new_tile_position.x][new_tile_position.y].explore(testing_player)

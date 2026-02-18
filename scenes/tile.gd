@@ -14,8 +14,11 @@ var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
 var _path_lines:Dictionary
+var _path_lines_minimap:Dictionary
 var a_star_id:int #used by A* for identifying tile
 var tile_size:Vector2
+@onready var _tile_bkd:Sprite2D = $Tile_Bkgd
+var _revealed_texture:Resource
 #endregion
 
 #region methods
@@ -24,7 +27,13 @@ func _ready() -> void:
 		_path_lines[GridManager.directions.east] = $Tile_Bkgd/East_Path
 		_path_lines[GridManager.directions.south] = $Tile_Bkgd/South_Path
 		_path_lines[GridManager.directions.west] = $Tile_Bkgd/West_Path
+		_path_lines_minimap[GridManager.directions.north] = $Tile_Bkgd/North_Path_minimap
+		_path_lines_minimap[GridManager.directions.east] = $Tile_Bkgd/East_Path_minimap
+		_path_lines_minimap[GridManager.directions.south] = $Tile_Bkgd/South_Path_minimap
+		_path_lines_minimap[GridManager.directions.west] = $Tile_Bkgd/West_Path_minimap
 		_set_random_explore_value()
+		#setting default texture for testing
+		set_revealed_texture(load("res://art/revealed_test_tile.png"))
 
 func set_coordinates(coords:Vector2):
 	grid_coordinates = coords
@@ -33,7 +42,8 @@ func set_coordinates(coords:Vector2):
 func reset_to_hidden():
 	is_tile_explored = false
 	is_tile_revealed = false
-	$Tile_Bkgd.self_modulate = Color("000000c0")
+	_tile_bkd.texture = load("res://art/unrevealed_tile.png")
+	#_tile_bkd.self_modulate = Color("000000c0")
 	
 func explore(which_player:Player):
 	if is_tile_revealed == false:
@@ -44,10 +54,12 @@ func explore(which_player:Player):
 func reveal(which_player:Player):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
-	$Tile_Bkgd.self_modulate = Color("ffffff")
+	_tile_bkd.texture = _revealed_texture
+	_tile_bkd.self_modulate = Color("ffffff")
 	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
+			_path_lines_minimap[each_direction].visible = true
 			
 func enter(which_player:Player):
 	explore(which_player)
@@ -63,4 +75,13 @@ func _set_random_explore_value():
 	
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
+	
+func set_highlight(on:bool):
+	if on == true:
+		_tile_bkd.self_modulate = Color("#db9718")
+	else:
+		_tile_bkd.self_modulate = Color("ffffff")
+		
+func set_revealed_texture(texture_resource:Resource):
+	_revealed_texture = texture_resource
 #endregion

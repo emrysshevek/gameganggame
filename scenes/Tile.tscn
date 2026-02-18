@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://dw0fkomkoklma"]
+
+[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_vhibn"]
+[ext_resource type="Texture2D" uid="uid://cikbsxsog7ku5" path="res://art/test_tile.png" id="2_r3gf4"]
+
+[node name="Tile" type="Node2D" unique_id=477134848]
+script = ExtResource("1_vhibn")
+
+[node name="Tile_Bkgd" type="Sprite2D" parent="." unique_id=107649264]
+texture = ExtResource("2_r3gf4")
+centered = false
+
+[node name="North_Path" type="Line2D" parent="Tile_Bkgd" unique_id=1296578233]
+visible = false
+position = Vector2(-33, -33.509434)
+scale = Vector2(1, 1.1320754)
+points = PackedVector2Array(65, 62, 65, 29)
+width = 20.0
+default_color = Color(0.43529412, 0.43529412, 0.43529412, 1)
+
+[node name="South_Path" type="Line2D" parent="Tile_Bkgd" unique_id=169237817]
+visible = false
+position = Vector2(-32, 12.142857)
+scale = Vector2(1, 0.5714286)
+points = PackedVector2Array(64, 29, 64, 93)
+width = 20.0
+default_color = Color(0.43529412, 0.43529412, 0.43529412, 1)
+
+[node name="West_Path" type="Line2D" parent="Tile_Bkgd" unique_id=993803757]
+visible = false
+position = Vector2(-4.594282, -28)
+scale = Vector2(0.6212571, 1)
+points = PackedVector2Array(65, 60, 6.1276608, 60)
+width = 20.0
+default_color = Color(0.43529412, 0.43529412, 0.43529412, 1)
+
+[node name="East_Path" type="Line2D" parent="Tile_Bkgd" unique_id=783189110]
+visible = false
+position = Vector2(-11.687505, -28)
+scale = Vector2(0.6125001, 1)
+points = PackedVector2Array(65, 60, 125, 60)
+width = 20.0
+default_color = Color(0.43529412, 0.43529412, 0.43529412, 1)
+
+[node name="North_Path_minimap" type="Line2D" parent="Tile_Bkgd" unique_id=1363639037]
+visible = false
+visibility_layer = 2
+position = Vector2(-33, -33.509434)
+scale = Vector2(1, 1.1320754)
+points = PackedVector2Array(65, 62, 65, 29)
+width = 20.0
+default_color = Color(0.5254902, 0.6862745, 0.9882353, 1)
+
+[node name="South_Path_minimap" type="Line2D" parent="Tile_Bkgd" unique_id=523053381]
+visible = false
+visibility_layer = 2
+position = Vector2(-32, 12.142857)
+scale = Vector2(1, 0.5714286)
+points = PackedVector2Array(64, 29, 64, 93)
+width = 20.0
+default_color = Color(0.5254902, 0.6862745, 0.9882353, 1)
+
+[node name="West_Path_minimap" type="Line2D" parent="Tile_Bkgd" unique_id=1635992741]
+visible = false
+visibility_layer = 2
+position = Vector2(-4.594282, -28)
+scale = Vector2(0.6212571, 1)
+points = PackedVector2Array(65, 60, 6.1276608, 60)
+width = 20.0
+default_color = Color(0.5254902, 0.6862745, 0.9882353, 1)
+
+[node name="East_Path_minimap" type="Line2D" parent="Tile_Bkgd" unique_id=1013367297]
+visible = false
+visibility_layer = 2
+position = Vector2(-11.687505, -28)
+scale = Vector2(0.6125001, 1)
+points = PackedVector2Array(65, 60, 125, 60)
+width = 20.0
+default_color = Color(0.5254902, 0.6862745, 0.9882353, 1)
