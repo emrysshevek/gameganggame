@@ -13,5 +13,6 @@ func move(new_grid_position:Vector2, relative_change:Vector2):
 	#concerned about this shadowing same method from grid_sprite?
 	grid_coordinates = new_grid_position
 	position += relative_change
+	move_remote_camera(position)
 	moved.emit(character_id, new_grid_position)
 #endregion

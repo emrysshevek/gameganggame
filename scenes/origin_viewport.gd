@@ -137,25 +137,21 @@ func _handle_input(player_id: int):
 		if _input_managers[player_id].is_action_just_released("move_up"):
 			if grid_man.is_directly_connected(0, character_sprites[player_id].grid_coordinates, Vector2(character_sprites[player_id].grid_coordinates.x, character_sprites[player_id].grid_coordinates.y - 1)) == true:
 				character_sprites[player_id].move(Vector2(character_sprites[player_id].grid_coordinates.x, character_sprites[player_id].grid_coordinates.y - 1), Vector2(0,-1 * _tile_size.y))
-				_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
 		elif _input_managers[player_id].is_action_just_released("move_right"):
 			if grid_man.is_directly_connected(0, character_sprites[player_id].grid_coordinates, Vector2(character_sprites[player_id].grid_coordinates.x + 1, character_sprites[player_id].grid_coordinates.y)) == true:
 				character_sprites[player_id].move(Vector2(character_sprites[player_id].grid_coordinates.x + 1, character_sprites[player_id].grid_coordinates.y), Vector2(_tile_size.x, 0))
-				_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
 		elif _input_managers[player_id].is_action_just_released("move_down"):
 			if grid_man.is_directly_connected(0, character_sprites[player_id].grid_coordinates, Vector2(character_sprites[player_id].grid_coordinates.x, character_sprites[player_id].grid_coordinates.y + 1)) == true:
 				character_sprites[player_id].move(Vector2(character_sprites[player_id].grid_coordinates.x, character_sprites[player_id].grid_coordinates.y + 1), Vector2(0,_tile_size.y))
-				_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
 		elif _input_managers[player_id].is_action_just_released("move_left"):
 			if grid_man.is_directly_connected(0, character_sprites[player_id].grid_coordinates, Vector2(character_sprites[player_id].grid_coordinates.x - 1, character_sprites[player_id].grid_coordinates.y)) == true:
 				character_sprites[player_id].move(Vector2(character_sprites[player_id].grid_coordinates.x - 1, character_sprites[player_id].grid_coordinates.y), Vector2(_tile_size.x * -1, 0))
-				_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
-		elif _input_managers[player_id].is_action_just_released("debug_f"):
-			#testing switching to 'look around mode'
-			create_reticule(testing_player, character_sprites[player_id].grid_coordinates)
-		elif _input_managers[player_id].is_action_just_released("debug_v"):
-			create_reticule(testing_player, character_sprites[player_id].grid_coordinates)
-			grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), true, false)
+		#elif _input_managers[player_id].is_action_just_released("debug_f"):
+			##testing switching to 'look around mode'
+			#create_reticule(testing_player, character_sprites[player_id].grid_coordinates)
+		#elif _input_managers[player_id].is_action_just_released("debug_v"):
+			#create_reticule(testing_player, character_sprites[player_id].grid_coordinates)
+			#grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), true, false)
 	else: #if player is in reticule mode. only set up for p1 right now
 		if _input_managers[player_id].is_action_just_released("move_up"):
 			#check in bounds not currently doing anything here
@@ -174,12 +170,12 @@ func _handle_input(player_id: int):
 			if grid_man.is_in_bounds(player_reticules[testing_player].grid_coordinates - Vector2(1,0)):
 				player_reticules[testing_player].move(player_reticules[testing_player].grid_coordinates - Vector2(1,0), Vector2(-1 * _tile_size.x, 0))
 				_player_sub_viewports[player_id].move_camera(player_reticules[testing_player].grid_coordinates * _tile_size)
-		elif _input_managers[player_id].is_action_just_released("debug_f"):
-			#switching out of 'look around mode' back to character sprite control
-			grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), false, false)
-			player_reticules[testing_player].queue_free()
-			player_reticules.erase(testing_player)
-			_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
+		#elif _input_managers[player_id].is_action_just_released("debug_f"):
+			##switching out of 'look around mode' back to character sprite control
+			#grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), false, false)
+			#player_reticules[testing_player].queue_free()
+			#player_reticules.erase(testing_player)
+			#_player_sub_viewports[player_id].move_camera(Vector2(character_sprites[player_id].grid_coordinates.x * _tile_size.x, character_sprites[player_id].grid_coordinates.y * _tile_size.y))
 
 func setup_player_testing():
 	player_to_character_sprite[testing_player] = character_sprites[0]
@@ -191,7 +187,9 @@ func setup_player_testing():
 		character_sprites[each_player].grid_coordinates = test_player_coords[each_player]
 		_player_sub_viewports[player_viewport_names[each_player]].visible = true
 		character_sprites[each_player].set_visual_position(Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
-		_player_sub_viewports[player_viewport_names[each_player]].move_camera(grid_man_origin + Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
+		character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
+		#_player_sub_viewports[player_viewport_names[each_player]].move_camera(grid_man_origin + Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
+		#_player_sub_viewports[player_viewport_names[each_player]].set_remote_camera_transform(character_sprites[each_player])
 		character_sprites[each_player].moved.connect(grid_man._on_character_moved)
 		character_sprites[each_player].set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
 #endregion

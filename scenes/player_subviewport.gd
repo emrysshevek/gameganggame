@@ -35,5 +35,5 @@ func set_fade(percent:float):
 	
 func set_layers_visible(layers:Dictionary[int,bool]): #the layer # starts at 0 despite being 1-10 in the UI :V
 	for each_layer_key in layers.keys():
-		subviewport.set_canvas_cull_mask_bit(each_layer_key, layers[each_layer_key])
+		subviewport.set_canvas_cull_mask_bit(each_layer_key, layers[each_layer_key])	
 #endregion
