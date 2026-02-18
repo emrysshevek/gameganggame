@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://dw0fkomkoklma"]
 
-[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_3dk36"]
-[ext_resource type="Texture2D" uid="uid://cikbsxsog7ku5" path="res://art/test_tile.png" id="2_ywnoi"]
+[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_vhibn"]
+[ext_resource type="Texture2D" uid="uid://cikbsxsog7ku5" path="res://art/test_tile.png" id="2_r3gf4"]
 
 [node name="Tile" type="Node2D" unique_id=477134848]
-script = ExtResource("1_3dk36")
+script = ExtResource("1_vhibn")
 
 [node name="Tile_Bkgd" type="Sprite2D" parent="." unique_id=107649264]
-texture = ExtResource("2_ywnoi")
+texture = ExtResource("2_r3gf4")
 centered = false
 
 [node name="North_Path" type="Line2D" parent="Tile_Bkgd" unique_id=1296578233]
