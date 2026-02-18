@@ -175,18 +175,17 @@ func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unreveale
 			each_tile.set_highlight(highlight_on)
 		
 func _on_character_moved(character_id:int, new_tile_position:Vector2):
-	var testing_player = Player.new()
-	floor_maps[level][new_tile_position.x][new_tile_position.y].explore(testing_player)
+	floor_maps[level][new_tile_position.x][new_tile_position.y].explore(character_id)
 		
 #region testing functions
 func reveal_full_map():
 	for each_tile in _get_all_tiles(0):
-		each_tile.reveal(null)
+		each_tile.reveal(0)
 		
 func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
 	var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
 	for each_tile in reached_tiles:
-		each_tile.reveal(null)
+		each_tile.reveal(0)
 #endregion
 		
 func _import_pre_baked_map_section():

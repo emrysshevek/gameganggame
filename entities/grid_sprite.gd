@@ -22,9 +22,9 @@ func set_minimap_sprite(sprite_to_load:Resource, color_to_set:Color):
 	new_minimap_sprite.self_modulate = color_to_set
 	add_child(new_minimap_sprite)
 	
-func move(new_grid_position:Vector2, relative_change:Vector2):
+func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	grid_coordinates = new_grid_position
-	position += relative_change
+	position = new_screen_position
 	move_remote_camera(position)
 	
 func set_sprite_scale(new_scale:Vector2):
