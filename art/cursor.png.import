@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b4scp0f1cd2n"
-path="res://.godot/imported/reticule.png-c6c7220539efc5cc476f08e2380296fe.ctex"
+path="res://.godot/imported/cursor.png-b7f19d942bcbadc7c717629006b6394f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/reticule.png"
-dest_files=["res://.godot/imported/reticule.png-c6c7220539efc5cc476f08e2380296fe.ctex"]
+source_file="res://art/cursor.png"
+dest_files=["res://.godot/imported/cursor.png-b7f19d942bcbadc7c717629006b6394f.ctex"]
 
 [params]
 

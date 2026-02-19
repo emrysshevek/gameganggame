@@ -1,8 +1,15 @@
 class_name GridSprite extends Sprite2D
 
+enum sprite_types{character, ui}
+
+#region signals
+signal move_request(which_sprite, requested_position)
+#endregion
+
 #region properties
 var grid_coordinates:Vector2
 var _remote_camera_transform:RemoteTransform2D
+var type:sprite_types
 #endregion
 
 #region methods
@@ -47,4 +54,7 @@ func set_remote_camera_transform(following_camera:Camera2D):
 func move_remote_camera(new_position:Vector2):
 	if _remote_camera_transform != null:
 		_remote_camera_transform.global_position = new_position
+		
+func set_type(type_to_set:sprite_types):
+	type = type_to_set
 #endregion
