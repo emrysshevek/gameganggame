@@ -6,13 +6,14 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var character_sprite = preload("res://entities/character_sprite.tscn")
 @onready var player_viewport = preload("res://scenes/player_subviewport.tscn")
 @onready var grid_sprite = preload("res://entities/grid_sprite.tscn")
+@onready var cursor_sprite = preload("res://entities/cursor_sprite.tscn")
 var _player_sub_viewports:Dictionary[viewport_names, PlayerSubViewport]
 @onready var _world:World2D = $OriginViewportContainer/OriginViewport.find_world_2d()
 @onready var grid_man:GridManager = $OriginViewportContainer/OriginViewport/GridManager
 @onready var _origin_viewport:SubViewport = $OriginViewportContainer/OriginViewport
-var _viewport_organizer_vertical:VBoxContainer
-var _viewport_organizer_top_horizontal:HBoxContainer
-var _viewport_organizer_bottom_horizontal:HBoxContainer
+@onready var _viewport_organizer_vertical:VBoxContainer = $VertViewportOrganizer
+@onready var _viewport_organizer_top_horizontal:HBoxContainer = $VertViewportOrganizer/TopHorViewportOrganizer
+@onready var _viewport_organizer_bottom_horizontal:HBoxContainer = $VertViewportOrganizer/BotHorViewportOrganizer
 @onready var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
@@ -33,14 +34,8 @@ var _input_managers: Array[PlayerInputManager]
 #region methods
 func _ready() -> void:
 	_tile_size = grid_man.tile_size
-	#for i in range(Config.MAX_PLAYER_COUNT):
-		#_input_managers.append(InputManager.get_controller_manager())
 	#moving origin viewport container and its children out of the regular viewable screen space so it doesn't peek through
 	$OriginViewportContainer.position.y = -1 * (grid_man.map_height * _tile_size.y)
-	_viewport_organizer_vertical = $VertViewportOrganizer
-	_viewport_organizer_top_horizontal = $VertViewportOrganizer/TopHorViewportOrganizer
-	_viewport_organizer_bottom_horizontal = $VertViewportOrganizer/BotHorViewportOrganizer
-	#_viewport_organizer_vertical.custom_minimum_size = DisplayServer.window_get_size()
 	#setting up camera limits so that they aren't able to move too far out of the game area
 	_camera_limits["Left"] = 0
 	_camera_limits["Top"] = 0
@@ -120,8 +115,9 @@ func setup_viewports(players:Array):
 		_player_sub_viewports[player_viewport_names[each_num]].set_layers_visible(player_culling_dictionary)
 		
 func create_cursor(which_player_id:int, tile_position:Vector2):
-	var new_cursor:GridSprite = grid_sprite.instantiate()
+	var new_cursor:CursorSprite = cursor_sprite.instantiate()
 	#currently cursor breaks if its not a child of grid man, size and placement is all wrong
+	new_cursor.input_man = character_sprites[which_player_id].input_man
 	grid_man.add_child(new_cursor)
 	player_cursors[which_player_id] = new_cursor
 	new_cursor.set_sprite(load("res://art/cursor.png"))
@@ -129,6 +125,8 @@ func create_cursor(which_player_id:int, tile_position:Vector2):
 	new_cursor.set_visual_position(Vector2(character_sprites[0].grid_coordinates.x * _tile_size.x, character_sprites[0].grid_coordinates.y * _tile_size.y))
 	new_cursor.set_type(GridSprite.sprite_types.ui)
 	new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
+	new_cursor.move_request.connect(grid_man._on_grid_sprite_move_request)
+	return new_cursor
 				
 #region testing methods
 func _process(delta: float) -> void:
@@ -146,35 +144,9 @@ func _handle_input(player_id: int):
 				character_sprites[player_id].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[player_id]].camera)
 				character_sprites[player_id].fake_state_machine = "character"
 			else:
-				create_cursor(player_id, character_sprites[player_id].grid_coordinates)
+				create_cursor(player_id, character_sprites[player_id].grid_coordinates).fake_state_machine = "cursor"
 				character_sprites[player_id].fake_state_machine = "cursor"
-		elif _input_managers[player_id].is_action_just_released(Model.Action.DESELECT):
-			create_cursor(player_id, character_sprites[player_id].grid_coordinates)
-			grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), true, false)
-	#else: #if player is in cursor mode. only set up for p1 right now
-		#if _input_managers[player_id].is_action_just_released("move_up"):
-			#var move_attempt_result = move_grid_sprite(player_cursors[player_id], Vector2(player_cursors[player_id].grid_coordinates.x, player_cursors[player_id].grid_coordinates.y - 1), 0)
-			#if move_attempt_result != [Vector2(-INF,-INF), Vector2(-INF,-INF)]:
-				#player_cursors[player_id].move(move_attempt_result[0], move_attempt_result[1])
-		#elif _input_managers[player_id].is_action_just_released("move_right"):
-			#var move_attempt_result = move_grid_sprite(player_cursors[player_id], Vector2(player_cursors[player_id].grid_coordinates.x + 1, player_cursors[player_id].grid_coordinates.y), 0)
-			#if move_attempt_result != [Vector2(-INF,-INF), Vector2(-INF,-INF)]:
-				#player_cursors[player_id].move(move_attempt_result[0], move_attempt_result[1])
-		#elif _input_managers[player_id].is_action_just_released("move_down"):
-			#var move_attempt_result = move_grid_sprite(player_cursors[player_id], Vector2(player_cursors[player_id].grid_coordinates.x, player_cursors[player_id].grid_coordinates.y + 1), 0)
-			#if move_attempt_result != [Vector2(-INF,-INF), Vector2(-INF,-INF)]:
-				#player_cursors[player_id].move(move_attempt_result[0], move_attempt_result[1])
-		#elif _input_managers[player_id].is_action_just_released("move_left"):
-			#var move_attempt_result = move_grid_sprite(player_cursors[player_id], Vector2(player_cursors[player_id].grid_coordinates.x - 1, player_cursors[player_id].grid_coordinates.y), 0)
-			#if move_attempt_result != [Vector2(-INF,-INF), Vector2(-INF,-INF)]:
-				#player_cursors[player_id].move(move_attempt_result[0], move_attempt_result[1])
-		#elif _input_managers[player_id].is_action_just_released(Model.Action.TOGGLE_MAP):
-			###switching out of 'look around mode' back to character sprite control
-			#grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), false, false)
-			#player_cursors[player_id].queue_free()
-			#player_cursors.erase(player_id)
-			#character_sprites[player_id].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[player_id]].camera)
-
+		
 func setup_player_testing():
 	var grid_man_origin = grid_man.global_position
 	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
