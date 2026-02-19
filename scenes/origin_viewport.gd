@@ -156,8 +156,6 @@ func setup_player_testing():
 		_player_sub_viewports[player_viewport_names[each_player]].visible = true
 		character_sprites[each_player].set_visual_position(Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
 		character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
-		#_player_sub_viewports[player_viewport_names[each_player]].move_camera(grid_man_origin + Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
-		#_player_sub_viewports[player_viewport_names[each_player]].set_remote_camera_transform(character_sprites[each_player])
 		character_sprites[each_player].move_request.connect(grid_man._on_grid_sprite_move_request)
 		character_sprites[each_player].set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
 		character_sprites[each_player].set_type(GridSprite.sprite_types.character)
