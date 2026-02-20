@@ -45,13 +45,13 @@ func reset_to_hidden():
 	_tile_bkd.texture = load("res://art/unrevealed_tile.png")
 	#_tile_bkd.self_modulate = Color("000000c0")
 	
-func explore(which_player:Player):
+func explore(which_player:int):
 	if is_tile_revealed == false:
 		reveal(which_player)
 	is_tile_explored = true
 	tile_explored.emit(self, which_player)
 	
-func reveal(which_player:Player):
+func reveal(which_player:int):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
 	_tile_bkd.texture = _revealed_texture
@@ -61,12 +61,12 @@ func reveal(which_player:Player):
 			_path_lines[each_direction].visible = true
 			_path_lines_minimap[each_direction].visible = true
 			
-func enter(which_player:Player):
+func enter(which_player:int):
 	explore(which_player)
 	tile_entered.emit(self, which_player)
 	pass
 	
-func exit(which_player:Player):
+func exit(which_player:int):
 	tile_exited.emit(self, which_player)
 	pass
 	

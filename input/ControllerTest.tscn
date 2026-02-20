@@ -24,10 +24,18 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("1_mnpmb")
-player_id = 0
 
 [node name="ColorRect2" type="ColorRect" parent="HBoxContainer" unique_id=228418078]
 layout_mode = 2
 size_flags_horizontal = 3
 script = ExtResource("1_mnpmb")
-player_id = 1
+
+[node name="ColorRect3" type="ColorRect" parent="HBoxContainer" unique_id=29001289]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_mnpmb")
+
+[node name="ColorRect4" type="ColorRect" parent="HBoxContainer" unique_id=125050344]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("1_mnpmb")

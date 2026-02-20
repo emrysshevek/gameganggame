@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://b3nf60g5y7cep"]
+
+[ext_resource type="Script" uid="uid://d1x4f63taxlrg" path="res://entities/cursor_sprite.gd" id="1_r0hhp"]
+
+[node name="CursorSprite" type="Sprite2D" unique_id=1415716114]
+centered = false
+script = ExtResource("1_r0hhp")

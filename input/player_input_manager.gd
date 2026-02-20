@@ -50,6 +50,18 @@ func is_action_pressed(action: StringName) -> bool:
 	if not InputManager.focused:
 		return false
 	return Input.is_action_pressed(InputManager.adapt_action(action, _controller_id))
+
+func is_action_just_pressed(action: StringName) -> bool:
+	# Ignore inputs if the project isn't focused
+	if not InputManager.focused:
+		return false
+	return Input.is_action_just_pressed(InputManager.adapt_action(action, _controller_id))
+
+func is_action_just_released(action: StringName) -> bool:
+	# Ignore inputs if the project isn't focused
+	if not InputManager.focused:
+		return false
+	return Input.is_action_just_released(InputManager.adapt_action(action, _controller_id))
 #endregion
 
 

@@ -13,6 +13,8 @@ var _controller_events = [
 	Model.Action.MOVE_UP,
 	Model.Action.MOVE_DOWN,
 	Model.Action.SELECT,
+	Model.Action.DESELECT,
+	Model.Action.TOGGLE_MAP,
 ]
 
 ## Format string to create per-player actions.
