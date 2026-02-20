@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ddyypebo34d8o"]
 
 [ext_resource type="Script" uid="uid://dv4h7scl85k7d" path="res://scenes/player_subviewport.gd" id="1_u10n8"]
+[ext_resource type="PackedScene" uid="uid://ba3gjrvqdpach" path="res://cards/card_manager.tscn" id="2_gmw07"]
 
 [node name="PlayerSubViewportContainer" type="SubViewportContainer" unique_id=456104485]
 anchors_preset = 15
@@ -28,3 +29,9 @@ render_target_update_mode = 4
 [node name="PlayerCamera" type="Camera2D" parent="PlayerSubViewport" unique_id=861333128]
 position_smoothing_enabled = true
 editor_draw_limits = true
+
+[node name="Control" type="Control" parent="." unique_id=1948831325]
+layout_mode = 2
+
+[node name="CardManager" parent="Control" unique_id=810966713 instance=ExtResource("2_gmw07")]
+layout_mode = 1

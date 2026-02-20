@@ -8,6 +8,8 @@ extends Control
 @export var discard_pile: Pile
 @export var hand_pile: Pile
 @export var player: Player
+
+@onready var card_scene := preload("res://cards/card.tscn")
 #endregion
 
 
@@ -16,6 +18,17 @@ func _ready() -> void:
 	deck.card_added.connect(_on_deck_card_added)
 	for card in deck.cards:
 		card.clicked.connect(func(): _on_card_clicked(card))
+		
+func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("debug_up"):
+		var card: Card = card_scene.instantiate()
+		deck.add_card(card)
+	if Input.is_action_just_pressed("debug_v"):
+		deck.toggle_display()
+	if deck.count > 0 and Input.is_action_just_pressed("debug_down"):
+		var card: Card = deck.cards[0]
+		deck.remove_card(card)
+		card.queue_free()
 #endregion
 
 

@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://v4okg7cuyttm"]
+
+[ext_resource type="Script" uid="uid://o1a5lvw41j55" path="res://scenes/game_scene.gd" id="1_xy3my"]
+
+[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas")]
+script = ExtResource("1_xy3my")
+player_areas = [NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P1Area"), NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P2Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P3Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P4Area")]
+
+[node name="PlayerAreas" type="CanvasLayer" parent="." unique_id=563823957]
+
+[node name="Control" type="Control" parent="PlayerAreas" unique_id=1125842288]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PlayerAreas/Control" unique_id=607298520]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopRow" type="HBoxContainer" parent="PlayerAreas/Control/VBoxContainer" unique_id=1402372468]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="P1Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/TopRow" unique_id=611729678]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="P2Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/TopRow" unique_id=1541442579]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BotRow" type="HBoxContainer" parent="PlayerAreas/Control/VBoxContainer" unique_id=89953762]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="P3Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/BotRow" unique_id=95536555]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="P4Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/BotRow" unique_id=775614498]
+layout_mode = 2
+size_flags_horizontal = 3
