@@ -16,6 +16,7 @@ extends Control
 #region Built-ins
 func _ready() -> void:
 	deck.card_added.connect(_on_deck_card_added)
+	deck.card_removed.connect(_on_deck_card_removed)
 	for card in deck.cards:
 		card.clicked.connect(func(): _on_card_clicked(card))
 		
@@ -28,7 +29,7 @@ func _input(_event: InputEvent) -> void:
 	if deck.count > 0 and Input.is_action_just_pressed("debug_down"):
 		var card: Card = deck.cards[0]
 		deck.remove_card(card)
-		card.queue_free()
+		card.queue_free.call_deferred()
 #endregion
 
 

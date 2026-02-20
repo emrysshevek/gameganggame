@@ -92,7 +92,7 @@ func remove_card(_card: Card) -> void:
 func move(_global_position: Vector2, _size: Vector2) -> void:
 	global_position = _global_position
 	size = _size
-	_reposition()
+	_reposition.call_deferred()
 #endregion
 
 
