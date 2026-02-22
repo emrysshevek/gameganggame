@@ -26,7 +26,7 @@ var _player_viewport_size:Vector2 # = Vector2(100,100)#Vector2(DisplayServer.win
 @onready var player_to_character_sprite:Dictionary[Player, CharacterSprite]
 var player_cursors:Dictionary[int, Sprite2D]
 var number_of_players:int
-var character_sprites:Array
+var character_sprites:Array[CharacterSprite]
 var _input_managers: Array[PlayerInputManager]
 @onready var player_viewport_names = [viewport_names.p1, viewport_names.p2, viewport_names.p3, viewport_names.p4]
 #endregion
@@ -46,10 +46,10 @@ func _ready() -> void:
 	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
 	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	setup_viewports([0,1,2,3])
-	setup_player_testing()
+	setup_minimap()
+	#setup_player_testing()
 
-func setup_viewports(players:Array):
+func setup_minimap():
 	number_of_players = 4 #testing for easy config of # of players
 	#setting up the minimap viewport
 	var minimap_viewport = player_viewport.instantiate()
@@ -64,55 +64,30 @@ func setup_viewports(players:Array):
 	var minimap_camera_center_position = Vector2((grid_man.map_width * _tile_size.x) / 2, ( (grid_man.map_height * _tile_size.y)) / 2)
 	minimap_viewport.move_camera(minimap_camera_center_position)
 	_player_sub_viewports[viewport_names.minimap] = minimap_viewport
-	##adding viewports to the containers and making containers visible
-	var player_viewport_names = [viewport_names.p1, viewport_names.p2, viewport_names.p3, viewport_names.p4]
-	for each_num in number_of_players:
-		var new_player_viewport = player_viewport.instantiate()
-		_player_sub_viewports[player_viewport_names[each_num]] = new_player_viewport
-		var new_character_sprite = character_sprite.instantiate()
-		new_character_sprite.set_sprite(load("res://art/test_cat.png"))
-		new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
-		new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
-		_origin_viewport.add_child(new_character_sprite)
-		character_sprites.append(new_character_sprite)
-		_input_managers.append(new_character_sprite.input_man)
-	##configuration of containers and viewports based on number of players
-	if number_of_players == 1:
-		_viewport_organizer_vertical.add_child(_player_sub_viewports[viewport_names.p1])
-		_player_sub_viewports[viewport_names.minimap].global_position = _minimap_coord_1p
-	elif number_of_players == 2:
-		_viewport_organizer_top_horizontal.visible = true
-		_viewport_organizer_bottom_horizontal.visible = true
-		_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.p1])
-		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p2])
-		_player_sub_viewports[viewport_names.minimap].global_position = _minimap_coord_2p
-	elif number_of_players == 3:
-		_viewport_organizer_top_horizontal.visible = true
-		_viewport_organizer_bottom_horizontal.visible = true
-		_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.p1])
-		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p2])
-		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p3])
-		_player_sub_viewports[viewport_names.minimap].reparent(_viewport_organizer_top_horizontal)
-		#toggling background off for minimap as it will be one of the four screen tiles with 3 players
-		_player_sub_viewports[viewport_names.minimap].toggle_background()
-	elif number_of_players == 4:
-		_viewport_organizer_top_horizontal.visible = true
-		_viewport_organizer_bottom_horizontal.visible = true
-		_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.p1])
-		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p2])
-		_viewport_organizer_bottom_horizontal.add_child(_player_sub_viewports[viewport_names.p3])
-		_viewport_organizer_top_horizontal.add_child(_player_sub_viewports[viewport_names.p4])
-		_player_sub_viewports[viewport_names.minimap].global_position = _minimap_coord_4p
-	else:
-		print("invalid number of players:" + str(players.size()))
-		assert(false)
-	#making camera/viewport changes after they're in the scene
-	for each_num in number_of_players:
-		_player_sub_viewports[player_viewport_names[each_num]].set_viewport_world(_world)
-		_player_sub_viewports[player_viewport_names[each_num]].set_zoom(_player_view_zoom)
-		_player_sub_viewports[player_viewport_names[each_num]].set_camera_limits(_camera_limits["Left"], _camera_limits["Top"], _camera_limits["Right"], _camera_limits["Bottom"])
-		var player_culling_dictionary:Dictionary[int,bool] = {0:true, 1:false}
-		_player_sub_viewports[player_viewport_names[each_num]].set_layers_visible(player_culling_dictionary)
+
+func add_character() -> CharacterSprite:
+	var new_character_sprite = character_sprite.instantiate()
+	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
+	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
+	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
+	_origin_viewport.add_child(new_character_sprite)
+	character_sprites.append(new_character_sprite)
+	_input_managers.append(new_character_sprite.input_man)
+	
+	var grid_man_origin = grid_man.global_position
+	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
+	var coords = test_player_coords[len(character_sprites)-1]
+	
+	grid_man.testing_map_distance_algorithm(Vector2(coords),3,0)
+	new_character_sprite.grid_coordinates = coords
+	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
+	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
+	#character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
+	new_character_sprite.move_request.connect(grid_man._on_grid_sprite_move_request)
+	new_character_sprite.set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
+	new_character_sprite.set_type(GridSprite.sprite_types.character)
+	return new_character_sprite
+
 		
 func create_cursor(which_player_id:int, tile_position:Vector2):
 	var new_cursor:CursorSprite = cursor_sprite.instantiate()
@@ -129,36 +104,26 @@ func create_cursor(which_player_id:int, tile_position:Vector2):
 	return new_cursor
 				
 #region testing methods
-func _process(delta: float) -> void:
-	for i in range(Config.MAX_PLAYER_COUNT):
-		_handle_input(i)
+#func _process(delta: float) -> void:
+	#for i in range(Config.MAX_PLAYER_COUNT):
+		#_handle_input(i)
 
-func _handle_input(player_id: int):
-	#this will eventually be in the player input handler instead
-		if _input_managers[player_id].is_action_just_released(Model.Action.TOGGLE_MAP):
-			#testing switching to 'look around mode'
-			if player_cursors.has(player_id):
-				grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), false, false)
-				player_cursors[player_id].queue_free()
-				player_cursors.erase(player_id)
-				character_sprites[player_id].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[player_id]].camera)
-				character_sprites[player_id].fake_state_machine = "character"
-			else:
-				create_cursor(player_id, character_sprites[player_id].grid_coordinates).fake_state_machine = "cursor"
-				character_sprites[player_id].fake_state_machine = "cursor"
+#func _handle_input(player_id: int):
+	##this will eventually be in the player input handler instead
+		#if _input_managers[player_id].is_action_just_released(Model.Action.TOGGLE_MAP):
+			##testing switching to 'look around mode'
+			#if player_cursors.has(player_id):
+				#grid_man.set_highlight_tiles(grid_man.get_reachable_tiles(0, character_sprites[player_id].grid_coordinates, 3), false, false)
+				#player_cursors[player_id].queue_free()
+				#player_cursors.erase(player_id)
+				#character_sprites[player_id].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[player_id]].camera)
+				#character_sprites[player_id].fake_state_machine = "character"
+			#else:
+				#create_cursor(player_id, character_sprites[player_id].grid_coordinates).fake_state_machine = "cursor"
+				#character_sprites[player_id].fake_state_machine = "cursor"
 		
-func setup_player_testing():
-	var grid_man_origin = grid_man.global_position
-	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
-	for each_player in number_of_players:
-		grid_man.testing_map_distance_algorithm(Vector2(test_player_coords[each_player]),3,0)
-		character_sprites[each_player].grid_coordinates = test_player_coords[each_player]
-		_player_sub_viewports[player_viewport_names[each_player]].visible = true
-		character_sprites[each_player].set_visual_position(Vector2(test_player_coords[each_player].x * _tile_size.x, test_player_coords[each_player].y * _tile_size.y))
-		character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
-		character_sprites[each_player].move_request.connect(grid_man._on_grid_sprite_move_request)
-		character_sprites[each_player].set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
-		character_sprites[each_player].set_type(GridSprite.sprite_types.character)
+#func setup_player_testing():
+
 #endregion
 		
 #endregion

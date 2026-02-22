@@ -34,8 +34,8 @@ func add_card(_card: Card) -> void:
 
 func remove_card(_card: Card) -> void:
 	assert(_card in cards)
-	card_removed.emit(_card)
 	cards.erase(_card)
+	card_removed.emit(_card)
 	
 
 func toggle_display() -> void:
