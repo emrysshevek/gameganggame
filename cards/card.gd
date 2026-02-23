@@ -10,6 +10,7 @@ signal clicked()
 #region Properties
 @export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
+@export var character_sprite: CharacterSprite
 @export var deck: Deck = null
 @export var pile: Pile = null
 var is_faceup: bool = true
