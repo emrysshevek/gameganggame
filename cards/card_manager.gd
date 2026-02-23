@@ -8,7 +8,22 @@ extends Control
 @export var hand_pile: Pile
 @export var player: Player
 
+@onready var _selected_card_index:int = 2:
+	get():
+		return _selected_card_index
+	set(new_value):
+		if hand_pile.count == 0:
+			new_value = -1
+		elif new_value < 0:
+			new_value = hand_pile.count - 1
+		elif new_value > hand_pile.count - 1:
+			new_value = 0
+		_selected_card_index = new_value
+		if new_value != -1:
+			_card_selection_visuals(_selected_card_index)
+
 @onready var card_scene := preload("res://cards/card.tscn")
+@onready var fake_state_machine:String = "character"
 #endregion
 
 
@@ -20,15 +35,17 @@ func _ready() -> void:
 		card.clicked.connect(func(): _on_card_clicked(card))
 		
 func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("debug_up"):
+	if Input.is_action_just_pressed("debug_up") && fake_state_machine == "cards":
 		var card: Card = card_scene.instantiate()
 		deck.add_card(card)
 	if Input.is_action_just_pressed("debug_v"):
-		deck.toggle_display()
-	if deck.count > 0 and Input.is_action_just_pressed("debug_down"):
+		#deck.toggle_display()
+		_toggle_visibility()
+	if deck.count > 0 and Input.is_action_just_pressed("debug_down") && fake_state_machine == "cards":
 		var card: Card = deck.cards[0]
 		deck.remove_card(card)
 		card.queue_free.call_deferred()
+	_card_selection_input(_event)
 #endregion
 
 
@@ -86,5 +103,44 @@ func _on_draw_button_pressed() -> void:
 		refill_draw()
 #endregion
 	
+#region Testing methods
+func setup_testing_cards():
+	var testing_cards:Array
+	for i in 5:
+		var card: Card = card_scene.instantiate()
+		testing_cards.append(card)
+	return testing_cards
+
+func turn_start_draw():
+	draw(5)
 	
+func _card_selection_input(_event: InputEvent) -> void:
+	if hand_pile.count > 0 && fake_state_machine == "cards":
+		if Input.is_action_just_pressed("move_left"):
+			_selected_card_index -= 1
+		elif Input.is_action_just_pressed("move_right"):
+			_selected_card_index += 1
+		elif Input.is_action_just_pressed("debug_f"):
+			#check for values
+			hand_pile.ordered_cards[_selected_card_index].play()
+			hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			discard(hand_pile.ordered_cards[_selected_card_index])
+			_toggle_visibility()
+			
+func _card_selection_visuals(new_selected_card_index:int):
+	var selected_card = hand_pile.ordered_cards[new_selected_card_index]
+	for each_card in hand_pile.ordered_cards:
+		if each_card == selected_card:
+			each_card.highlight_react()
+		else:
+			each_card.highlight_return()
+			
+func _toggle_visibility():
+	if fake_state_machine != "cards":
+		fake_state_machine = "cards"
+	else:
+		fake_state_machine = "character"
+	$Layout/HBoxContainer.visible = !$Layout/HBoxContainer.visible
+	$Layout/TestLabel.visible = !$Layout/TestLabel.visible
+#endregion
 	

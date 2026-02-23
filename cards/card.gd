@@ -4,6 +4,7 @@ extends Control
 
 #region Signals
 signal clicked()
+signal activate_effect(which_card)
 #endregion
 
 
@@ -18,6 +19,8 @@ var is_faceup: bool = true
 @export var _frontside: Node
 @export var _description_label: Label
 @export var _costs_hbox: HBoxContainer
+
+var owning_character_id:int #should change this to a reference to the character later
 #endregion
 
 
@@ -59,12 +62,18 @@ func play() -> void:
 func discard() -> void:
 	_trigger_discard_ability()
 	Events.card_discarded.emit(self)
+	
+func highlight_react() -> void:
+	scale = Vector2(1.5, 1.5)
+	
+func highlight_return():
+	scale = Vector2(1,1)
 #endregion
 
 
 #region Private Methods
 func _trigger_play_ability() -> void:
-	pass
+	activate_effect.emit(self)
 	
 
 func _trigger_discard_ability() -> void:

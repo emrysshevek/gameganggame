@@ -177,7 +177,7 @@ func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unreveale
 func move_grid_sprite(which_sprite:GridSprite, tile_coord:Vector2, floor:int):
 	if which_sprite.type == GridSprite.sprite_types.character:
 		if is_directly_connected(floor, which_sprite.grid_coordinates, tile_coord) == false:
-			return [Vector2(-INF,-INF), Vector2(-INF,-INF)]
+			return false
 		else:
 			floor_maps[floor][which_sprite.grid_coordinates.x][which_sprite.grid_coordinates.y].exit(0)
 			floor_maps[floor][tile_coord.x][tile_coord.y].enter(0)
@@ -185,20 +185,24 @@ func move_grid_sprite(which_sprite:GridSprite, tile_coord:Vector2, floor:int):
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			which_sprite.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
+			return true
 	elif which_sprite.type == GridSprite.sprite_types.ui:
 		if is_in_bounds(tile_coord) == false:
-			return [Vector2(-INF,-INF), Vector2(-INF,-INF)]
+			return false
 		else:
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			which_sprite.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
+			return true
 	else:
 		print("invalid sprite type: " + str(which_sprite.type))
 		assert(false)
 		
 func _on_grid_sprite_move_request(sprite:GridSprite, new_tile_position:Vector2):
-	move_grid_sprite(sprite, new_tile_position, 0)
+	if move_grid_sprite(sprite, new_tile_position, 0) != false:
+		if "movement" in sprite:
+			sprite.movement -= 1
 		
 #region testing functions
 func reveal_full_map():

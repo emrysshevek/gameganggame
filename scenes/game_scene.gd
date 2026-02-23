@@ -35,6 +35,11 @@ func _ready() -> void:
 		var character_sprite := origin_viewport.add_character(i) #i should be character id in this case
 		character_sprite.set_remote_camera_transform(player_viewport.camera)
 		var card_manager := _setup_card_area(player_areas[i])
+		for each_test_card in card_manager.setup_testing_cards():
+			each_test_card.owning_character_id = i
+			each_test_card.activate_effect.connect(_testing_card_activate_effect)
+			card_manager.draw_pile.add_card(each_test_card)
+		card_manager.turn_start_draw()
 	setup_minimap().reparent($PlayerAreas/Control)
 #endregion
 
@@ -47,7 +52,6 @@ func _setup_card_area(area: Node) -> CardManager:
 	
 	var card_manager: CardManager = card_manager_scene.instantiate()
 	card_manager.deck = deck
-	card_manager.card_play_request.connect(_on_card_play_request)
 	area.add_child(card_manager)
 	
 	return card_manager
@@ -85,7 +89,10 @@ func _setup_player_viewport(area: Node) -> PlayerSubViewport:
 	player_viewport.set_layers_visible(player_culling_dictionary)
 	
 	return player_viewport
-	
-func _on_card_play_request(which_player, card):
-	pass
+
+#endregion
+
+#region testing methods
+func _testing_card_activate_effect(which_card:Card):
+	$OriginViewportController.player_id_to_character_sprite[which_card.owning_character_id].movement = 3
 #endregion
