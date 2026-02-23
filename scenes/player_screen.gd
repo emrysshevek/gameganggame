@@ -22,7 +22,6 @@ func _ready() -> void:
 	_setup_card_area()
 
 
-
 func _setup_card_area() -> void:
 	## Set up card area
 	var deck = deck_scene.instantiate()

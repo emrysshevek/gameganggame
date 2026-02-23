@@ -1,7 +1,6 @@
 class_name CardManager
 extends Control
 
-
 #region Properties
 @export var deck: Deck
 @export var draw_pile: Pile
