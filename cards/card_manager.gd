@@ -14,10 +14,8 @@ extends Control
 
 #region Built-ins
 func _ready() -> void:
-	deck.card_added.connect(_on_deck_card_added)
-	deck.card_removed.connect(_on_deck_card_removed)
-	for card in deck.cards:
-		card.clicked.connect(func(): _on_card_clicked(card))
+	if deck != null:
+		set_deck(deck)
 		
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("debug_up"):
@@ -33,6 +31,13 @@ func _input(_event: InputEvent) -> void:
 
 
 #region Public Methods
+func set_deck(_deck: Deck) -> void:
+	deck = _deck
+	deck.card_added.connect(_on_deck_card_added)
+	deck.card_removed.connect(_on_deck_card_removed)
+	for card in deck.cards:
+		card.clicked.connect(func(): _on_card_clicked(card))
+	
 func draw(_count:=1) -> void:			
 	for i in _count:
 		var card := draw_pile.get_top_card()
