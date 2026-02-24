@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://363gomiab23n"]
+
+[ext_resource type="Script" uid="uid://bvmeh2tm3dqyj" path="res://scenes/player_screen.gd" id="1_5wr03"]
+[ext_resource type="PackedScene" uid="uid://ddyypebo34d8o" path="res://scenes/player_subviewport.tscn" id="2_nihkf"]
+[ext_resource type="PackedScene" uid="uid://ba3gjrvqdpach" path="res://cards/card_manager.tscn" id="3_dqqwp"]
+
+[node name="PlayerScreen" type="Control" unique_id=1718520440 node_paths=PackedStringArray("player_sub_viewport", "card_manager")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_5wr03")
+player_sub_viewport = NodePath("PlayerSubViewportContainer")
+card_manager = NodePath("CardManager")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1346685662]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 0.7799101, 0.9984786, 1)
+
+[node name="PlayerSubViewportContainer" parent="." unique_id=456104485 instance=ExtResource("2_nihkf")]
+layout_mode = 1
+
+[node name="CardManager" parent="." unique_id=810966713 instance=ExtResource("3_dqqwp")]
+layout_mode = 1
