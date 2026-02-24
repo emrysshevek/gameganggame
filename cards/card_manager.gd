@@ -8,6 +8,8 @@ extends Control
 @export var hand_pile: Pile
 @export var player: Player
 
+var input_man:PlayerInputManager
+
 @onready var _selected_card_index:int = 2:
 	get():
 		return _selected_card_index
@@ -32,19 +34,11 @@ func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
 		
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("debug_up") && fake_state_machine == "cards":
-		var card: Card = card_scene.instantiate()
-		deck.add_card(card)
-	if Input.is_action_just_pressed("debug_v"):
-		#deck.toggle_display()
-		_toggle_visibility()
-	if deck.count > 0 and Input.is_action_just_pressed("debug_down") && fake_state_machine == "cards":
-		var card: Card = deck.cards[0]
-		deck.remove_card(card)
-		card.queue_free.call_deferred()
-	_card_selection_input(_event)
-#endregion
+func _process(delta: float) -> void:
+	if fake_state_machine == "cards" && input_man != null:
+		_handle_input()
+	else:
+		pass
 
 
 #region Public Methods
@@ -119,13 +113,23 @@ func setup_testing_cards():
 func turn_start_draw():
 	draw(5)
 	
-func _card_selection_input(_event: InputEvent) -> void:
-	if hand_pile.count > 0 && fake_state_machine == "cards":
-		if Input.is_action_just_pressed("move_left"):
+func set_input_man(input_manager:PlayerInputManager) -> void:
+	input_man = input_manager
+	
+func _handle_input():
+	if input_man.is_action_just_released("move_up"):
+		var card: Card = card_scene.instantiate()
+		deck.add_card(card)
+	if deck.count > 0 and input_man.is_action_just_released("move_down"):
+		var card: Card = deck.cards[0]
+		deck.remove_card(card)
+		card.queue_free.call_deferred()
+	if hand_pile.count > 0:
+		if input_man.is_action_just_released("move_left"):
 			_selected_card_index -= 1
-		elif Input.is_action_just_pressed("move_right"):
+		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
-		elif Input.is_action_just_pressed("debug_f"):
+		elif input_man.is_action_just_released(Model.Action.SELECT):
 			#check for values
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()

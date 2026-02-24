@@ -41,6 +41,7 @@ func _ready() -> void:
 
 func add_character(character_id:int) -> CharacterSprite:
 	var new_character_sprite = character_sprite.instantiate()
+	new_character_sprite.set_input_man(InputManager.get_player_input_manager(character_id))
 	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
 	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
 	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
@@ -65,10 +66,10 @@ func add_character(character_id:int) -> CharacterSprite:
 	return new_character_sprite
 
 		
-func create_cursor(which_player_id:int, tile_position:Vector2):
+func create_cursor(which_player_id:int, tile_position:Vector2) -> CursorSprite:
 	var new_cursor:CursorSprite = cursor_sprite.instantiate()
 	#currently cursor breaks if its not a child of grid man, size and placement is all wrong
-	new_cursor.input_man = character_sprites[which_player_id].input_man
+	new_cursor.set_input_man(InputManager.get_player_input_manager(which_player_id))
 	grid_man.add_child(new_cursor)
 	player_cursors[which_player_id] = new_cursor
 	new_cursor.set_sprite(load("res://art/cursor.png"))

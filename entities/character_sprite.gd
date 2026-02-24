@@ -10,7 +10,6 @@ var character_ref:int #will be character, currently player
 
 var movement:int = 0 #we probably want to move this into the character obj later
 
-@onready var input_man:PlayerInputManager = InputManager.get_controller_manager()
 @onready var fake_state_machine:String = "character" #character, cursor, blank
 #endregion
 

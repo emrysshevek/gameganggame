@@ -3,7 +3,6 @@ class_name CursorSprite extends GridSprite
 #region properties
 var character_id:int = 0
 
-var input_man:PlayerInputManager
 @onready var fake_state_machine:String = "character" #character, cursor
 #endregion
 

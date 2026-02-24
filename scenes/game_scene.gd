@@ -6,6 +6,8 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @export var origin_viewport: OriginViewport
 @export var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
 
+var _test_input_man:PlayerInputManager
+
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
 @onready var player_viewport_scene := preload("res://scenes/player_subviewport.tscn")
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
@@ -31,6 +33,7 @@ func _ready() -> void:
 	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
+	_test_input_man = InputManager.get_player_input_manager(0)
 	for i in player_areas.size():
 		var player_screen: PlayerScreen = player_screen_scene.instantiate()
 		player_screen.origin_viewport = origin_viewport
@@ -42,7 +45,11 @@ func _ready() -> void:
 			each_test_card.activate_effect.connect(_testing_card_activate_effect)
 			player_screen.card_manager.draw_pile.add_card(each_test_card)
 		player_screen.card_manager.turn_start_draw()
+		var new_cursor := origin_viewport.create_cursor(i,character_sprite.grid_coordinates)
 	setup_minimap().reparent($PlayerAreas/Control)
+	
+func _process(delta: float) -> void:
+	_handle_input()
 #endregion
 
 
@@ -74,6 +81,12 @@ func _on_card_play_request(which_player, card):
 #endregion
 
 #region testing methods
+func _handle_input(): #until the PISM is ready to do this
+	if _test_input_man != null:
+		if _test_input_man.is_action_just_released(Model.Action.TOGGLE_MAP):
+			#deck.toggle_display()
+			player_areas[0].get_child(0, false).card_manager._toggle_visibility()
+
 func _testing_card_activate_effect(which_card:Card):
 	$OriginViewportController.player_id_to_character_sprite[which_card.owning_character_id].movement = 3
 #endregion
