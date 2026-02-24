@@ -1,25 +1,43 @@
 class_name CardManager
 extends Control
 
-
 #region Properties
 @export var deck: Deck
 @export var draw_pile: Pile
 @export var discard_pile: Pile
 @export var hand_pile: Pile
 @export var player: Player
+
+@onready var card_scene := preload("res://cards/card.tscn")
 #endregion
 
 
 #region Built-ins
 func _ready() -> void:
-	deck.card_added.connect(_on_deck_card_added)
-	for card in deck.cards:
-		card.clicked.connect(func(): _on_card_clicked(card))
+	if deck != null:
+		set_deck(deck)
+		
+func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("debug_up"):
+		var card: Card = card_scene.instantiate()
+		deck.add_card(card)
+	if Input.is_action_just_pressed("debug_v"):
+		deck.toggle_display()
+	if deck.count > 0 and Input.is_action_just_pressed("debug_down"):
+		var card: Card = deck.cards[0]
+		deck.remove_card(card)
+		card.queue_free.call_deferred()
 #endregion
 
 
 #region Public Methods
+func set_deck(_deck: Deck) -> void:
+	deck = _deck
+	deck.card_added.connect(_on_deck_card_added)
+	deck.card_removed.connect(_on_deck_card_removed)
+	for card in deck.cards:
+		card.clicked.connect(func(): _on_card_clicked(card))
+	
 func draw(_count:=1) -> void:			
 	for i in _count:
 		var card := draw_pile.get_top_card()
