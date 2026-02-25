@@ -7,13 +7,12 @@ extends Node
 	return initial_state if initial_state != null else get_child(0)
 ).call()
 
+var _running := false
+
 
 func _ready() -> void:
 	for state_node: State in find_children("*", "State"):
 		state_node.finished.connect(_transition_to_next_state)
-
-	await owner.ready
-	state.enter("")
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -21,6 +20,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _process(delta: float) -> void:
+	if !_running:
+		state.enter("")
+		_running = true
 	state.update(delta)
 
 

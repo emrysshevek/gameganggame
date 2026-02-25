@@ -45,6 +45,7 @@ func setup_players() -> void:
 		# pis machine setup
 		pis_machine.character_sprite = character_sprite
 		add_child(pis_machine)
+		pis_machine.owner = self
 		
 		# player screen setup
 		player_screen.card_manager.input_man = player_input_manager

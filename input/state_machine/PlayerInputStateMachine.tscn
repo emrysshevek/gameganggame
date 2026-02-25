@@ -7,13 +7,13 @@
 
 [node name="PlayerInputStateMachine" type="Node" unique_id=1913364748 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("1_cnwri")
-initial_state = NodePath("MoveState")
+initial_state = NodePath("Move")
 
-[node name="MoveState" type="Node" parent="." unique_id=689572359]
+[node name="Move" type="Node" parent="." unique_id=689572359]
 script = ExtResource("3_u2irg")
 
-[node name="CursorState" type="Node" parent="." unique_id=1524883526]
+[node name="Cursor" type="Node" parent="." unique_id=1524883526]
 script = ExtResource("2_k6r1c")
 
-[node name="CardState" type="Node" parent="." unique_id=1152163068]
+[node name="Card" type="Node" parent="." unique_id=1152163068]
 script = ExtResource("4_bmfje")

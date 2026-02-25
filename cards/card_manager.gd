@@ -90,18 +90,18 @@ func _handle_input():
 		var card: Card = deck.cards[0]
 		deck.remove_card(card)
 		card.queue_free.call_deferred()
-		
 	if hand_pile.count > 0:
 		if input_man.is_action_just_released("move_left"):
 			_selected_card_index -= 1
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
-		elif input_man.is_action_just_released(Model.Action.SELECT):
+		elif input_man.is_action_just_released(Model.Action.TOGGLE_MAP):
 			#check for values
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
 			_toggle_visibility()
+
 #endregion
 	
 

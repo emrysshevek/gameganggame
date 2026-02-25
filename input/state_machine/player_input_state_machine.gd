@@ -15,6 +15,7 @@ var current_state: States:
 		return (state as PlayerInputState).state
 
 func _ready() -> void:
+	super._ready()
 	if character_sprite != null:
 		set_character_sprite(character_sprite)
 	
