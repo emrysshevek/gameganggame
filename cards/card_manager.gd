@@ -24,6 +24,8 @@ var input_man:PlayerInputManager
 		if new_value != -1:
 			_card_selection_visuals(_selected_card_index)
 
+@export var input_state_machine: PlayerInputStateMachine
+@export var input_manager: PlayerInputManager
 @onready var card_scene := preload("res://cards/card.tscn")
 @onready var fake_state_machine:String = "character"
 #endregion
@@ -33,12 +35,12 @@ var input_man:PlayerInputManager
 func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
+
 		
-func _process(delta: float) -> void:
-	if fake_state_machine == "cards" && input_man != null:
+func _process(_delta: float) -> void:
+	if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
 		_handle_input()
-	else:
-		pass
+#endregion
 
 
 #region Public Methods
@@ -76,9 +78,34 @@ func return_discard() -> void:
 func shuffle_draw() -> void:
 	draw_pile.shuffle()
 #endregion
+
+
+#region Private Methods
+func _handle_input():
+	# TODO: REMOVE!!!
+	if input_man.is_action_just_released("move_up"):
+		var card: Card = card_scene.instantiate()
+		deck.add_card(card)
+	if deck.count > 0 and input_man.is_action_just_released("move_down"):
+		var card: Card = deck.cards[0]
+		deck.remove_card(card)
+		card.queue_free.call_deferred()
+		
+	if hand_pile.count > 0:
+		if input_man.is_action_just_released("move_left"):
+			_selected_card_index -= 1
+		elif input_man.is_action_just_released("move_right"):
+			_selected_card_index += 1
+		elif input_man.is_action_just_released(Model.Action.SELECT):
+			#check for values
+			hand_pile.ordered_cards[_selected_card_index].play()
+			hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			discard(hand_pile.ordered_cards[_selected_card_index])
+			_toggle_visibility()
+#endregion
 	
 
-#region Signal Connections	
+#region Signal Connections
 func _on_deck_card_added(_card) -> void:
 	_card.clicked.connect(func():_on_card_clicked(_card))
 	draw_pile.add_card(_card, 0, true) # add and shuffle
@@ -116,25 +143,7 @@ func turn_start_draw():
 func set_input_man(input_manager:PlayerInputManager) -> void:
 	input_man = input_manager
 	
-func _handle_input():
-	if input_man.is_action_just_released("move_up"):
-		var card: Card = card_scene.instantiate()
-		deck.add_card(card)
-	if deck.count > 0 and input_man.is_action_just_released("move_down"):
-		var card: Card = deck.cards[0]
-		deck.remove_card(card)
-		card.queue_free.call_deferred()
-	if hand_pile.count > 0:
-		if input_man.is_action_just_released("move_left"):
-			_selected_card_index -= 1
-		elif input_man.is_action_just_released("move_right"):
-			_selected_card_index += 1
-		elif input_man.is_action_just_released(Model.Action.SELECT):
-			#check for values
-			hand_pile.ordered_cards[_selected_card_index].play()
-			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
-			_toggle_visibility()
+
 			
 func _card_selection_visuals(new_selected_card_index:int):
 	var selected_card = hand_pile.ordered_cards[new_selected_card_index]

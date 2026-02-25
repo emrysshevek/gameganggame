@@ -11,9 +11,12 @@ signal activate_effect(which_card)
 #region Properties
 @export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
+@export var character_sprite: CharacterSprite
 @export var deck: Deck = null
 @export var pile: Pile = null
 var is_faceup: bool = true
+
+@export var focus: Focusable
 
 @export var _backside: Node
 @export var _frontside: Node
@@ -85,4 +88,12 @@ func _trigger_discard_ability() -> void:
 func _on_button_pressed() -> void:
 	play()
 	clicked.emit()
+	
+	
+func _on_focus_entered() -> void:
+	pass
+	
+	
+func _on_focus_exited() -> void:
+	pass
 #endregion
