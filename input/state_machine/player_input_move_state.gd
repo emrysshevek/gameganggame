@@ -5,6 +5,10 @@ extends PlayerInputState
 var prev_state: String
 
 
+func _ready() -> void:
+	state = PlayerInputStateMachine.States.MOVE
+
+
 func enter(_previous_state_path: String, _data := {}) -> void:
 	prev_state = _previous_state_path
 

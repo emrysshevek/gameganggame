@@ -7,6 +7,7 @@
 script = ExtResource("1_xy3my")
 player_areas = [NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P1Area"), NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P2Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P3Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P4Area")]
 origin_viewport = NodePath("OriginViewportController")
+_player_view_zoom = null
 
 [node name="OriginViewportController" parent="." unique_id=1737952139 instance=ExtResource("2_cxv17")]
 

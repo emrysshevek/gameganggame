@@ -15,6 +15,8 @@ signal clicked()
 @export var pile: Pile = null
 var is_faceup: bool = true
 
+@export var focus: Focusable
+
 @export var _backside: Node
 @export var _frontside: Node
 @export var _description_label: Label
@@ -38,6 +40,18 @@ func _ready() -> void:
 		label.text = "{0}{1}".format([cost[cv], letter])
 		label.add_theme_color_override("font_color", Color.BLACK)
 		_costs_hbox.add_child(label)
+		
+func _process(delta: float) -> void:
+	if character_sprite.input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
+		if character_sprite.input_man.is_action_just_pressed(Model.Action.MOVE_LEFT):
+			focus.shift_focus("left")
+		if character_sprite.input_man.is_action_just_pressed(Model.Action.MOVE_RIGHT):
+			focus.shift_focus("right")
+		if focus.is_focused:
+			if character_sprite.input_man.is_action_just_pressed(Model.Action.SELECT):
+				play()
+			if character_sprite.input_man.is_action_just_pressed(Model.Action.DESELECT):
+				discard()
 #endregion
 
 
@@ -77,4 +91,12 @@ func _trigger_discard_ability() -> void:
 func _on_button_pressed() -> void:
 	play()
 	clicked.emit()
+	
+	
+func _on_focus_entered() -> void:
+	pass
+	
+	
+func _on_focus_exited() -> void:
+	pass
 #endregion

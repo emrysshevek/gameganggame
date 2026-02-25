@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bnv5dqpc4y8xb"]
 
 [ext_resource type="Script" uid="uid://cq0rkd2f0cx1d" path="res://cards/card.gd" id="1_ivai2"]
+[ext_resource type="PackedScene" uid="uid://ddbf7ide4v43w" path="res://components/focusable/focusable.tscn" id="2_nwofj"]
 
 [node name="Card" type="Control" unique_id=693299294 node_paths=PackedStringArray("_backside", "_frontside", "_description_label", "_costs_hbox")]
 custom_minimum_size = Vector2(50, 75)
@@ -81,5 +82,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 flat = true
+
+[node name="Focusable" parent="." unique_id=1139748745 instance=ExtResource("2_nwofj")]
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

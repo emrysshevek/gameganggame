@@ -8,6 +8,8 @@ extends Control
 @export var hand_pile: Pile
 @export var player: Player
 
+@export var input_state_machine: PlayerInputStateMachine
+@export var input_manager: PlayerInputManager
 @onready var card_scene := preload("res://cards/card.tscn")
 #endregion
 
@@ -17,16 +19,10 @@ func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
 		
-func _input(_event: InputEvent) -> void:
-	if Input.is_action_just_pressed("debug_up"):
-		var card: Card = card_scene.instantiate()
-		deck.add_card(card)
-	if Input.is_action_just_pressed("debug_v"):
-		deck.toggle_display()
-	if deck.count > 0 and Input.is_action_just_pressed("debug_down"):
-		var card: Card = deck.cards[0]
-		deck.remove_card(card)
-		card.queue_free.call_deferred()
+		
+func _process(delta: float) -> void:
+	if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
+		_process_input()
 #endregion
 
 
@@ -65,9 +61,16 @@ func return_discard() -> void:
 func shuffle_draw() -> void:
 	draw_pile.shuffle()
 #endregion
+
+
+#region Private Methods
+func _process_input() -> void:
+	if Input.is_action_just_pressed(Model.Action.TOGGLE_MAP):
+		hide()
+#endregion
 	
 
-#region Signal Connections	
+#region Signal Connections
 func _on_deck_card_added(_card) -> void:
 	_card.clicked.connect(func():_on_card_clicked(_card))
 	draw_pile.add_card(_card, 0, true) # add and shuffle

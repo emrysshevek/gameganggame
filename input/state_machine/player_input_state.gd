@@ -8,6 +8,8 @@ const CURSOR := "cursor"
 @export var character_sprite: CharacterSprite
 @export var player_input_manager: PlayerInputManager
 
+var state: PlayerInputStateMachine.States
+
 
 func handle_card_played(_card: Card) -> void:
 	pass

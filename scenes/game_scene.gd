@@ -11,6 +11,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
 @onready var deck_scene := preload("res://cards/Deck.tscn")
 @onready var character_sprite_scene := preload("res://entities/character_sprite.tscn")
+@onready var pism_scene := preload("res://input/state_machine/PlayerInputStateMachine.tscn")
 @onready var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
@@ -25,25 +26,37 @@ var _minimap_coord_4p:Vector2
 
 #region Built-in methods
 func _ready() -> void:
+	setup_players()
+	setup_minimap().reparent($PlayerAreas/Control)
+#endregion
+
+
+#region Private Methods
+func setup_players() -> void:
+	for i in player_areas.size():
+		# setup screen
+		var player_screen: PlayerScreen = player_screen_scene.instantiate()
+		player_screen.origin_viewport = origin_viewport
+		player_areas[i].add_child(player_screen)
+		
+		# add token to board
+		var character_sprite := origin_viewport.add_character(i) #i should be character id in this case
+		character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
+
+		# Setup input
+		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
+		pis_machine.character_sprite = character_sprite
+		add_child(pis_machine)
+
+
+func setup_minimap():
 	_tile_size = grid_man.tile_size
 	_minimap_size = Vector2(((grid_man.map_width * _tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _tile_size.y) * _minimap_zoom.y))
 	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
 	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	for i in player_areas.size():
-		var player_screen: PlayerScreen = player_screen_scene.instantiate()
-		player_screen.origin_viewport = origin_viewport
-		player_areas[i].add_child(player_screen)
-		var character_sprite := origin_viewport.add_character(i) #i should be character id in this case
-		character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
-	setup_minimap().reparent($PlayerAreas/Control)
-#endregion
-
-
-#region Private Methods
-
-func setup_minimap():
+	
 	number_of_players = 4 #testing for easy config of # of players
 	#setting up the minimap viewport
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]

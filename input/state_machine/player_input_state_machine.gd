@@ -2,7 +2,17 @@ class_name PlayerInputStateMachine
 extends StateMachine
 
 
+enum States {
+	MOVE,
+	CARD,
+	CURSOR,
+}
+
+
 @export var character_sprite: CharacterSprite
+var current_state: States:
+	get:
+		return (state as PlayerInputState).state
 
 func _ready() -> void:
 	if character_sprite != null:
