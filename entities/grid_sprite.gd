@@ -10,12 +10,16 @@ signal move_request(which_sprite, requested_position)
 var grid_coordinates:Vector2
 var _remote_camera_transform:RemoteTransform2D
 var type:sprite_types
+var input_man:PlayerInputManager
 #endregion
 
 #region methods
 func set_visual_position(coords:Vector2):
 	position = coords
 	move_remote_camera(coords)
+	
+func set_input_man(input_manager:PlayerInputManager) -> void:
+	input_man = input_manager
 	
 func set_sprite(sprite_to_load:Resource):
 	texture = sprite_to_load

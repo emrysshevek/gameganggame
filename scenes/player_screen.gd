@@ -27,6 +27,7 @@ func _setup_card_area() -> void:
 	var deck = deck_scene.instantiate()
 	add_child(deck)
 	card_manager.set_deck(deck)
+	card_manager.set_input_man(InputManager.get_player_input_manager(player_id))
 	
 	
 func _setup_player_viewport() -> void:

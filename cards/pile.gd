@@ -110,6 +110,8 @@ func _reposition() -> void:
 		spacing = Vector2(0, size.y / float(count + 1))
 	if size == Vector2.ZERO:
 		spacing.y -= 2
+	else:
+		_set_focus_neighbors()
 	
 	var curr_pos := global_position + area_offset - card_offset
 	for i in len(ordered_cards):
@@ -118,3 +120,15 @@ func _reposition() -> void:
 		card._description_label.text = str(i)
 		card.global_position = curr_pos
 		card.z_index = i
+
+
+func _set_focus_neighbors() -> void:
+	for i in len(ordered_cards):
+		var focus_node: Focusable = ordered_cards[i].get_node("Focusable")
+		if i > 0:
+			focus_node.left = ordered_cards[i-1]
+			focus_node.prev = ordered_cards[i-1]
+		if i < len(ordered_cards):
+			focus_node.right = ordered_cards[i+1]
+			focus_node.next = ordered_cards[i+1]
+			

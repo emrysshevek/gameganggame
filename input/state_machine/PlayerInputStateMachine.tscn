@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://didf61okrlv8y"]
+
+[ext_resource type="Script" uid="uid://ig2b4j372uky" path="res://input/state_machine/player_input_state_machine.gd" id="1_cnwri"]
+[ext_resource type="Script" uid="uid://cpf05jjwg0xm1" path="res://input/state_machine/player_input_cursor_state.gd" id="2_k6r1c"]
+[ext_resource type="Script" uid="uid://djvoq2nx6we67" path="res://input/state_machine/player_input_move_state.gd" id="3_u2irg"]
+[ext_resource type="Script" uid="uid://b1rv7a3mnyj7f" path="res://input/state_machine/player_input_card_state.gd" id="4_bmfje"]
+
+[node name="PlayerInputStateMachine" type="Node" unique_id=1913364748 node_paths=PackedStringArray("initial_state")]
+script = ExtResource("1_cnwri")
+initial_state = NodePath("Move")
+
+[node name="Move" type="Node" parent="." unique_id=689572359]
+script = ExtResource("3_u2irg")
+
+[node name="Cursor" type="Node" parent="." unique_id=1524883526]
+script = ExtResource("2_k6r1c")
+
+[node name="Card" type="Node" parent="." unique_id=1152163068]
+script = ExtResource("4_bmfje")
