@@ -26,8 +26,7 @@ func _setup_card_area() -> void:
 	## Set up card area
 	var deck = deck_scene.instantiate()
 	add_child(deck)
-	card_manager.set_deck(deck)
-	
+	card_manager.set_deck(deck)	
 	
 func _setup_player_viewport() -> void:
 	var player_culling_dictionary:Dictionary[int,bool] = {0:true, 1:false}

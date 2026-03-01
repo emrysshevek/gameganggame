@@ -9,19 +9,42 @@ signal started_turn(which_player)
 #endregion
 
 #region properties
+var input_man = PlayerInputManager
 var controller_id:int #will this be an int??
+var character_id:int
 var health_max:int = 5
 var health_current:int
 var deck:Deck
-var coordinates:Vector2
+var grid_coordinates:Vector2:
+	get():
+		return character_sprite.grid_coordinates
+var movement:int
+var character_sprite:CharacterSprite
+var cursor_sprite:CursorSprite
 #endregion
 
 #region methods
+func setup_new_character(input_character_id:int) -> Character:
+	character_id = input_character_id
+	input_man = InputManager.get_player_input_manager(character_id)
+	return self
+
 func bind_controller(controller_info:int):
 	controller_id = controller_info
+	
+func bind_character_sprite(input_sprite:CharacterSprite):
+	character_sprite = input_sprite
+	character_sprite.input_man = input_man
+	add_child(character_sprite)
+	
+func bind_cursor_sprite(input_sprite:CursorSprite):
+	cursor_sprite = input_sprite
+	cursor_sprite.input_man = input_man
+	add_child(cursor_sprite)
 
 func bind_deck(new_deck:Deck):
 	deck = new_deck
+	add_child(deck)
 
 func take_damage(amount:int):
 	health_current -= amount
@@ -37,10 +60,10 @@ func heal(amount:int):
 func die():
 	died.emit(self)
 	
-func move(new_coordinates):
-	var old_coords = coordinates
-	coordinates = new_coordinates
-	moved.emit(self, old_coords, new_coordinates)
+#func move(new_coordinates):
+	#var old_coords = coordinates
+	#coordinates = new_coordinates
+	#moved.emit(self, old_coords, new_coordinates)
 	
 	
 func end_turn():

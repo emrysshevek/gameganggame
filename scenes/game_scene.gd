@@ -32,11 +32,20 @@ func _ready() -> void:
 	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	for i in player_areas.size():
+		var new_character = Character.new()
+		new_character.setup_new_character(i)
+		###deck setup
+		#var new_deck = Deck.new()
+		#new_character.bind_deck(new_deck)
+		#for card_num in 5:
+			#var new_card = Card.new()
+			#new_deck.add_card(new_card)
+		###
 		var player_screen: PlayerScreen = player_screen_scene.instantiate()
 		player_screen.origin_viewport = origin_viewport
 		player_areas[i].add_child(player_screen)
-		var character_sprite := origin_viewport.add_character(i) #i should be character id in this case
-		character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
+		origin_viewport.add_character(new_character) #i should be character id in this case
+		new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
 	setup_minimap().reparent($PlayerAreas/Control)
 #endregion
 

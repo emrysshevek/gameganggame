@@ -39,15 +39,17 @@ func _ready() -> void:
 	#minimap placement and size configuration
 	#setup_player_testing()
 
-func add_character(character_id:int) -> CharacterSprite:
+func add_character(new_character:Character) -> CharacterSprite:
+	_origin_viewport.add_child(new_character)
 	var new_character_sprite = character_sprite.instantiate()
+	new_character.bind_character_sprite(new_character_sprite)
 	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
 	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
 	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
-	_origin_viewport.add_child(new_character_sprite)
+	#_origin_viewport.add_child(new_character_sprite)
 	character_sprites.append(new_character_sprite)
 	_input_managers.append(new_character_sprite.input_man)
-	create_cursor(character_id, new_character_sprite.grid_coordinates)
+	create_cursor(new_character, new_character_sprite.grid_coordinates)
 	
 	var grid_man_origin = grid_man.global_position
 	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
@@ -64,12 +66,13 @@ func add_character(character_id:int) -> CharacterSprite:
 	return new_character_sprite
 
 		
-func create_cursor(which_player_id:int, tile_position:Vector2):
+func create_cursor(new_character:Character, tile_position:Vector2):
 	var new_cursor:CursorSprite = cursor_sprite.instantiate()
+	new_character.bind_cursor_sprite(new_cursor)
 	#currently cursor breaks if its not a child of grid man, size and placement is all wrong
-	new_cursor.input_man = character_sprites[which_player_id].input_man
-	grid_man.add_child(new_cursor)
-	player_cursors[which_player_id] = new_cursor
+	new_cursor.input_man = character_sprites[new_character.character_id].input_man
+	#grid_man.add_child(new_cursor)
+	player_cursors[new_character.character_id] = new_cursor
 	new_cursor.set_sprite(load("res://art/cursor.png"))
 	new_cursor.grid_coordinates = tile_position
 	new_cursor.set_visual_position(Vector2(character_sprites[0].grid_coordinates.x * _tile_size.x, character_sprites[0].grid_coordinates.y * _tile_size.y))
