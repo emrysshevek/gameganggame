@@ -9,15 +9,16 @@ signal started_turn(which_player)
 #endregion
 
 #region properties
-var input_man = PlayerInputManager
+var input_man:PlayerInputManager
+var pis_machine:PlayerInputStateMachine
 var controller_id:int #will this be an int??
 var character_id:int
 var health_max:int = 5
 var health_current:int
 var deck:Deck
-var grid_coordinates:Vector2:
-	get():
-		return character_sprite.grid_coordinates
+var grid_coordinates:Vector2
+	#get():
+		#return character_sprite.grid_coordinates
 var movement:int
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
@@ -35,16 +36,23 @@ func bind_controller(controller_info:int):
 func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
+	character_sprite.input_state_machine = pis_machine
 	add_child(character_sprite)
 	
 func bind_cursor_sprite(input_sprite:CursorSprite):
 	cursor_sprite = input_sprite
 	cursor_sprite.input_man = input_man
+	cursor_sprite.input_state_machine = pis_machine
 	add_child(cursor_sprite)
 
 func bind_deck(new_deck:Deck):
 	deck = new_deck
 	add_child(deck)
+
+func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
+	pis_machine = input_pis_machine
+	pis_machine.character_sprite = character_sprite
+	pis_machine.owner = self
 
 func take_damage(amount:int):
 	health_current -= amount

@@ -38,8 +38,9 @@ func _ready() -> void:
 
 		
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
-		_handle_input()
+	pass
+	#if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
+		#_handle_input()
 #endregion
 
 

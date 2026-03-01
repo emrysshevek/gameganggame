@@ -11,6 +11,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
 @onready var deck_scene := preload("res://cards/Deck.tscn")
 @onready var character_sprite_scene := preload("res://entities/character_sprite.tscn")
+@onready var pism_scene := preload("res://input/state_machine/PlayerInputStateMachine.tscn")
 @onready var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
@@ -26,14 +27,10 @@ var _minimap_coord_4p:Vector2
 #region Built-in methods
 func _ready() -> void:
 	_tile_size = grid_man.tile_size
-	_minimap_size = Vector2(((grid_man.map_width * _tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _tile_size.y) * _minimap_zoom.y))
-	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
-	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
-	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	for i in player_areas.size():
-		var new_character = Character.new()
-		new_character.setup_new_character(i)
+	setup_players()
+	#for i in player_areas.size():
+		#var new_character = Character.new()
+		#new_character.setup_new_character(i)
 		###deck setup
 		#var new_deck = Deck.new()
 		#new_character.bind_deck(new_deck)
@@ -41,18 +38,56 @@ func _ready() -> void:
 			#var new_card = Card.new()
 			#new_deck.add_card(new_card)
 		###
-		var player_screen: PlayerScreen = player_screen_scene.instantiate()
-		player_screen.origin_viewport = origin_viewport
-		player_areas[i].add_child(player_screen)
-		origin_viewport.add_character(new_character) #i should be character id in this case
-		new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
+		#var player_screen: PlayerScreen = player_screen_scene.instantiate()
+		#player_screen.origin_viewport = origin_viewport
+		#player_areas[i].add_child(player_screen)
+		#origin_viewport.add_character(new_character) #i should be character id in this case
+		#new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
 	setup_minimap().reparent($PlayerAreas/Control)
 #endregion
 
 
 #region Private Methods
+func setup_players() -> void:
+	for i in player_areas.size():
+		var new_character = Character.new()
+		var player_input_manager := InputManager.get_player_input_manager(i)
+		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
+		new_character.setup_new_character(i)
+		new_character.bind_pis_machine(pis_machine)
+		origin_viewport.add_character(new_character) #i should be character id in this case
+		var player_screen: PlayerScreen = player_screen_scene.instantiate()
+		
+		# pis machine setup
+		#pis_machine.character_sprite = character_sprite
+		#add_child(pis_machine)
+		#pis_machine.owner = self
+		
+		# player screen setup
+		player_screen.card_manager.input_man = player_input_manager
+		player_screen.card_manager.input_state_machine = pis_machine
+		player_screen.origin_viewport = origin_viewport
+		player_areas[i].add_child(player_screen)
+		
+		# character setup
+		#character_sprite.input_man = player_input_manager
+		#character_sprite.input_state_machine = pis_machine
+		new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
+		
+		# cursor setup
+		#new_cursor.input_man = player_input_manager
+		#new_cursor.input_state_machine = pis_machine
+		
+		pass
+		
+#endregion
 
 func setup_minimap():
+	_minimap_size = Vector2(((grid_man.map_width * _tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _tile_size.y) * _minimap_zoom.y))
+	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
+	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
+	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
+	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	number_of_players = 4 #testing for easy config of # of players
 	#setting up the minimap viewport
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]
