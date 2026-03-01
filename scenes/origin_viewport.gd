@@ -19,7 +19,7 @@ var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
 var _camera_limits:Dictionary[String,int]
 var _tile_size:Vector2
 var _player_viewport_size:Vector2 # = Vector2(100,100)#Vector2(DisplayServer.window_get_size().x / 2,DisplayServer.window_get_size().y / 2)
-@onready var player_to_character_sprite:Dictionary[Player, CharacterSprite]
+@onready var player_to_character_sprite:Dictionary[Character, CharacterSprite]
 var player_cursors:Dictionary[int, Sprite2D]
 var character_sprites:Array[CharacterSprite]
 var _input_managers: Array[PlayerInputManager]

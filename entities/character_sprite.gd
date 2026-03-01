@@ -8,7 +8,7 @@ signal moved(which_character, new_tile_position)
 var character_id:int = 0
 var character_ref:int #will be character, currently player
 
-@onready var input_man:PlayerInputManager = InputManager.get_controller_manager()
+@onready var input_man:PlayerInputManager = InputManager.get_player_input_manager(0)
 @onready var fake_state_machine:String = "character" #character, cursor, blank
 #endregion
 
