@@ -17,6 +17,7 @@ var _controller_events = [
 	Model.Action.SELECT,
 	Model.Action.DESELECT,
 	Model.Action.TOGGLE_MAP,
+	Model.Action.TOGGLE_CURSOR,
 ]
 
 ## Format string to create per-player actions.

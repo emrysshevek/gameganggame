@@ -28,10 +28,12 @@ theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Layout" unique_id=1366182083]
+visible = false
 layout_mode = 2
-size_flags_vertical = 8
+size_flags_vertical = 4
 
 [node name="spacer3" type="Control" parent="Layout/HBoxContainer" unique_id=880297745]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -55,6 +57,7 @@ text = "Draw"
 flat = true
 
 [node name="spacer4" type="Control" parent="Layout/HBoxContainer" unique_id=921878017]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -62,10 +65,11 @@ size_flags_vertical = 4
 [node name="HandPile" parent="Layout/HBoxContainer" unique_id=1066738121 instance=ExtResource("2_vmpa3")]
 custom_minimum_size = Vector2(350, 75)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 size_flags_vertical = 0
 
 [node name="spacer2" type="Control" parent="Layout/HBoxContainer" unique_id=676037695]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -94,8 +98,16 @@ text = "Discard"
 flat = true
 
 [node name="spacer" type="Control" parent="Layout/HBoxContainer" unique_id=1997233733]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
+
+[node name="TestLabel" type="Label" parent="Layout" unique_id=422090548]
+layout_mode = 2
+size_flags_vertical = 8
+text = "Press 'v' to bring up your cards"
+horizontal_alignment = 1
+vertical_alignment = 2
 
 [connection signal="pressed" from="Layout/HBoxContainer/DrawPile/DrawButton" to="." method="_on_draw_button_pressed"]

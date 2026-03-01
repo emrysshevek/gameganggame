@@ -3,15 +3,14 @@ class_name CursorSprite extends GridSprite
 #region properties
 var character_id:int = 0
 
-var input_man:PlayerInputManager
-@onready var fake_state_machine:String = "character" #character, cursor
+
+@export var input_state_machine: PlayerInputStateMachine
 #endregion
 
-func _process(delta: float) -> void:
-	if fake_state_machine == "cursor" && input_man != null:
+func _process(_delta: float) -> void:
+	if input_state_machine.current_state == PlayerInputStateMachine.States.CURSOR && input_man != null:
 		_handle_input()
-	else:
-		pass
+
 
 func _handle_input():
 	if input_man.is_action_just_released("move_up"):
