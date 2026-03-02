@@ -51,6 +51,7 @@ func setup_players() -> void:
 		new_character.bind_pis_machine(pis_machine)
 		origin_viewport.add_character(new_character) #i should be character id in this case
 		var player_screen: PlayerScreen = player_screen_scene.instantiate()
+		player_screen.card_manager.deck = new_deck
 		
 		# pis machine setup
 		pis_machine.character_sprite = new_character.character_sprite

@@ -1,6 +1,7 @@
 class_name PlayerInputStateMachine
 extends StateMachine
 
+signal state_switched(old_state, new_state)
 
 enum States {
 	MOVE,
@@ -36,3 +37,9 @@ func _on_card_played(_card: Card) -> void:
 
 func _on_character_sprite_moved() -> void:
 	(state as PlayerInputState).handle_character_sprite_moved(character_sprite)
+
+func _transition_to_next_state(target_state_path: String, data: Dictionary = {}) -> void:
+	var old_state = current_state
+	super._transition_to_next_state(target_state_path, data)
+	var new_state = current_state
+	state_switched.emit(old_state, new_state)
