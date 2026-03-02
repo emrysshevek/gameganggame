@@ -100,7 +100,7 @@ func _handle_input():
 			#check for values
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
+			#discard(hand_pile.ordered_cards[_selected_card_index])
 			_toggle_visibility()
 
 #endregion

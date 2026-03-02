@@ -52,7 +52,6 @@ func bind_deck(new_deck:Deck):
 func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
 	pis_machine = input_pis_machine
 	pis_machine.character_sprite = character_sprite
-	pis_machine.owner = self
 
 func take_damage(amount:int):
 	health_current -= amount

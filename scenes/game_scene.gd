@@ -12,6 +12,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var deck_scene := preload("res://cards/Deck.tscn")
 @onready var character_sprite_scene := preload("res://entities/character_sprite.tscn")
 @onready var pism_scene := preload("res://input/state_machine/PlayerInputStateMachine.tscn")
+@onready var card_scene :=preload("res://cards/card.tscn")
 @onready var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
@@ -28,21 +29,6 @@ var _minimap_coord_4p:Vector2
 func _ready() -> void:
 	_tile_size = grid_man.tile_size
 	setup_players()
-	#for i in player_areas.size():
-		#var new_character = Character.new()
-		#new_character.setup_new_character(i)
-		###deck setup
-		#var new_deck = Deck.new()
-		#new_character.bind_deck(new_deck)
-		#for card_num in 5:
-			#var new_card = Card.new()
-			#new_deck.add_card(new_card)
-		###
-		#var player_screen: PlayerScreen = player_screen_scene.instantiate()
-		#player_screen.origin_viewport = origin_viewport
-		#player_areas[i].add_child(player_screen)
-		#origin_viewport.add_character(new_character) #i should be character id in this case
-		#new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
 	setup_minimap().reparent($PlayerAreas/Control)
 #endregion
 
@@ -53,15 +39,23 @@ func setup_players() -> void:
 		var new_character = Character.new()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
+		
 		new_character.setup_new_character(i)
+		##deck setup
+		var new_deck = deck_scene.instantiate()
+		new_character.bind_deck(new_deck)
+		for card_num in 5:
+			var new_card = card_scene.instantiate()
+			new_deck.add_card(new_card)
+		##
 		new_character.bind_pis_machine(pis_machine)
 		origin_viewport.add_character(new_character) #i should be character id in this case
 		var player_screen: PlayerScreen = player_screen_scene.instantiate()
 		
 		# pis machine setup
-		#pis_machine.character_sprite = character_sprite
-		#add_child(pis_machine)
-		#pis_machine.owner = self
+		pis_machine.character_sprite = new_character.character_sprite
+		add_child(pis_machine)
+		pis_machine.owner = self
 		
 		# player screen setup
 		player_screen.card_manager.input_man = player_input_manager
