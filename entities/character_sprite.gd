@@ -26,14 +26,13 @@ func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	moved.emit(self, new_grid_position)
 	
 func _handle_input():
-	if movement > 0:
-		if input_man.is_action_just_released("move_up"):
-			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y - 1))
-		elif input_man.is_action_just_released("move_right"):
-			move_request.emit(self, Vector2(grid_coordinates.x + 1, grid_coordinates.y))
-		elif input_man.is_action_just_released("move_down"):
-			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
-		elif input_man.is_action_just_released("move_left"):
-			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
+	if input_man.is_action_just_released("move_up"):
+		move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y - 1))
+	elif input_man.is_action_just_released("move_right"):
+		move_request.emit(self, Vector2(grid_coordinates.x + 1, grid_coordinates.y))
+	elif input_man.is_action_just_released("move_down"):
+		move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
+	elif input_man.is_action_just_released("move_left"):
+		move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
 		
 #endregion

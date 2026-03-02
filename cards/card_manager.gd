@@ -106,6 +106,10 @@ func _handle_input():
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
+		elif input_man.is_action_just_released(Model.Action.DISCARD):
+			hand_pile.ordered_cards[_selected_card_index].discard()
+			hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			discard(hand_pile.ordered_cards[_selected_card_index])
 
 #endregion
 	

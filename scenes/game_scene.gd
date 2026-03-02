@@ -46,6 +46,7 @@ func setup_players() -> void:
 		new_character.bind_deck(new_deck)
 		for card_num in 5:
 			var new_card = card_scene.instantiate()
+			new_card.owning_character = new_character
 			new_deck.add_card(new_card)
 		##
 		new_character.bind_pis_machine(pis_machine)

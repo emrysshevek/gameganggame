@@ -11,14 +11,11 @@ signal started_turn(which_player)
 #region properties
 var input_man:PlayerInputManager
 var pis_machine:PlayerInputStateMachine
-var controller_id:int #will this be an int??
 var character_id:int
 var health_max:int = 5
 var health_current:int
 var deck:Deck
 var grid_coordinates:Vector2
-	#get():
-		#return character_sprite.grid_coordinates
 var movement:int
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
@@ -30,8 +27,8 @@ func setup_new_character(input_character_id:int) -> Character:
 	input_man = InputManager.get_player_input_manager(character_id)
 	return self
 
-func bind_controller(controller_info:int):
-	controller_id = controller_info
+#func bind_controller(controller_info:int):
+	#controller_id = controller_info
 	
 func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
