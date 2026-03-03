@@ -40,7 +40,7 @@ func setup_players() -> void:
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
 		
-		new_character.setup_new_character(i)
+		new_character.setup_new_character(i, pis_machine)
 		##deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
@@ -66,8 +66,7 @@ func setup_players() -> void:
 		player_areas[i].add_child(player_screen)
 		
 		# character setup
-		#character_sprite.input_man = player_input_manager
-		#character_sprite.input_state_machine = pis_machine
+		new_character.bind_screen(player_screen)
 		new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
 		
 		# cursor setup

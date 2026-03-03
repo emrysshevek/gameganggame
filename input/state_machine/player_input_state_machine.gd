@@ -25,7 +25,8 @@ func _ready() -> void:
 
 func set_character_sprite(_character_sprite: CharacterSprite) -> void:
 	character_sprite = _character_sprite
-	character_sprite.moved.connect(_on_character_sprite_moved)
+	##temporarily turning this off until it can be hooked back up to Character obj
+	#character_sprite.moved.connect(_on_character_sprite_moved)
 	for player_input_state_node: PlayerInputState in find_children("*", "State"):
 		player_input_state_node.player_input_manager = _character_sprite.input_man
 

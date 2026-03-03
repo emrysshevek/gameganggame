@@ -38,3 +38,4 @@ func _setup_player_viewport() -> void:
 	player_sub_viewport.set_zoom(_player_view_zoom)
 	player_sub_viewport.set_camera_limits(camera_limits["Left"], camera_limits["Top"], camera_limits["Right"], camera_limits["Bottom"])
 	player_sub_viewport.set_layers_visible(player_culling_dictionary)
+	

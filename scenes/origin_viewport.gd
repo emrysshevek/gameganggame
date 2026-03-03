@@ -43,6 +43,7 @@ func add_character(new_character:Character) -> CharacterSprite:
 	_origin_viewport.add_child(new_character)
 	var new_character_sprite = character_sprite.instantiate()
 	new_character.bind_character_sprite(new_character_sprite)
+	new_character.move_request.connect(grid_man._on_object_move_request)
 	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
 	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
 	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
@@ -56,11 +57,10 @@ func add_character(new_character:Character) -> CharacterSprite:
 	var coords = test_player_coords[len(character_sprites)-1]
 	
 	grid_man.testing_map_distance_algorithm(Vector2(coords),3,0)
-	new_character_sprite.grid_coordinates = coords
+	new_character.grid_coordinates = coords
 	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
 	#character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
-	new_character_sprite.move_request.connect(grid_man._on_grid_sprite_move_request)
 	new_character_sprite.set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
 	new_character_sprite.set_type(GridSprite.sprite_types.character)
 	return new_character_sprite
@@ -79,7 +79,7 @@ func create_cursor(new_character:Character, tile_position:Vector2):
 	new_cursor.set_type(GridSprite.sprite_types.ui)
 	#the below switch of camera transform should happen when the PISM receives input to switch it to cursor mode
 	#new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
-	new_cursor.move_request.connect(grid_man._on_grid_sprite_move_request)
+	new_cursor.move_request.connect(grid_man._on_object_move_request)
 	new_cursor.visible = false
 	return new_cursor
 				
