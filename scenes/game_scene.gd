@@ -87,6 +87,7 @@ func setup_players() -> void:
 		player_screen.card_manager.input_man = player_input_manager
 		player_screen.card_manager.input_state_machine = pis_machine
 		player_screen.origin_viewport = origin_viewport
+		player_screen.player_id = i
 		player_areas[i].add_child(player_screen)
 		
 		# character setup

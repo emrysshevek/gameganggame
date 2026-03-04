@@ -27,7 +27,6 @@ var input_man:PlayerInputManager
 @export var input_state_machine: PlayerInputStateMachine
 @export var input_manager: PlayerInputManager
 @onready var card_scene := preload("res://cards/card.tscn")
-@onready var fake_state_machine:String = "character"
 #endregion
 
 
@@ -102,14 +101,15 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			#check for values
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
+			_selected_card_index -= 1
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
+			_selected_card_index -= 1
 
 #endregion
 	
@@ -140,6 +140,7 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
+		_selected_card_index = 2
 #endregion
 	
 #region Testing methods
