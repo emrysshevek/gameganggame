@@ -13,7 +13,7 @@ signal card_removed(_card: Card)
 var count: int:
 	get:
 		return len(cards)
-@export var player: Player = null
+@export var character: Character = null
 
 @export var cards_node: Node2D
 @export var deck_view: CanvasLayer

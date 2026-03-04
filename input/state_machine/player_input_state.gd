@@ -11,5 +11,5 @@ func handle_card_played(_card: Card) -> void:
 	pass
 
 
-func handle_character_sprite_moved(_character_sprite: CharacterSprite) -> void:
+func handle_character_sprite_moved(_character: Character) -> void:
 	pass
