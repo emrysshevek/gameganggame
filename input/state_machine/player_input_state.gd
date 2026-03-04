@@ -15,7 +15,7 @@ func physics_update(_delta: float) -> void:
 
 
 func handle_round_started() -> void:
-	pass
+	finished.emit(Model.InputState.CURSOR)
 
 
 func handle_card_played(_card: Card) -> void:
