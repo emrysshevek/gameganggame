@@ -15,3 +15,7 @@ func handle_card_played(_card: Card) -> void:
 	# if card gives movement, transition to move state
 	# if card targets board entity (character, tile, etc), transition to cursor state
 	finished.emit(Model.InputState.MOVE)
+	
+	
+func handle_card_discarded(_card: Card) -> void:
+	finished.emit(Model.InputState.MOVE)

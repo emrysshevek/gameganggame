@@ -3,13 +3,19 @@ extends Node
 
 
 #region Properties
-var state: String
 var _controller_id: int
+var _character: Character
+var state: String
 var _state_machine: PlayerInputStateMachine
 #endregion
 
 
 #region Builtins
+func _ready() -> void:
+	if _character != null:
+		_state_machine.set_character(_character)
+	
+	
 func _init(controller_id: int) -> void:
 	_controller_id = controller_id
 #endregion

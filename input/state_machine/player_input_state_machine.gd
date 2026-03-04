@@ -14,23 +14,30 @@ func _ready() -> void:
 		set_character(character)
 	
 	Events.card_played.connect(_on_card_played)
+	Events.card_discarded.connect(_on_card_discarded)
 		
 
 func set_character(_character: Character) -> void:
 	character = _character
 	##temporarily turning this off until it can be hooked back up to Character obj
-	character.moved.connect(_on_character_sprite_moved)
+	character.moved.connect(_on_character_moved)
 	for player_input_state_node: PlayerInputState in find_children("*", "State"):
 		player_input_state_node.player_input_manager = character.input_man
 
 
 func _on_card_played(_card: Card) -> void:
-	if _card.character_sprite == character:
+	if _card.owning_character == character:
 		(state as PlayerInputState).handle_card_played(_card)
+		
+		
+func _on_card_discarded(_card: Card) -> void:
+	if _card.owning_character == character:
+		(state as PlayerInputState).handle_card_discarded(_card)
 
 
-func _on_character_sprite_moved(_character: Character, _old_pos: Vector2i, _new_pos: Vector2i) -> void:
-	(state as PlayerInputState).handle_character_sprite_moved(character)
+func _on_character_moved(_character: Character, _old_coord: Vector2i, _new_coord: Vector2i) -> void:
+	(state as PlayerInputState).handle_character_moved(_character, _old_coord, _new_coord)
+	
 
 func _transition_to_next_state(target_state_path: String, data: Dictionary = {}) -> void:
 	var old_state = current_state

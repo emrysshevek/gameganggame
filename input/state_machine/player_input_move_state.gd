@@ -20,6 +20,6 @@ func update(_delta: float) -> void:
 		finished.emit(Model.InputState.CURSOR)
 
 
-func handle_character_sprite_moved(_character_sprite: Character) -> void:
-	# TODO: check if character has 0 movement left and transition to previous state
-	pass
+func handle_character_moved(_character: Character, _old_coord: Vector2i, _new_coord: Vector2i) -> void:
+	if prev_state != "" and _character.movement <= 0:
+		finished.emit(prev_state)
