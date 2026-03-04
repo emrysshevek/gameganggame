@@ -179,6 +179,9 @@ func move_object(object, tile_coord:Vector2, floor:int):
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
+			#clearing out movement after entering an unexplored tile
+			if floor_maps[floor][tile_coord.x][tile_coord.y].is_tile_explored == false:
+				object.movement = 1
 			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(0)
 			floor_maps[floor][tile_coord.x][tile_coord.y].enter(0)
 			var new_sprite_tile_position:Vector2 = tile_coord
@@ -205,12 +208,12 @@ func _on_object_move_request(object, new_tile_position:Vector2):
 #region testing functions
 func reveal_full_map():
 	for each_tile in _get_all_tiles(0):
-		each_tile.reveal(0)
+		each_tile.explore(0)
 		
 func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
 	var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
 	for each_tile in reached_tiles:
-		each_tile.reveal(0)
+		each_tile.explore(0)
 #endregion
 		
 func _import_pre_baked_map_section():
