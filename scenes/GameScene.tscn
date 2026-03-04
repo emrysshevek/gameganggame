@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://o1a5lvw41j55" path="res://scenes/game_scene.gd" id="1_xy3my"]
 [ext_resource type="PackedScene" uid="uid://dxpo0yea3rw7f" path="res://scenes/origin_viewport.tscn" id="2_cxv17"]
 
-[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas", "origin_viewport")]
+[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas", "origin_viewport") groups=["game_scene"]]
 script = ExtResource("1_xy3my")
 player_areas = [NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P1Area"), NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P2Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P3Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P4Area")]
 origin_viewport = NodePath("OriginViewportController")

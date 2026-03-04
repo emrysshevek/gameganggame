@@ -7,15 +7,18 @@ signal state_switched(old_state, new_state)
 var current_state: String:
 	get:
 		return (state as PlayerInputState).state
+		
+var input_manager: PlayerInputManager
 
 func _ready() -> void:
 	super._ready()
 	if character != null:
 		set_character(character)
 	
+	Events.round_started.connect(_on_round_started)
 	Events.card_played.connect(_on_card_played)
 	Events.card_discarded.connect(_on_card_discarded)
-		
+
 
 func set_character(_character: Character) -> void:
 	character = _character
@@ -23,6 +26,11 @@ func set_character(_character: Character) -> void:
 	character.moved.connect(_on_character_moved)
 	for player_input_state_node: PlayerInputState in find_children("*", "State"):
 		player_input_state_node.player_input_manager = character.input_man
+		player_input_state_node.character = _character
+
+
+func _on_round_started() -> void:
+	(state as PlayerInputState).handle_round_started()
 
 
 func _on_card_played(_card: Card) -> void:

@@ -25,17 +25,41 @@ var _minimap_coord_2p:Vector2
 var _minimap_coord_3p:Vector2
 var _minimap_coord_4p:Vector2
 
+var _player_turn_end: Array[bool] = []
+
 #region Built-in methods
 func _ready() -> void:
+	start_game()
+	Events.player_turn_ended.connect(_on_player_turn_ended)
+#endregion
+
+
+#region Public Methods
+func start_game() -> void:
 	_tile_size = grid_man.tile_size
 	setup_players()
 	setup_minimap().reparent($PlayerAreas/Control)
+	Events.game_started.emit()
+	
+	
+func start_round() -> void:
+	# TODO: cards and draw 5 (shuffle discard if needed)
+	for i in _player_turn_end.size():
+		_player_turn_end[i] = false
+	Events.round_started.emit()
+	
+	
+func end_round() -> void:
+	# put unused cards into discard
+	Events.round_ended.emit()
+	start_round()
 #endregion
 
 
 #region Private Methods
 func setup_players() -> void:
 	for i in player_areas.size():
+		_player_turn_end.append(false)
 		var new_character = Character.new()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
@@ -75,7 +99,6 @@ func setup_players() -> void:
 		
 		pass
 		
-#endregion
 
 func setup_minimap():
 	_minimap_size = Vector2(((grid_man.map_width * _tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _tile_size.y) * _minimap_zoom.y))
@@ -105,4 +128,12 @@ func setup_minimap():
 	
 func _on_card_play_request(which_player, card):
 	pass
+#endregion
+
+
+#region Signal methods
+func _on_player_turn_ended(_character: Character) -> void:
+	_player_turn_end[_character.character_id] = true
+	if _player_turn_end.all(func(x): return x):
+		end_round()
 #endregion

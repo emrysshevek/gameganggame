@@ -23,6 +23,7 @@ class Action:
 	const DESELECT = "deselect"
 	const TOGGLE_MAP = "toggle_map"
 	const TOGGLE_CURSOR = "toggle_cursor"
+	const TOGGLE_END_TURN = "toggle_end_turn"
 	const DISCARD = "discard"
 
 
@@ -30,3 +31,4 @@ class InputState:
 	const MOVE = "Move"
 	const CARD = "Card"
 	const CURSOR = "Cursor"
+	const END = "End"
