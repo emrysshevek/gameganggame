@@ -58,9 +58,12 @@ func flip() -> void:
 	is_faceup = !is_faceup	
 
 
-func play() -> void:
+func play() -> bool:#return true if card played successfully?
+	#check for values, then reserve them
+	#
 	_trigger_play_ability()
 	Events.card_played.emit(self)
+	return true
 
 
 func discard() -> void:
