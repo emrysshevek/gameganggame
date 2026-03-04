@@ -1,18 +1,19 @@
 class_name PlayerInputState
 extends State
 
-const MOVE := "Move"
-const CARD := "Card"
-const CURSOR := "Cursor"
 
 @export var player_input_manager: PlayerInputManager
 
-var state: PlayerInputStateMachine.States
+var state: String
 
 
 func handle_card_played(_card: Card) -> void:
 	pass
+	
+	
+func handle_card_discarded(_card: Card) -> void:
+	pass
 
 
-func handle_character_sprite_moved(_character_sprite: CharacterSprite) -> void:
+func handle_character_moved(_character: Character, _old_coord: Vector2i, _new_coord: Vector2i) -> void:
 	pass

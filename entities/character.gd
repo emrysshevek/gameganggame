@@ -52,7 +52,7 @@ func bind_deck(new_deck:Deck):
 
 func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
 	pis_machine = input_pis_machine
-	pis_machine.character_sprite = character_sprite
+	pis_machine.character = self
 	pis_machine.state_switched.connect(_on_state_machine_switched)
 
 func take_damage(amount:int):
@@ -76,7 +76,7 @@ func start_turn():
 	started_turn.emit(self)
 	
 func _process(_delta: float) -> void:
-	if pis_machine.current_state == PlayerInputStateMachine.States.MOVE:
+	if pis_machine.current_state == Model.InputState.MOVE:
 		_handle_input()
 
 func move(new_grid_position:Vector2, new_screen_position:Vector2):
@@ -99,8 +99,8 @@ func _handle_input():
 		
 #endregion
 
-func _on_state_machine_switched(old_state:PlayerInputStateMachine.States, new_state:PlayerInputStateMachine.States):
-	if new_state == PlayerInputStateMachine.States.CURSOR or old_state == PlayerInputStateMachine.States.CURSOR:
+func _on_state_machine_switched(old_state:String, new_state:String):
+	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR:
 		cursor_sprite.move(grid_coordinates, character_sprite.position)
 		cursor_sprite.toggle_visibility()
 		if cursor_sprite.visible == true:

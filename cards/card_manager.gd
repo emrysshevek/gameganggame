@@ -39,7 +39,7 @@ func _ready() -> void:
 
 		
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
+	if input_state_machine.current_state == Model.InputState.CARD:
 		_handle_input()
 #endregion
 
@@ -137,8 +137,8 @@ func _on_draw_button_pressed() -> void:
 	if draw_pile.count == 0:
 		refill_draw()
 		
-func _on_state_machine_switched(old_state:PlayerInputStateMachine.States, new_state:PlayerInputStateMachine.States):
-	if new_state == PlayerInputStateMachine.States.CARD or old_state == PlayerInputStateMachine.States.CARD:
+func _on_state_machine_switched(old_state:String, new_state:String):
+	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
 		_selected_card_index = 2
 #endregion

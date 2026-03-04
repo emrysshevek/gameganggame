@@ -24,3 +24,9 @@ class Action:
 	const TOGGLE_MAP = "toggle_map"
 	const TOGGLE_CURSOR = "toggle_cursor"
 	const DISCARD = "discard"
+
+
+class InputState:
+	const MOVE = "Move"
+	const CARD = "Card"
+	const CURSOR = "Cursor"

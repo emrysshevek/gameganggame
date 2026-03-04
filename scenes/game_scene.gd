@@ -55,7 +55,7 @@ func setup_players() -> void:
 		player_screen.card_manager.deck = new_deck
 		
 		# pis machine setup
-		pis_machine.character_sprite = new_character.character_sprite
+		pis_machine.character = new_character
 		add_child(pis_machine)
 		pis_machine.owner = self
 		

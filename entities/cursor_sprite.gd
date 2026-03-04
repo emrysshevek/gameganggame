@@ -8,7 +8,7 @@ var character_id:int = 0
 #endregion
 
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == PlayerInputStateMachine.States.CURSOR:
+	if input_state_machine.current_state == Model.InputState.CURSOR:
 		_handle_input()
 
 func toggle_visibility():
