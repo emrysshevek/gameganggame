@@ -3,11 +3,11 @@ extends PlayerInputState
 
 
 func _ready() -> void:
-	state = PlayerInputStateMachine.States.CURSOR
+	state = Model.InputState.CURSOR
 	
 
 func update(_delta: float) -> void:
 	if player_input_manager.is_action_just_pressed(Model.Action.TOGGLE_MAP):
-		finished.emit(CARD)
+		finished.emit(Model.InputState.CARD)
 	if player_input_manager.is_action_just_pressed(Model.Action.TOGGLE_CURSOR):
-		finished.emit(MOVE)
+		finished.emit(Model.InputState.MOVE)
