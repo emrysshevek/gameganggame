@@ -1,0 +1,109 @@
+class_name Character extends Node2D
+
+#region signals
+signal health_changed(which_player, old_value, new_value)
+signal move_request(which_sprite, requested_position)
+signal moved(which_player, old_coord, new_coord)
+signal died(which_player)
+signal ended_turn(which_player)
+signal started_turn(which_player)
+#endregion
+
+#region properties
+var input_man:PlayerInputManager
+var pis_machine:PlayerInputStateMachine
+var my_screen:PlayerScreen
+var character_id:int
+var health_max:int = 5
+var health_current:int
+var deck:Deck
+var grid_coordinates:Vector2
+var movement:int = 3
+var character_sprite:CharacterSprite
+var type:GridSprite.sprite_types
+var cursor_sprite:CursorSprite
+#endregion
+
+#region methods
+func setup_new_character(input_character_id:int, input_state_machine:PlayerInputStateMachine) -> Character:
+	character_id = input_character_id
+	input_man = InputManager.get_player_input_manager(character_id)
+	pis_machine = input_state_machine
+	return self
+
+func bind_screen(input_screen:PlayerScreen):
+	my_screen = input_screen
+	
+func bind_character_sprite(input_sprite:CharacterSprite):
+	character_sprite = input_sprite
+	character_sprite.input_man = input_man
+	type = character_sprite.type
+	add_child(character_sprite)
+	
+func bind_cursor_sprite(input_sprite:CursorSprite):
+	cursor_sprite = input_sprite
+	cursor_sprite.input_man = input_man
+	cursor_sprite.input_state_machine = pis_machine
+	add_child(cursor_sprite)
+
+func bind_deck(new_deck:Deck):
+	deck = new_deck
+	add_child(deck)
+
+func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
+	pis_machine = input_pis_machine
+	pis_machine.character_sprite = character_sprite
+	pis_machine.state_switched.connect(_on_state_machine_switched)
+
+func take_damage(amount:int):
+	health_current -= amount
+	health_changed.emit(self, health_current + amount, health_current)
+	if health_current <= 0:
+		die()
+		
+func heal(amount:int):
+	health_current += amount
+	if health_current > health_max:
+		health_current = health_max
+	
+func die():
+	died.emit(self)
+	
+func end_turn():
+	ended_turn.emit(self)
+
+func start_turn():
+	started_turn.emit(self)
+	
+func _process(_delta: float) -> void:
+	if pis_machine.current_state == PlayerInputStateMachine.States.MOVE:
+		_handle_input()
+
+func move(new_grid_position:Vector2, new_screen_position:Vector2):
+	var old_grid_position = grid_coordinates
+	grid_coordinates = new_grid_position
+	movement -= 1
+	character_sprite.position = new_screen_position
+	moved.emit(self, old_grid_position, new_grid_position)
+	
+func _handle_input():
+	if movement > 0:
+		if input_man.is_action_just_released("move_up"):
+			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y - 1))
+		elif input_man.is_action_just_released("move_right"):
+			move_request.emit(self, Vector2(grid_coordinates.x + 1, grid_coordinates.y))
+		elif input_man.is_action_just_released("move_down"):
+			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
+		elif input_man.is_action_just_released("move_left"):
+			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
+		
+#endregion
+
+func _on_state_machine_switched(old_state:PlayerInputStateMachine.States, new_state:PlayerInputStateMachine.States):
+	if new_state == PlayerInputStateMachine.States.CURSOR or old_state == PlayerInputStateMachine.States.CURSOR:
+		cursor_sprite.move(grid_coordinates, character_sprite.position)
+		cursor_sprite.toggle_visibility()
+		if cursor_sprite.visible == true:
+			cursor_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
+		else:
+			character_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
