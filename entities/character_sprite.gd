@@ -14,7 +14,7 @@ var movement:int = 0 #we probably want to move this into the character obj later
 
 #region methods
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == PlayerInputStateMachine.States.MOVE:
+	if input_state_machine.current_state == Model.InputState.MOVE:
 		_handle_input()
 
 

@@ -6,7 +6,7 @@ var prev_state: String
 
 
 func _ready() -> void:
-	state = PlayerInputStateMachine.States.MOVE
+	state = Model.InputState.MOVE
 
 
 func enter(_previous_state_path: String, _data := {}) -> void:
@@ -15,9 +15,9 @@ func enter(_previous_state_path: String, _data := {}) -> void:
 
 func update(_delta: float) -> void:
 	if player_input_manager.is_action_just_pressed(Model.Action.TOGGLE_MAP):
-		finished.emit(CARD)
+		finished.emit(Model.InputState.CARD)
 	if player_input_manager.is_action_just_pressed(Model.Action.TOGGLE_CURSOR):
-		finished.emit(CURSOR)
+		finished.emit(Model.InputState.CURSOR)
 
 
 func handle_character_sprite_moved(_character_sprite: CharacterSprite) -> void:

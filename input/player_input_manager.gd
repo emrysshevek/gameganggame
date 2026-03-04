@@ -3,7 +3,9 @@ extends Node
 
 
 #region Properties
+var state: String
 var _controller_id: int
+var _state_machine: PlayerInputStateMachine
 #endregion
 
 

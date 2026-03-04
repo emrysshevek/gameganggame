@@ -2,15 +2,8 @@ class_name PlayerInputStateMachine
 extends StateMachine
 
 
-enum States {
-	MOVE,
-	CARD,
-	CURSOR,
-}
-
-
 @export var character_sprite: CharacterSprite
-var current_state: States:
+var current_state: String:
 	get:
 		return (state as PlayerInputState).state
 
