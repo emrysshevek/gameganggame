@@ -1,6 +1,7 @@
 class_name Card
 extends Control
 
+enum target_types{caster, character, explored_tile, unexplored_tile}
 
 #region Signals
 signal clicked()
@@ -15,7 +16,8 @@ signal activate_effect(which_card)
 @export var deck: Deck = null
 @export var pile: Pile = null
 var is_faceup: bool = true
-var targets:Array
+var targets: Dictionary[Node, target_types]
+var targets_required: Dictionary[target_types, int]
 
 @export var focus: Focusable
 
@@ -59,12 +61,49 @@ func flip() -> void:
 
 
 func play() -> bool:#return true if card played successfully?
+	#making value manager instance for testing
+	var testing_value_manager = ValueManager.new()
 	#check for values, then reserve them
-	#
+	if testing_value_manager.check_values(cost.keys().pick_random(), 0, self) == true:
+		pass
+		#check if targetting is needed by the card
+		if targets_required.has(target_types.caster) == true:
+			#no targetting needed, only affects caster. some other types may not require targetting and can be added here
+			pass
+		else:
+			pass
+			#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
+	else:
+		return false
+		#make card play 'cant be played' animation or sound
+	#then play card effect
+	#then tell value manager to unreserve+spend the values this card reserved
 	_trigger_play_ability()
 	Events.card_played.emit(self)
 	return true
 
+func validate_targets():
+	#called from the targetting mode state machine when the player selects the last (or only) target in targetting mode
+	if targets_required.size() != targets.size():
+		#verifying that player hasn't selected too few or too many targets
+		targets.clear() #so they can start over
+		return false #stay in targetting mode, indicate player to re-pick targets
+	var approved_targets: Dictionary[target_types, int]
+	#check each target type that is required to see if the right number of each have been provided
+	for each_target_type in targets_required.keys():
+		for each_node_type in targets.keys():
+			if approved_targets.has(each_node_type) == true:
+				approved_targets[each_node_type] += 1
+			else:
+				approved_targets[each_node_type] = 1
+	#checks that the 'approved targets' dictionary created above by counting types of targets in 'targets'
+	#matches the required targets
+	if targets_required.recursive_equal(approved_targets, 1) == true:
+		return true
+		#then play card effect
+		#then tell value manager to unreserve+spend the values this card reserved
+	else:
+		return false #stay in targetting mode, indicate player to re-pick targets
 
 func discard() -> void:
 	_trigger_discard_ability()
@@ -80,12 +119,12 @@ func highlight_return():
 
 #region Private Methods
 func _trigger_play_ability() -> void:
-	targets.append(owning_character)
+	targets[owning_character] = target_types.caster
 	owning_character.movement += 3
 	
 
 func _trigger_discard_ability() -> void:
-	targets.append(owning_character)
+	targets[owning_character] = target_types.caster
 	owning_character.movement += 1
 #endregion
 

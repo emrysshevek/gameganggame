@@ -57,3 +57,11 @@ func clear_values() -> void:
 		creature_values[i] = 0
 	creature_values_cleared.emit()
 #endregion
+
+#region Testing
+func check_values(which_value: CreatureValue, amount: int, source_of_check):
+	#if values are available then reserve them, return true, and store the reservation with a ref to the reserving card?
+	return true
+	#if values are not available:
+	#return false
+#endregion

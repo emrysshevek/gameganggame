@@ -4,6 +4,7 @@ enum sprite_types{character, ui}
 
 #region signals
 signal move_request(which_sprite, requested_position)
+signal get_tile_object_request(object_type, grid_coordinates)
 #endregion
 
 #region properties

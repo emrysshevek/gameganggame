@@ -80,6 +80,7 @@ func create_cursor(new_character:Character, tile_position:Vector2):
 	#the below switch of camera transform should happen when the PISM receives input to switch it to cursor mode
 	#new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
 	new_cursor.move_request.connect(grid_man._on_object_move_request)
+	new_cursor.get_tile_object_request.connect(grid_man._on_get_tile_objects_request)
 	new_cursor.visible = false
 	return new_cursor
 				

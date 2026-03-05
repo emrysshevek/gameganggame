@@ -24,3 +24,6 @@ func _handle_input():
 			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
 		elif input_man.is_action_just_released("move_left"):
 			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
+		elif input_man.is_action_just_released(Model.Action.SELECT): #&& input state machine == targetting!
+			get_tile_object_request.emit("", grid_coordinates)
+			#add the selected tile/object to the 'target' for the card being played in input_state_machine

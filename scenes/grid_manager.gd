@@ -201,6 +201,14 @@ func move_object(object, tile_coord:Vector2, floor:int):
 	else:
 		print("invalid sprite type: " + str(object.type))
 		assert(false)
+
+func get_tile_objects(type, grid_coordinates:Vector2): #make this use target_types enum?
+	#for each object on type_list (we'll have to make these lists) check grid coordinates
+	#return array of all objects + the tile itself that match these grid coordinates and type
+	pass
+		
+func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
+	get_tile_objects(type, grid_coordinates)	
 		
 func _on_object_move_request(object, new_tile_position:Vector2):
 	move_object(object, new_tile_position, 0)
