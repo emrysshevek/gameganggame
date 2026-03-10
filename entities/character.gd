@@ -22,6 +22,9 @@ var movement:int = 3
 var character_sprite:CharacterSprite
 var type:GridSprite.sprite_types
 var cursor_sprite:CursorSprite
+var character_color:Color
+
+@onready var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
 #endregion
 
 #region methods
@@ -37,6 +40,7 @@ func bind_screen(input_screen:PlayerScreen):
 func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
+	character_sprite.self_modulate = testing_player_colors[character_id]
 	type = character_sprite.type
 	add_child(character_sprite)
 	
@@ -44,6 +48,7 @@ func bind_cursor_sprite(input_sprite:CursorSprite):
 	cursor_sprite = input_sprite
 	cursor_sprite.input_man = input_man
 	cursor_sprite.input_state_machine = pis_machine
+	cursor_sprite.self_modulate = testing_player_colors[character_id]
 	add_child(cursor_sprite)
 
 func bind_deck(new_deck:Deck):
