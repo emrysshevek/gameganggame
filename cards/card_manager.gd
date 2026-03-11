@@ -34,7 +34,6 @@ var input_man:PlayerInputManager
 func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
-		turn_start_draw()
 	input_state_machine.state_switched.connect(_on_state_machine_switched)
 
 		

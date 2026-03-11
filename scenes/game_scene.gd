@@ -17,6 +17,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
 
+var player_screens: Array[PlayerScreen]
 var _player_sub_viewports:Dictionary[viewport_names, PlayerSubViewport]
 var _tile_size:Vector2
 var number_of_players:int
@@ -40,17 +41,20 @@ func start_game() -> void:
 	setup_players()
 	setup_minimap().reparent($PlayerAreas/Control)
 	Events.game_started.emit()
+	start_round()
 	
 	
 func start_round() -> void:
-	# TODO: cards and draw 5 (shuffle discard if needed)
-	for i in _player_turn_end.size():
+	for i in player_screens.size():
+		player_screens[i].start_turn()
 		_player_turn_end[i] = false
 	Events.round_started.emit()
 	
 	
 func end_round() -> void:
-	# put unused cards into discard
+	for player in player_screens:
+		player.end_turn()
+		
 	Events.round_ended.emit()
 	start_round()
 #endregion
@@ -68,10 +72,7 @@ func setup_players() -> void:
 		##deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-		for card_num in 5:
-			var new_card = card_scene.instantiate()
-			new_card.owning_character = new_character
-			new_deck.add_card(new_card)
+
 		##
 		new_character.bind_pis_machine(pis_machine)
 		origin_viewport.add_character(new_character) #i should be character id in this case
@@ -89,6 +90,7 @@ func setup_players() -> void:
 		player_screen.origin_viewport = origin_viewport
 		player_screen.player_id = i
 		player_areas[i].add_child(player_screen)
+		player_screens.append(player_screen)
 		
 		# character setup
 		new_character.bind_screen(player_screen)
