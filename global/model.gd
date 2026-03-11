@@ -30,3 +30,4 @@ class InputState:
 	const MOVE = "Move"
 	const CARD = "Card"
 	const CURSOR = "Cursor"
+	const TARGET = "Target"

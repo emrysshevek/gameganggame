@@ -60,7 +60,7 @@ func flip() -> void:
 	is_faceup = !is_faceup	
 
 
-func play() -> bool:#return true if card played successfully?
+func play() -> void:
 	#making value manager instance for testing
 	var testing_value_manager = ValueManager.new()
 	#check for values, then reserve them
@@ -69,21 +69,17 @@ func play() -> bool:#return true if card played successfully?
 		#check if targetting is needed by the card
 		if targets_required.has(target_types.caster) == true:
 			#no targetting needed, only affects caster. some other types may not require targetting and can be added here
-			pass
+			#play card effect
+			_trigger_play_ability()
 		else:
-			pass
 			#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
+			Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 	else:
-		return false
+		pass
 		#make card play 'cant be played' animation or sound
-	#then play card effect
-	#then tell value manager to unreserve+spend the values this card reserved
-	_trigger_play_ability()
-	Events.card_played.emit(self)
-	return true
 
 func validate_targets():
-	#called from the targetting mode state machine when the player selects the last (or only) target in targetting mode
+	#called from the card manager? cursor? when the player selects the last (or only) target in targetting mode
 	if targets_required.size() != targets.size():
 		#verifying that player hasn't selected too few or too many targets
 		targets.clear() #so they can start over
@@ -99,9 +95,9 @@ func validate_targets():
 	#checks that the 'approved targets' dictionary created above by counting types of targets in 'targets'
 	#matches the required targets
 	if targets_required.recursive_equal(approved_targets, 1) == true:
+		Events.request_input_state_transition.emit(Model.InputState.CARD, owning_character)
 		return true
-		#then play card effect
-		#then tell value manager to unreserve+spend the values this card reserved
+		_trigger_play_ability()
 	else:
 		return false #stay in targetting mode, indicate player to re-pick targets
 
@@ -121,6 +117,7 @@ func highlight_return():
 func _trigger_play_ability() -> void:
 	targets[owning_character] = target_types.caster
 	owning_character.movement += 3
+	Events.card_played.emit(self) #then tell value manager to unreserve+spend the values this card reserved
 	
 
 func _trigger_discard_ability() -> void:
