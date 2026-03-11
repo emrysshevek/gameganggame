@@ -110,8 +110,6 @@ func _reposition() -> void:
 		spacing = Vector2(0, size.y / float(count + 1))
 	if size == Vector2.ZERO:
 		spacing.y -= 2
-	else:
-		_set_focus_neighbors()
 	
 	var curr_pos := global_position + area_offset - card_offset
 	for i in len(ordered_cards):

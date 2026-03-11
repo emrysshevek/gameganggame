@@ -19,7 +19,7 @@ var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
 var _camera_limits:Dictionary[String,int]
 var _tile_size:Vector2
 var _player_viewport_size:Vector2 # = Vector2(100,100)#Vector2(DisplayServer.window_get_size().x / 2,DisplayServer.window_get_size().y / 2)
-@onready var player_id_to_character_sprite:Dictionary[int, CharacterSprite]
+@onready var player_to_character_sprite:Dictionary[Character, CharacterSprite]
 var player_cursors:Dictionary[int, Sprite2D]
 var character_sprites:Array[CharacterSprite]
 var _input_managers: Array[PlayerInputManager]
@@ -39,44 +39,47 @@ func _ready() -> void:
 	#minimap placement and size configuration
 	#setup_player_testing()
 
-func add_character(character_id:int) -> CharacterSprite:
+func add_character(new_character:Character) -> CharacterSprite:
+	_origin_viewport.add_child(new_character)
 	var new_character_sprite = character_sprite.instantiate()
-	new_character_sprite.set_input_man(InputManager.get_player_input_manager(character_id))
+	new_character.bind_character_sprite(new_character_sprite)
+	new_character.move_request.connect(grid_man._on_object_move_request)
 	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
 	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
 	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
-	_origin_viewport.add_child(new_character_sprite)
+	#_origin_viewport.add_child(new_character_sprite)
 	character_sprites.append(new_character_sprite)
 	_input_managers.append(new_character_sprite.input_man)
-	player_id_to_character_sprite[character_id] = new_character_sprite
+	create_cursor(new_character, new_character_sprite.grid_coordinates)
 	
 	var grid_man_origin = grid_man.global_position
 	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
 	var coords = test_player_coords[len(character_sprites)-1]
 	
 	grid_man.testing_map_distance_algorithm(Vector2(coords),3,0)
-	new_character_sprite.grid_coordinates = coords
+	new_character.grid_coordinates = coords
 	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
 	#character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
-	new_character_sprite.move_request.connect(grid_man._on_grid_sprite_move_request)
 	new_character_sprite.set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
 	new_character_sprite.set_type(GridSprite.sprite_types.character)
 	return new_character_sprite
 
 		
-func create_cursor(which_player_id:int, tile_position:Vector2) -> CursorSprite:
+func create_cursor(new_character:Character, tile_position:Vector2):
 	var new_cursor:CursorSprite = cursor_sprite.instantiate()
+	new_character.bind_cursor_sprite(new_cursor)
 	#currently cursor breaks if its not a child of grid man, size and placement is all wrong
-	grid_man.add_child(new_cursor)
-	player_cursors[which_player_id] = new_cursor
+	new_cursor.input_man = character_sprites[new_character.character_id].input_man
+	#grid_man.add_child(new_cursor)
+	player_cursors[new_character.character_id] = new_cursor
 	new_cursor.set_sprite(load("res://art/cursor.png"))
 	new_cursor.grid_coordinates = tile_position
 	new_cursor.set_visual_position(Vector2(character_sprites[0].grid_coordinates.x * _tile_size.x, character_sprites[0].grid_coordinates.y * _tile_size.y))
 	new_cursor.set_type(GridSprite.sprite_types.ui)
 	#the below switch of camera transform should happen when the PISM receives input to switch it to cursor mode
 	#new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
-	new_cursor.move_request.connect(grid_man._on_grid_sprite_move_request)
+	new_cursor.move_request.connect(grid_man._on_object_move_request)
 	new_cursor.visible = false
 	return new_cursor
 				

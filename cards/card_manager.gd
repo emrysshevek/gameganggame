@@ -6,7 +6,7 @@ extends Control
 @export var draw_pile: Pile
 @export var discard_pile: Pile
 @export var hand_pile: Pile
-@export var player: Player
+@export var character: Character
 
 var input_man:PlayerInputManager
 
@@ -27,7 +27,6 @@ var input_man:PlayerInputManager
 @export var input_state_machine: PlayerInputStateMachine
 @export var input_manager: PlayerInputManager
 @onready var card_scene := preload("res://cards/card.tscn")
-@onready var fake_state_machine:String = "character"
 #endregion
 
 
@@ -35,10 +34,12 @@ var input_man:PlayerInputManager
 func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
+		turn_start_draw()
+	input_state_machine.state_switched.connect(_on_state_machine_switched)
 
 		
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == PlayerInputStateMachine.States.CARD:
+	if input_state_machine.current_state == Model.InputState.CARD:
 		_handle_input()
 #endregion
 
@@ -50,8 +51,12 @@ func set_deck(_deck: Deck) -> void:
 	deck.card_removed.connect(_on_deck_card_removed)
 	for card in deck.cards:
 		card.clicked.connect(func(): _on_card_clicked(card))
+		draw_pile.add_card(card)
+	draw_pile.shuffle()
 	
 func draw(_count:=1) -> void:			
+	if draw_pile.count < _count:
+		refill_draw()
 	for i in _count:
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
@@ -95,12 +100,16 @@ func _handle_input():
 			_selected_card_index -= 1
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
-		elif input_man.is_action_just_released(Model.Action.TOGGLE_MAP):
-			#check for values
+		elif input_man.is_action_just_released(Model.Action.SELECT):
 			hand_pile.ordered_cards[_selected_card_index].play()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
-			_toggle_visibility()
+			_selected_card_index -= 1
+		elif input_man.is_action_just_released(Model.Action.DISCARD):
+			hand_pile.ordered_cards[_selected_card_index].discard()
+			hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			discard(hand_pile.ordered_cards[_selected_card_index])
+			_selected_card_index -= 1
 
 #endregion
 	
@@ -127,6 +136,11 @@ func _on_card_clicked(_card) -> void:
 func _on_draw_button_pressed() -> void:
 	if draw_pile.count == 0:
 		refill_draw()
+		
+func _on_state_machine_switched(old_state:String, new_state:String):
+	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
+		_toggle_visibility()
+		_selected_card_index = 2
 #endregion
 	
 #region Testing methods
@@ -144,7 +158,6 @@ func set_input_man(input_manager:PlayerInputManager) -> void:
 	input_man = input_manager
 	
 
-			
 func _card_selection_visuals(new_selected_card_index:int):
 	var selected_card = hand_pile.ordered_cards[new_selected_card_index]
 	for each_card in hand_pile.ordered_cards:
@@ -154,10 +167,6 @@ func _card_selection_visuals(new_selected_card_index:int):
 			each_card.highlight_return()
 			
 func _toggle_visibility():
-	if fake_state_machine != "cards":
-		fake_state_machine = "cards"
-	else:
-		fake_state_machine = "character"
 	$Layout/HBoxContainer.visible = !$Layout/HBoxContainer.visible
 	$Layout/TestLabel.visible = !$Layout/TestLabel.visible
 #endregion

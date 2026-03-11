@@ -174,45 +174,46 @@ func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unreveale
 		else:
 			each_tile.set_highlight(highlight_on)
 		
-func move_grid_sprite(which_sprite:GridSprite, tile_coord:Vector2, floor:int):
-	if which_sprite.type == GridSprite.sprite_types.character:
-		if is_directly_connected(floor, which_sprite.grid_coordinates, tile_coord) == false:
+func move_object(object, tile_coord:Vector2, floor:int):
+	if object.type == GridSprite.sprite_types.character:
+		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
-			floor_maps[floor][which_sprite.grid_coordinates.x][which_sprite.grid_coordinates.y].exit(0)
+			#clearing out movement after entering an unexplored tile
+			if floor_maps[floor][tile_coord.x][tile_coord.y].is_tile_explored == false:
+				object.movement = 1
+			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(0)
 			floor_maps[floor][tile_coord.x][tile_coord.y].enter(0)
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
-			which_sprite.move(new_sprite_tile_position, new_sprite_screen_position)
+			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
-	elif which_sprite.type == GridSprite.sprite_types.ui:
+	elif object.type == GridSprite.sprite_types.ui:
 		if is_in_bounds(tile_coord) == false:
 			return false
 		else:
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
-			which_sprite.move(new_sprite_tile_position, new_sprite_screen_position)
+			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
 	else:
-		print("invalid sprite type: " + str(which_sprite.type))
+		print("invalid sprite type: " + str(object.type))
 		assert(false)
 		
-func _on_grid_sprite_move_request(sprite:GridSprite, new_tile_position:Vector2):
-	if move_grid_sprite(sprite, new_tile_position, 0) != false:
-		if "movement" in sprite:
-			sprite.movement -= 1
+func _on_object_move_request(object, new_tile_position:Vector2):
+	move_object(object, new_tile_position, 0)
 		
 #region testing functions
 func reveal_full_map():
 	for each_tile in _get_all_tiles(0):
-		each_tile.reveal(0)
+		each_tile.explore(0)
 		
 func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
 	var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
 	for each_tile in reached_tiles:
-		each_tile.reveal(0)
+		each_tile.explore(0)
 #endregion
 		
 func _import_pre_baked_map_section():

@@ -15,6 +15,7 @@ signal activate_effect(which_card)
 @export var deck: Deck = null
 @export var pile: Pile = null
 var is_faceup: bool = true
+var targets:Array
 
 @export var focus: Focusable
 
@@ -23,7 +24,7 @@ var is_faceup: bool = true
 @export var _description_label: Label
 @export var _costs_hbox: HBoxContainer
 
-var owning_character_id:int #should change this to a reference to the character later
+var owning_character:Character #should change this to a reference to the character later
 #endregion
 
 
@@ -57,9 +58,12 @@ func flip() -> void:
 	is_faceup = !is_faceup	
 
 
-func play() -> void:
+func play() -> bool:#return true if card played successfully?
+	#check for values, then reserve them
+	#
 	_trigger_play_ability()
 	Events.card_played.emit(self)
+	return true
 
 
 func discard() -> void:
@@ -76,11 +80,13 @@ func highlight_return():
 
 #region Private Methods
 func _trigger_play_ability() -> void:
-	activate_effect.emit(self)
+	targets.append(owning_character)
+	owning_character.movement += 3
 	
 
 func _trigger_discard_ability() -> void:
-	pass
+	targets.append(owning_character)
+	owning_character.movement += 1
 #endregion
 
 
