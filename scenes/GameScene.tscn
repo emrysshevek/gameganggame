@@ -1,12 +1,15 @@
 [gd_scene format=3 uid="uid://drvp6l1arplgr"]
 
 [ext_resource type="Script" uid="uid://o1a5lvw41j55" path="res://scenes/game_scene.gd" id="1_xy3my"]
+[ext_resource type="PackedScene" uid="uid://ck6os832o7j48" path="res://scenes/ValueManager.tscn" id="2_18ig4"]
 [ext_resource type="PackedScene" uid="uid://dxpo0yea3rw7f" path="res://scenes/origin_viewport.tscn" id="2_cxv17"]
 
 [node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas", "origin_viewport")]
 script = ExtResource("1_xy3my")
 player_areas = [NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P1Area"), NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P2Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P3Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P4Area")]
 origin_viewport = NodePath("OriginViewportController")
+
+[node name="ValueManager" parent="." unique_id=323409287 instance=ExtResource("2_18ig4")]
 
 [node name="OriginViewportController" parent="." unique_id=1737952139 instance=ExtResource("2_cxv17")]
 
