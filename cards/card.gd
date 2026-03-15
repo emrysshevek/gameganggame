@@ -46,6 +46,9 @@ func _ready() -> void:
 		label.text = "{0}{1}".format([cost[cv], letter])
 		label.add_theme_color_override("font_color", Color.BLACK)
 		_costs_hbox.add_child(label)
+		
+	#testing
+	targets_required[target_types.caster] = 1
 #endregion
 
 
@@ -72,17 +75,15 @@ func value_check() -> bool:
 		value_man.reserve_value(each_value_type, cost[each_value_type])
 	return true
 
-func play() -> bool:
+func play() -> void:
 	#check if targetting is needed by the card
 	if targets_required.has(target_types.caster) == true:
 		#no targetting needed, only affects caster. some other types may not require targetting and can be added here
 		#play card effect
 		_trigger_play_ability()
-		return true
 	else:
-		#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
+		#call state machine to switch to 'targetting' state, pass it card owner so events knows who is calling for switch
 		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
-		return true
 
 func validate_targets():
 	#called from the card manager? cursor? when the player selects the last (or only) target in targetting mode
