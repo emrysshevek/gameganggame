@@ -101,10 +101,14 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			hand_pile.ordered_cards[_selected_card_index].play()
-			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
-			_selected_card_index -= 1
+			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
+				hand_pile.ordered_cards[_selected_card_index].play()
+				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+				discard(hand_pile.ordered_cards[_selected_card_index])
+				_selected_card_index -= 1
+			else:
+				pass
+				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()

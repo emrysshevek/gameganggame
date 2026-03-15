@@ -59,23 +59,30 @@ func flip() -> void:
 		_backside.hide()
 	is_faceup = !is_faceup	
 
-
-func play() -> void:
+func value_check() -> bool:
+	var value_man = Utils.try_get_value_manager()
 	#check for values, then reserve them
 	for each_value_type in cost.keys():
-		if Utils.try_get_value_manager().get_value(each_value_type) >= cost[each_value_type]:
+		if value_man.get_value(each_value_type) >= cost[each_value_type]:
 			pass
-			#check if targetting is needed by the card
-			if targets_required.has(target_types.caster) == true:
-				#no targetting needed, only affects caster. some other types may not require targetting and can be added here
-				#play card effect
-				_trigger_play_ability()
-			else:
-				#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
-				Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 		else:
-			pass
+			return false
 			#make card play 'cant be played' animation or sound
+	for each_value_type in cost.keys():
+		value_man.reserve_value(each_value_type, cost[each_value_type])
+	return true
+
+func play() -> bool:
+	#check if targetting is needed by the card
+	if targets_required.has(target_types.caster) == true:
+		#no targetting needed, only affects caster. some other types may not require targetting and can be added here
+		#play card effect
+		_trigger_play_ability()
+		return true
+	else:
+		#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
+		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
+		return true
 
 func validate_targets():
 	#called from the card manager? cursor? when the player selects the last (or only) target in targetting mode
