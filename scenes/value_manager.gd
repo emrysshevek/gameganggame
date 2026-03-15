@@ -33,6 +33,7 @@ func get_value(value: Model.CreatureValue) -> int:
 
 func gain_value(value: Model.CreatureValue, quantity: int = 1) -> void:
 	_increase_value(value, quantity)
+	print("added " + str(quantity) + " " + Model.CreatureValue.keys()[value])
 
 
 func reserve_value(value: Model.CreatureValue, quantity: int = 1) -> bool:
@@ -95,12 +96,4 @@ func clear_values() -> void:
 	for i in len(_creature_values):
 		_creature_values[i] = 0
 	creature_values_cleared.emit()
-#endregion
-
-#region Testing
-func check_values(which_value: CreatureValue, amount: int, source_of_check):
-	#if values are available then reserve them, return true, and store the reservation with a ref to the reserving card?
-	return true
-	#if values are not available:
-	#return false
 #endregion

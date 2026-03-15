@@ -10,7 +10,7 @@ signal activate_effect(which_card)
 
 
 #region Properties
-@export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
+@export var cost: Dictionary[Model.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
 @export var character_sprite: CharacterSprite
 @export var deck: Deck = null
@@ -41,7 +41,7 @@ func _ready() -> void:
 		_backside.show()
 		
 	for cv in cost.keys():
-		var letter = ValueManager.value_names[cv][0]
+		var letter = Model.CreatureValue.keys()[cv].left(1)
 		var label: Label = Label.new()
 		label.text = "{0}{1}".format([cost[cv], letter])
 		label.add_theme_color_override("font_color", Color.BLACK)
@@ -61,22 +61,21 @@ func flip() -> void:
 
 
 func play() -> void:
-	#making value manager instance for testing
-	var testing_value_manager = ValueManager.new()
 	#check for values, then reserve them
-	if testing_value_manager.check_values(cost.keys().pick_random(), 0, self) == true:
-		pass
-		#check if targetting is needed by the card
-		if targets_required.has(target_types.caster) == true:
-			#no targetting needed, only affects caster. some other types may not require targetting and can be added here
-			#play card effect
-			_trigger_play_ability()
+	for each_value_type in cost.keys():
+		if Utils.try_get_value_manager().get_value(each_value_type) >= cost[each_value_type]:
+			pass
+			#check if targetting is needed by the card
+			if targets_required.has(target_types.caster) == true:
+				#no targetting needed, only affects caster. some other types may not require targetting and can be added here
+				#play card effect
+				_trigger_play_ability()
+			else:
+				#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
+				Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 		else:
-			#call state machine to switch to 'targetting' state, pass it this card so it knows what is targetting
-			Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
-	else:
-		pass
-		#make card play 'cant be played' animation or sound
+			pass
+			#make card play 'cant be played' animation or sound
 
 func validate_targets():
 	#called from the card manager? cursor? when the player selects the last (or only) target in targetting mode

@@ -9,7 +9,7 @@ signal tile_exited(which_tile, which_player)
 
 #region properties
 var grid_coordinates:Vector2
-var explore_value:String
+var explore_value:Model.CreatureValue
 var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
@@ -49,6 +49,7 @@ func explore(which_player:int):
 	if is_tile_revealed == false:
 		reveal(which_player)
 	is_tile_explored = true
+	Utils.try_get_value_manager().gain_value(explore_value, 1)
 	tile_explored.emit(self, which_player)
 	
 func reveal(which_player:int):
@@ -62,7 +63,8 @@ func reveal(which_player:int):
 			_path_lines_minimap[each_direction].visible = true
 			
 func enter(which_player:int):
-	explore(which_player)
+	if is_tile_explored == false:
+		explore(which_player)
 	tile_entered.emit(self, which_player)
 	pass
 	
@@ -71,7 +73,7 @@ func exit(which_player:int):
 	pass
 	
 func _set_random_explore_value():
-	explore_value = ValueManager.value_names.pick_random()
+	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now
 	
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
