@@ -105,7 +105,7 @@ func _handle_input():
 #endregion
 
 func _on_state_machine_switched(old_state:String, new_state:String):
-	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR:
+	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR or new_state == Model.InputState.TARGET || old_state == Model.InputState.TARGET:
 		cursor_sprite.move(grid_coordinates, character_sprite.position)
 		cursor_sprite.toggle_visibility()
 		if cursor_sprite.visible == true:

@@ -6,6 +6,8 @@ signal map_generated()
 
 enum directions{north, east, south, west}
 
+enum object_types{tile}
+
 #region properties
 var _tile_scene = preload("res://scenes/Tile.tscn")
 var _path_number_odds = [75,75,60,40]
@@ -202,11 +204,12 @@ func move_object(object, tile_coord:Vector2, floor:int):
 		print("invalid sprite type: " + str(object.type))
 		assert(false)
 
-func get_tile_objects(type, grid_coordinates:Vector2): #make this use target_types enum?
+func get_tile_objects(type:object_types, grid_coordinates:Vector2): #make this use target_types enum?
 	#for each object on type_list (we'll have to make these lists) check grid coordinates
 	#return array of all objects + the tile itself that match these grid coordinates and type
-	pass
-		
+	#just returning the selected tile for now
+	return floor_maps[0][grid_coordinates.x][grid_coordinates.y]
+	
 func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
 	get_tile_objects(type, grid_coordinates)	
 		

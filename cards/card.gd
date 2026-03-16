@@ -124,6 +124,8 @@ func highlight_return():
 func _trigger_play_ability() -> void:
 	targets[owning_character] = target_types.caster
 	owning_character.movement += 3
+	for each_value_type in cost.keys():
+		Utils.try_get_value_manager().use_reserved_value(each_value_type, cost[each_value_type])
 	Events.card_played.emit(self) #then tell value manager to unreserve+spend the values this card reserved
 	
 

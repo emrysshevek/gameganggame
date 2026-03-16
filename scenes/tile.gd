@@ -49,6 +49,7 @@ func explore(which_player:int):
 	if is_tile_revealed == false:
 		reveal(which_player)
 	is_tile_explored = true
+	_tile_bkd.self_modulate = Color("ffffff")
 	Utils.try_get_value_manager().gain_value(explore_value, 1)
 	tile_explored.emit(self, which_player)
 	
@@ -56,7 +57,7 @@ func reveal(which_player:int):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
 	_tile_bkd.texture = _revealed_texture
-	_tile_bkd.self_modulate = Color("ffffff")
+	_tile_bkd.self_modulate = Color("858585")
 	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
