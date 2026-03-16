@@ -21,6 +21,10 @@ enum CreatureValue {
 	EMPATHY
 }
 
+## Object Types.
+enum ObjectTypes {
+	TILE,
+}
 
 ## Action StringNames. These should be a 1:1 mapping to the actions defined in
 ## the InputMap. Always reference actions through this class to ensure

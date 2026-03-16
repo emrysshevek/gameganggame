@@ -48,7 +48,7 @@ func _ready() -> void:
 		_costs_hbox.add_child(label)
 		
 	#testing
-	targets_required[target_types.caster] = 1
+	targets_required[target_types.unexplored_tile] = 1
 #endregion
 
 
@@ -76,6 +76,7 @@ func value_check() -> bool:
 	return true
 
 func play() -> void:
+	targets.clear()
 	#check if targetting is needed by the card
 	if targets_required.has(target_types.caster) == true:
 		#no targetting needed, only affects caster. some other types may not require targetting and can be added here
@@ -85,16 +86,24 @@ func play() -> void:
 		#call state machine to switch to 'targetting' state, pass it card owner so events knows who is calling for switch
 		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 
-func validate_targets():
-	#called from the card manager? cursor? when the player selects the last (or only) target in targetting mode
-	if targets_required.size() != targets.size():
-		#verifying that player hasn't selected too few or too many targets
+func validate_target(potential_target:Tile): #overwrite(?) this for sub-class cards
+	#called from the cursor when the player selects a target with the cursor in TARGET state
+	#the OBJECT_TYPE of the target is already checked by the tile, but not necessarily target_type
+	if potential_target.is_tile_revealed == false:
+		targets[potential_target] = target_types.unexplored_tile
+		check_targetting_finished()
+
+func check_targetting_finished():
+	if targets_required.size() > targets.size():
+		pass #stay in targetting mode, indicate player to continue pickig targets
+	elif targets_required.size() < targets.size():
+		#verifying that player hasn't selected too many targets
 		targets.clear() #so they can start over
-		return false #stay in targetting mode, indicate player to re-pick targets
+		pass #stay in targetting mode, indicate player to re-pick targets
 	var approved_targets: Dictionary[target_types, int]
 	#check each target type that is required to see if the right number of each have been provided
 	for each_target_type in targets_required.keys():
-		for each_node_type in targets.keys():
+		for each_node_type in targets.values():
 			if approved_targets.has(each_node_type) == true:
 				approved_targets[each_node_type] += 1
 			else:
@@ -103,10 +112,29 @@ func validate_targets():
 	#matches the required targets
 	if targets_required.recursive_equal(approved_targets, 1) == true:
 		Events.request_input_state_transition.emit(Model.InputState.CARD, owning_character)
-		return true
 		_trigger_play_ability()
 	else:
-		return false #stay in targetting mode, indicate player to re-pick targets
+		print ("somehow player picked invalid targets")
+		assert(false)
+
+func get_my_target_types():
+	return targets_required.keys()
+	
+func get_remaining_target_types() -> Array[target_types]:
+	var return_types:Array[target_types]
+	for each_required_type in targets_required.keys():
+		if targets.values().has(each_required_type):
+			if targets[each_required_type == targets_required[each_required_type]]:
+				pass
+			elif targets[each_required_type > targets_required[each_required_type]]:
+				print("too many targets selected")
+				assert(false)
+			elif targets[each_required_type < targets_required[each_required_type]]:
+				print("more targets needed")
+				return_types.append(each_required_type)
+		else:
+			return_types.append(each_required_type)
+	return return_types
 
 func discard() -> void:
 	_trigger_discard_ability()
@@ -122,8 +150,9 @@ func highlight_return():
 
 #region Private Methods
 func _trigger_play_ability() -> void:
-	targets[owning_character] = target_types.caster
-	owning_character.movement += 3
+	#targets[owning_character] = target_types.caster
+	#owning_character.movement += 3
+	targets.keys()[0].reveal(owning_character.character_id)
 	for each_value_type in cost.keys():
 		Utils.try_get_value_manager().use_reserved_value(each_value_type, cost[each_value_type])
 	Events.card_played.emit(self) #then tell value manager to unreserve+spend the values this card reserved

@@ -49,6 +49,7 @@ func bind_cursor_sprite(input_sprite:CursorSprite):
 	cursor_sprite.input_man = input_man
 	cursor_sprite.input_state_machine = pis_machine
 	cursor_sprite.self_modulate = testing_player_colors[character_id]
+	cursor_sprite.character_ref = self
 	add_child(cursor_sprite)
 
 func bind_deck(new_deck:Deck):
@@ -101,7 +102,10 @@ func _handle_input():
 			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
 		elif input_man.is_action_just_released("move_left"):
 			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
-		
+
+func get_my_current_playing_card():
+	return my_screen.card_manager.card_being_played
+
 #endregion
 
 func _on_state_machine_switched(old_state:String, new_state:String):
