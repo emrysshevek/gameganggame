@@ -146,6 +146,9 @@ func get_tiles_in_crow_flies_range(floor:int, from_tile_coords:Vector2, distance
 			returning_tiles.append(each_tile)
 	return returning_tiles
 
+func get_crow_flies_distance(tile1_coords:Vector2, tile2_coords:Vector2):
+	return abs(tile1_coords.x - tile2_coords.x) + abs(tile1_coords.y - tile2_coords.y)
+
 func get_distance(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
@@ -176,10 +179,13 @@ func is_in_bounds(position_to_check:Vector2):
 	return true
 		
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
-	var tiles_in_range = get_tiles_in_crow_flies_range(floor, origin_point, evaluating_card.target_range_max)
-	for each_tile in tiles_in_range:
+	for each_tile in _get_all_tiles(floor):
 		if evaluating_card.validate_target(each_tile, true) == true:
 			each_tile.set_highlight(evaluating_card.owning_character.character_id, true)
+
+func clear_highlights(for_character_id:int, floor:int):
+	for each_tile in _get_all_tiles(floor):
+		each_tile.set_highlight(for_character_id, false)
 
 func move_object(object, tile_coord:Vector2, floor:int):
 	if object.type == GridSprite.sprite_types.character:

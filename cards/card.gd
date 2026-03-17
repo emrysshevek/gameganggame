@@ -89,12 +89,22 @@ func validate_target(potential_target:Tile, just_checking:bool) -> bool: #overwr
 	#called from the cursor when the player selects a target with the cursor in TARGET state -> just checking = false
 	#or called from grid_man when trying to find tiles to highlight -> just checking = true
 	#the OBJECT_TYPE of the target is already checked by grid man in get_tile_objects
+	if validate_range(potential_target.grid_coordinates) == false:
+		return false
 	if potential_target.is_tile_revealed == false:
 		if just_checking == false:
 			targets[potential_target] = Model.ObjectTypes.TILE
 		return true
 	return false
 
+func validate_range(possible_target_location:Vector2) -> bool:
+	var owners_location = owning_character.grid_coordinates
+	var distance:int = Utils.try_get_grid_man().get_crow_flies_distance(possible_target_location, owners_location)
+	if distance > target_range_max:
+		return false
+	else:
+		return true
+	
 func check_targetting_finished():
 	if targets_required.size() > targets.size():
 		pass #stay in targetting mode, indicate player to continue pickig targets
