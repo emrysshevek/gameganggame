@@ -86,8 +86,9 @@ func play() -> void:
 		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 
 func validate_target(potential_target:Tile, just_checking:bool) -> bool: #overwrite(?) this for sub-class cards
-	#called from the cursor when the player selects a target with the cursor in TARGET state
-	#the OBJECT_TYPE of the target is already checked by the tile, but not necessarily target_type
+	#called from the cursor when the player selects a target with the cursor in TARGET state -> just checking = false
+	#or called from grid_man when trying to find tiles to highlight -> just checking = true
+	#the OBJECT_TYPE of the target is already checked by grid man in get_tile_objects
 	if potential_target.is_tile_revealed == false:
 		if just_checking == false:
 			targets[potential_target] = Model.ObjectTypes.TILE
