@@ -24,6 +24,16 @@ enum CreatureValue {
 ## Object Types.
 enum ObjectTypes {
 	TILE,
+	PLAYER_CHARACTER,
+}
+
+enum CullingLayers {
+	VISIBLE_ALL,
+	VISIBLE_MINIMAP_ONLY,
+	VISIBLE_P1_ONLY,
+	VISIBLE_P2_ONLY,
+	VISIBLE_P3_ONLY,
+	VISIBLE_P4_ONLY,
 }
 
 ## Action StringNames. These should be a 1:1 mapping to the actions defined in

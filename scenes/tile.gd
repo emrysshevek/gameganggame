@@ -18,6 +18,7 @@ var _path_lines_minimap:Dictionary
 var a_star_id:int #used by A* for identifying tile
 var tile_size:Vector2
 @onready var _tile_bkd:Sprite2D = $Tile_Bkgd
+@onready var _highlight:Polygon2D = $Tile_Bkgd/SelectionHighlight
 var _revealed_texture:Resource
 #endregion
 
@@ -79,11 +80,11 @@ func _set_random_explore_value():
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
 	
-func set_highlight(on:bool):
-	if on == true:
-		_tile_bkd.self_modulate = Color("#db9718")
+func set_highlight(for_character_id:int, highlight_on:bool):
+	if highlight_on == true:
+		_highlight.set_visibility_layer_bit(for_character_id + 2, true)
 	else:
-		_tile_bkd.self_modulate = Color("ffffff")
+		_highlight.set_visibility_layer_bit(for_character_id + 2, false)
 		
 func set_revealed_texture(texture_resource:Resource):
 	_revealed_texture = texture_resource

@@ -31,7 +31,16 @@ func _setup_card_area() -> void:
 	
 	
 func _setup_player_viewport() -> void:
-	var player_culling_dictionary:Dictionary[int,bool] = {0:true, 1:false}
+	var this_player_only_culling_layer = Model.CullingLayers.values()[2 + player_id]
+	var player_culling_dictionary:Dictionary[Model.CullingLayers,bool] = {
+		Model.CullingLayers.VISIBLE_ALL:true, 
+		Model.CullingLayers.VISIBLE_MINIMAP_ONLY:false,
+		Model.CullingLayers.VISIBLE_P1_ONLY:false,
+		Model.CullingLayers.VISIBLE_P2_ONLY:false,
+		Model.CullingLayers.VISIBLE_P3_ONLY:false,
+		Model.CullingLayers.VISIBLE_P4_ONLY:false,
+	}
+	player_culling_dictionary[this_player_only_culling_layer] = true
 	var camera_limits = origin_viewport._camera_limits
 	
 	player_sub_viewport.set_viewport_world(origin_viewport._world)

@@ -116,3 +116,5 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 			cursor_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
 		else:
 			character_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
+		if new_state == Model.InputState.TARGET:
+			Utils.try_get_grid_man().highlight_targettable_tiles(get_my_current_playing_card(), grid_coordinates, 0)

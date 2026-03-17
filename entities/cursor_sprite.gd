@@ -29,6 +29,6 @@ func _handle_input():
 			if character_ref.get_my_current_playing_card() != null:
 				var current_card = character_ref.get_my_current_playing_card()
 				var grid_man = Utils.try_get_grid_man()
-				current_card.validate_target(grid_man.get_tile_objects(current_card.get_remaining_target_types()[0], grid_coordinates))				
-				
+				if current_card.validate_target(grid_man.get_tile_objects(current_card.get_remaining_target_types()[0], grid_coordinates), false) == true:		
+					current_card.check_targetting_finished()
 			#add the selected tile/object to the 'target' for the card being played in input_state_machine
