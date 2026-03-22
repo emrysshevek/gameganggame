@@ -33,6 +33,7 @@ func get_value(value: Model.CreatureValue) -> int:
 
 func gain_value(value: Model.CreatureValue, quantity: int = 1) -> void:
 	_increase_value(value, quantity)
+	print("added " + str(quantity) + " " + Model.CreatureValue.keys()[value])
 
 
 func reserve_value(value: Model.CreatureValue, quantity: int = 1) -> bool:

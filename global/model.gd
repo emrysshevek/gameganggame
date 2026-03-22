@@ -21,6 +21,20 @@ enum CreatureValue {
 	EMPATHY
 }
 
+## Object Types.
+enum ObjectTypes {
+	TILE,
+	PLAYER_CHARACTER,
+}
+
+enum CullingLayers {
+	VISIBLE_ALL,
+	VISIBLE_MINIMAP_ONLY,
+	VISIBLE_P1_ONLY,
+	VISIBLE_P2_ONLY,
+	VISIBLE_P3_ONLY,
+	VISIBLE_P4_ONLY,
+}
 
 ## Action StringNames. These should be a 1:1 mapping to the actions defined in
 ## the InputMap. Always reference actions through this class to ensure
@@ -41,3 +55,4 @@ class InputState:
 	const MOVE = "Move"
 	const CARD = "Card"
 	const CURSOR = "Cursor"
+	const TARGET = "Target"

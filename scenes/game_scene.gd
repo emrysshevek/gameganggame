@@ -96,7 +96,14 @@ func setup_minimap():
 	minimap_viewport.set_fade(0.8)
 	minimap_viewport.set_stretch(false)
 	minimap_viewport.position = minimap_coords[number_of_players - 1]
-	var culling_dictionary:Dictionary[int,bool] = {0:true, 1:true}
+	var culling_dictionary:Dictionary[Model.CullingLayers,bool] = {
+		Model.CullingLayers.VISIBLE_ALL:true, 
+		Model.CullingLayers.VISIBLE_MINIMAP_ONLY:true,
+		Model.CullingLayers.VISIBLE_P1_ONLY:false,
+		Model.CullingLayers.VISIBLE_P2_ONLY:false,
+		Model.CullingLayers.VISIBLE_P3_ONLY:false,
+		Model.CullingLayers.VISIBLE_P4_ONLY:false,
+	}
 	minimap_viewport.set_layers_visible(culling_dictionary)
 	var minimap_camera_center_position = Vector2((grid_man.map_width * _tile_size.x) / 2, ( (grid_man.map_height * _tile_size.y)) / 2)
 	minimap_viewport.move_camera(minimap_camera_center_position)
