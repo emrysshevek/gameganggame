@@ -9,7 +9,7 @@ signal activate_effect(which_card)
 
 
 #region Properties
-@export var cost: Dictionary[ValueManager.CreatureValue, int] = {}
+@export var cost: Dictionary[Model.CreatureValue, int] = {}
 @export var description: String = "Placeholder Description"
 @export var character_sprite: CharacterSprite
 @export var deck: Deck = null
