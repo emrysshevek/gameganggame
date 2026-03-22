@@ -13,10 +13,13 @@ signal activate_effect(which_card)
 @export var character_sprite: CharacterSprite
 @export var deck: Deck = null
 @export var pile: Pile = null
+
+@export var targets_required: Array[TargetRequirement]
+@export var target_range_max:int = 3 #set to 0 to auto-target own character or tile
+
 var is_faceup: bool = true
 var targets: Dictionary[Node, Model.ObjectTypes]
-var targets_required: Dictionary[Model.ObjectTypes, int]
-@onready var target_range_max:int = 3 #set to 0 to auto-target own character or tile
+
 
 @export var focus: Focusable
 
@@ -47,7 +50,7 @@ func _ready() -> void:
 		_costs_hbox.add_child(label)
 		
 	#testing
-	targets_required[Model.ObjectTypes.TILE] = 1
+	#targets_required[Model.ObjectTypes.TILE] = 1
 #endregion
 
 
@@ -75,13 +78,13 @@ func value_check() -> bool:
 	return true
 
 func play() -> void:
-	targets.clear()
 	#check if targetting is needed by the card
 	if targets_required.has(Model.ObjectTypes.PLAYER_CHARACTER) == true && target_range_max == 0:
 		#no targetting needed, only affects caster. some other types may not require targetting and can be added here
 		#play card effect
 		_trigger_play_ability()
 	else:
+		targets.clear()
 		#call state machine to switch to 'targetting' state, pass it card owner so events knows who is calling for switch
 		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 
