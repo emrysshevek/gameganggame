@@ -15,6 +15,7 @@ func _ready() -> void:
 	
 	Events.card_played.connect(_on_card_played)
 	Events.card_discarded.connect(_on_card_discarded)
+	Events.request_input_state_transition.connect(_on_request_input_state_transition)
 		
 
 func set_character(_character: Character) -> void:
@@ -38,6 +39,9 @@ func _on_card_discarded(_card: Card) -> void:
 func _on_character_moved(_character: Character, _old_coord: Vector2i, _new_coord: Vector2i) -> void:
 	(state as PlayerInputState).handle_character_moved(_character, _old_coord, _new_coord)
 	
+func _on_request_input_state_transition(new_state:String, requesting_character:Character):
+	if requesting_character == character:
+		_transition_to_next_state(new_state)
 
 func _transition_to_next_state(target_state_path: String, data: Dictionary = {}) -> void:
 	var old_state = current_state

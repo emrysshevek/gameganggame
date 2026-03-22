@@ -23,6 +23,8 @@ var input_man:PlayerInputManager
 		_selected_card_index = new_value
 		if new_value != -1:
 			_card_selection_visuals(_selected_card_index)
+			
+var card_being_played:Card
 
 @export var input_state_machine: PlayerInputStateMachine
 @export var input_manager: PlayerInputManager
@@ -36,6 +38,7 @@ func _ready() -> void:
 		set_deck(deck)
 		turn_start_draw()
 	input_state_machine.state_switched.connect(_on_state_machine_switched)
+	Events.card_played.connect(_on_card_played)
 
 		
 func _process(_delta: float) -> void:
@@ -101,10 +104,13 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			hand_pile.ordered_cards[_selected_card_index].play()
-			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
-			_selected_card_index -= 1
+			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
+				card_being_played = hand_pile.ordered_cards[_selected_card_index]
+				hand_pile.ordered_cards[_selected_card_index].play()
+				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			else:
+				pass
+				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
@@ -132,7 +138,6 @@ func _on_card_clicked(_card) -> void:
 	elif _card.pile == discard_pile:
 		pass
 
-
 func _on_draw_button_pressed() -> void:
 	if draw_pile.count == 0:
 		refill_draw()
@@ -141,6 +146,11 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
 		_selected_card_index = 2
+		
+func _on_card_played(_card:Card):
+	card_being_played = null
+	discard(hand_pile.ordered_cards[_selected_card_index])
+	_selected_card_index -= 1
 #endregion
 	
 #region Testing methods

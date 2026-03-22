@@ -20,6 +20,7 @@ var map_height:int = 20
 
 #region methods
 func _ready() -> void:
+	add_to_group(Config.GRID_MANAGER_GROUP)
 	_direction_opposites[directions.north] = directions.south
 	_direction_opposites[directions.east] = directions.west
 	_direction_opposites[directions.south] = directions.north
@@ -137,6 +138,17 @@ func get_reachable_tiles(level:int, starting_tile_coords:Vector2, range:int):
 	return_array.append(starting_tile)
 	return return_array
 
+func get_tiles_in_crow_flies_range(floor:int, from_tile_coords:Vector2, distance:int) -> Array[Tile]:
+	var returning_tiles:Array[Tile]
+	for each_tile in _get_all_tiles(floor):
+		var tile_distance_from_target = abs(each_tile.grid_coordinates.x - from_tile_coords.x) + abs(each_tile.grid_coordinates.y - from_tile_coords.y)
+		if tile_distance_from_target <= distance:
+			returning_tiles.append(each_tile)
+	return returning_tiles
+
+func get_crow_flies_distance(tile1_coords:Vector2, tile2_coords:Vector2):
+	return abs(tile1_coords.x - tile2_coords.x) + abs(tile1_coords.y - tile2_coords.y)
+
 func get_distance(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
@@ -166,14 +178,15 @@ func is_in_bounds(position_to_check:Vector2):
 		return false
 	return true
 		
-func set_highlight_tiles(tiles:Array[Tile], highlight_on:bool, include_unrevealed:bool):
-	for each_tile in tiles:
-		if include_unrevealed == false:
-			if each_tile.is_tile_revealed == true:
-				each_tile.set_highlight(highlight_on)
-		else:
-			each_tile.set_highlight(highlight_on)
-		
+func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
+	for each_tile in _get_all_tiles(floor):
+		if evaluating_card.validate_target(each_tile, true) == true:
+			each_tile.set_highlight(evaluating_card.owning_character.character_id, true)
+
+func clear_highlights(for_character_id:int, floor:int):
+	for each_tile in _get_all_tiles(floor):
+		each_tile.set_highlight(for_character_id, false)
+
 func move_object(object, tile_coord:Vector2, floor:int):
 	if object.type == GridSprite.sprite_types.character:
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
@@ -201,6 +214,15 @@ func move_object(object, tile_coord:Vector2, floor:int):
 	else:
 		print("invalid sprite type: " + str(object.type))
 		assert(false)
+
+func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
+	#for each object on type_list (we'll have to make these lists) check grid coordinates
+	#return array of all objects + the tile itself that match these grid coordinates and type
+	#just returning the selected tile for now
+	return floor_maps[0][grid_coordinates.x][grid_coordinates.y]
+	
+func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
+	get_tile_objects(type, grid_coordinates)	
 		
 func _on_object_move_request(object, new_tile_position:Vector2):
 	move_object(object, new_tile_position, 0)

@@ -9,7 +9,7 @@ signal tile_exited(which_tile, which_player)
 
 #region properties
 var grid_coordinates:Vector2
-var explore_value:String
+var explore_value:Model.CreatureValue
 var is_tile_explored:bool = false
 var is_tile_revealed:bool = false
 var paths:Dictionary
@@ -18,6 +18,7 @@ var _path_lines_minimap:Dictionary
 var a_star_id:int #used by A* for identifying tile
 var tile_size:Vector2
 @onready var _tile_bkd:Sprite2D = $Tile_Bkgd
+@onready var _highlight:Polygon2D = $Tile_Bkgd/SelectionHighlight
 var _revealed_texture:Resource
 #endregion
 
@@ -49,20 +50,23 @@ func explore(which_player:int):
 	if is_tile_revealed == false:
 		reveal(which_player)
 	is_tile_explored = true
+	_tile_bkd.self_modulate = Color("ffffff")
+	Utils.try_get_value_manager().gain_value(explore_value, 1)
 	tile_explored.emit(self, which_player)
 	
 func reveal(which_player:int):
 	is_tile_revealed = true
 	tile_revealed.emit(self, which_player)
 	_tile_bkd.texture = _revealed_texture
-	_tile_bkd.self_modulate = Color("ffffff")
+	_tile_bkd.self_modulate = Color("858585")
 	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			_path_lines_minimap[each_direction].visible = true
 			
 func enter(which_player:int):
-	explore(which_player)
+	if is_tile_explored == false:
+		explore(which_player)
 	tile_entered.emit(self, which_player)
 	pass
 	
@@ -71,16 +75,16 @@ func exit(which_player:int):
 	pass
 	
 func _set_random_explore_value():
-	explore_value = ValueManager.value_names.pick_random()
+	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now
 	
 func set_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
 	
-func set_highlight(on:bool):
-	if on == true:
-		_tile_bkd.self_modulate = Color("#db9718")
+func set_highlight(for_character_id:int, highlight_on:bool):
+	if highlight_on == true:
+		_highlight.set_visibility_layer_bit(for_character_id + 2, true)
 	else:
-		_tile_bkd.self_modulate = Color("ffffff")
+		_highlight.set_visibility_layer_bit(for_character_id + 2, false)
 		
 func set_revealed_texture(texture_resource:Resource):
 	_revealed_texture = texture_resource
