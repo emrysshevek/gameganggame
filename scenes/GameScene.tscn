@@ -4,9 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://ck6os832o7j48" path="res://scenes/ValueManager.tscn" id="2_18ig4"]
 [ext_resource type="PackedScene" uid="uid://dxpo0yea3rw7f" path="res://scenes/origin_viewport.tscn" id="2_cxv17"]
 
-[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas", "origin_viewport")]
+[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("origin_viewport")]
 script = ExtResource("1_xy3my")
-player_areas = [NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P1Area"), NodePath("PlayerAreas/Control/VBoxContainer/TopRow/P2Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P3Area"), NodePath("PlayerAreas/Control/VBoxContainer/BotRow/P4Area")]
 origin_viewport = NodePath("OriginViewportController")
 
 [node name="ValueManager" parent="." unique_id=323409287 instance=ExtResource("2_18ig4")]
@@ -34,23 +33,9 @@ grow_vertical = 2
 [node name="TopRow" type="HBoxContainer" parent="PlayerAreas/Control/VBoxContainer" unique_id=1402372468]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="P1Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/TopRow" unique_id=611729678]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="P2Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/TopRow" unique_id=1541442579]
-layout_mode = 2
-size_flags_horizontal = 3
+alignment = 1
 
 [node name="BotRow" type="HBoxContainer" parent="PlayerAreas/Control/VBoxContainer" unique_id=89953762]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="P3Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/BotRow" unique_id=95536555]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="P4Area" type="Control" parent="PlayerAreas/Control/VBoxContainer/BotRow" unique_id=775614498]
-layout_mode = 2
-size_flags_horizontal = 3
+alignment = 1

@@ -17,9 +17,10 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
 
+@onready var manual_set_number_of_players:int = 4
+
 var _player_sub_viewports:Dictionary[viewport_names, PlayerSubViewport]
 var _tile_size:Vector2
-var number_of_players:int
 var _minimap_coord_1p:Vector2
 var _minimap_coord_2p:Vector2
 var _minimap_coord_3p:Vector2
@@ -35,7 +36,14 @@ func _ready() -> void:
 
 #region Private Methods
 func setup_players() -> void:
-	for i in player_areas.size():
+	for i in manual_set_number_of_players:
+		var new_player_area:Control = Control.new()
+		new_player_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		player_areas.append(new_player_area)
+		if i == 0 || i == 1:
+			$PlayerAreas/Control/VBoxContainer/TopRow.add_child(new_player_area)
+		else:
+			$PlayerAreas/Control/VBoxContainer/BotRow.add_child(new_player_area)
 		var new_character = Character.new()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
@@ -84,7 +92,6 @@ func setup_minimap():
 	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	number_of_players = 4 #testing for easy config of # of players
 	#setting up the minimap viewport
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]
 	var minimap_viewport = player_viewport_scene.instantiate()
@@ -95,7 +102,7 @@ func setup_minimap():
 	minimap_viewport.toggle_background()
 	minimap_viewport.set_fade(0.8)
 	minimap_viewport.set_stretch(false)
-	minimap_viewport.position = minimap_coords[number_of_players - 1]
+	minimap_viewport.position = minimap_coords[player_areas.size() - 1]
 	var culling_dictionary:Dictionary[Model.CullingLayers,bool] = {
 		Model.CullingLayers.VISIBLE_ALL:true, 
 		Model.CullingLayers.VISIBLE_MINIMAP_ONLY:true,
