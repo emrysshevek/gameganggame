@@ -17,7 +17,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
 
-@onready var manual_set_number_of_players:int = 4
+@onready var manual_set_number_of_players:int = 1
 
 var _player_sub_viewports:Dictionary[viewport_names, PlayerSubViewport]
 var _tile_size:Vector2
@@ -40,6 +40,8 @@ func setup_players() -> void:
 		var new_player_area:Control = Control.new()
 		new_player_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		player_areas.append(new_player_area)
+		if i > 1:
+			$PlayerAreas/Control/VBoxContainer/BotRow.visible = true
 		if i == 0 || i == 1:
 			$PlayerAreas/Control/VBoxContainer/TopRow.add_child(new_player_area)
 		else:
@@ -89,8 +91,8 @@ func setup_players() -> void:
 func setup_minimap():
 	_minimap_size = Vector2(((grid_man.map_width * _tile_size.x) * _minimap_zoom.x), ((grid_man.map_height * _tile_size.y) * _minimap_zoom.y))
 	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
-	_minimap_coord_2p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	_minimap_coord_3p = Vector2((DisplayServer.window_get_size().x / 2) + _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y)
+	_minimap_coord_2p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y) - _minimap_size.y)
+	_minimap_coord_3p = Vector2((0), (DisplayServer.window_get_size().y) - _minimap_size.y)
 	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
 	#setting up the minimap viewport
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]

@@ -50,7 +50,6 @@ class Action:
 	const TOGGLE_CURSOR = "toggle_cursor"
 	const DISCARD = "discard"
 
-
 class InputState:
 	const MOVE = "Move"
 	const CARD = "Card"

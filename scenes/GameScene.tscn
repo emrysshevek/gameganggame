@@ -36,6 +36,7 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="BotRow" type="HBoxContainer" parent="PlayerAreas/Control/VBoxContainer" unique_id=89953762]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
