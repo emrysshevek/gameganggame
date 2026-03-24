@@ -39,6 +39,10 @@ func get_bottom_card() -> Card:
 	remove_card(card)
 	return card
 
+func get_random_card() -> Card:
+	if cards.is_empty() == true:
+		return null
+	return cards.pick_random()
 	
 func shuffle() -> void:
 	ordered_cards.shuffle()

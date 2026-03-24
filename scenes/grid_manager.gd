@@ -15,6 +15,7 @@ var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors
 var level:int = 0 #dummy
 var map_width:int = 20
 var map_height:int = 20
+var _hazards:Array[Hazard]
 @onready var tile_size:Vector2 = Vector2(64,64)
 #endregion
 
@@ -49,6 +50,7 @@ func _ready() -> void:
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
+	generate_hazards(0)
 	#reveal_full_map()
 	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
@@ -92,6 +94,15 @@ func generate_map(level:int):
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
 		each_tile.reset_to_hidden()
 	map_generated.emit()
+
+func generate_hazards(level:int):
+	for each_tile in _get_all_tiles(level):
+		if randi_range(1,10) == 10:
+			var new_hazard = Hazard.new()
+			new_hazard.grid_coordinates = each_tile.grid_coordinates
+			add_child(new_hazard)
+			new_hazard.position = Vector2(Utils.try_get_grid_man().tile_size.x * new_hazard.grid_coordinates.x, Utils.try_get_grid_man().tile_size.y * new_hazard.grid_coordinates.y)
+			_hazards.append(new_hazard)
 
 func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
@@ -188,7 +199,7 @@ func clear_highlights(for_character_id:int, floor:int):
 		each_tile.set_highlight(for_character_id, false)
 
 func move_object(object, tile_coord:Vector2, floor:int):
-	if object.type == GridSprite.sprite_types.character:
+	if object.type == Model.ObjectTypes.PLAYER_CHARACTER:
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
@@ -196,13 +207,16 @@ func move_object(object, tile_coord:Vector2, floor:int):
 			if floor_maps[floor][tile_coord.x][tile_coord.y].is_tile_explored == false:
 				object.movement = 1
 			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(0)
+			get_tile_exit_triggers(floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y], object)
 			floor_maps[floor][tile_coord.x][tile_coord.y].enter(0)
+			get_tile_enter_triggers(floor_maps[floor][tile_coord.x][tile_coord.y], object)
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
+			
 			return true
-	elif object.type == GridSprite.sprite_types.ui:
+	else: #should be for ui elements, like the cursor
 		if is_in_bounds(tile_coord) == false:
 			return false
 		else:
@@ -211,9 +225,16 @@ func move_object(object, tile_coord:Vector2, floor:int):
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
-	else:
-		print("invalid sprite type: " + str(object.type))
-		assert(false)
+
+func get_tile_enter_triggers(entering_tile:Tile, character_entering:Character):
+	for each_hazard in _hazards:
+		if each_hazard.grid_coordinates == entering_tile.grid_coordinates:
+			each_hazard.trigger_enter_ability(character_entering)
+
+func get_tile_exit_triggers(exiting_tile:Tile, character_exiting:Character):
+	for each_hazard in _hazards:
+		if each_hazard.grid_coordinates == exiting_tile.grid_coordinates:
+			each_hazard.trigger_exit_ability(character_exiting)
 
 func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
 	#for each object on type_list (we'll have to make these lists) check grid coordinates

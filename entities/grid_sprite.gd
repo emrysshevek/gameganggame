@@ -65,4 +65,7 @@ func set_type(type_to_set:Model.ObjectTypes):
 func trigger_enter_ability(target:Character):
 	pass
 	
+func trigger_exit_ability(target:Character):
+	pass
+	
 #endregion

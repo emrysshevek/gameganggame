@@ -22,6 +22,7 @@ var movement:int = 3
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 var character_color:Color
+@onready var type = Model.ObjectTypes.PLAYER_CHARACTER
 
 @onready var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
 #endregion
@@ -73,7 +74,13 @@ func heal(amount:int):
 	
 func die():
 	died.emit(self)
-	
+
+func forced_random_discard(number_of_cards:int):
+	for i in number_of_cards:
+		var random_card = my_screen.card_manager.hand_pile.get_random_card()
+		if random_card != null:
+			my_screen.card_manager.discard(my_screen.card_manager.hand_pile.get_random_card())
+
 func end_turn():
 	ended_turn.emit(self)
 
