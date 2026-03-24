@@ -20,7 +20,6 @@ var deck:Deck
 var grid_coordinates:Vector2
 var movement:int = 3
 var character_sprite:CharacterSprite
-var type:GridSprite.sprite_types
 var cursor_sprite:CursorSprite
 var character_color:Color
 
@@ -41,7 +40,7 @@ func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
 	character_sprite.self_modulate = testing_player_colors[character_id]
-	type = character_sprite.type
+	character_sprite.type = Model.ObjectTypes.PLAYER_CHARACTER
 	add_child(character_sprite)
 	
 func bind_cursor_sprite(input_sprite:CursorSprite):

@@ -9,7 +9,7 @@ signal move_request(which_sprite, requested_position)
 #region properties
 var grid_coordinates:Vector2
 var _remote_camera_transform:RemoteTransform2D
-var type:sprite_types
+var type:Model.ObjectTypes
 var input_man:PlayerInputManager
 #endregion
 
@@ -59,6 +59,10 @@ func move_remote_camera(new_position:Vector2):
 	if _remote_camera_transform != null:
 		_remote_camera_transform.global_position = new_position
 		
-func set_type(type_to_set:sprite_types):
+func set_type(type_to_set:Model.ObjectTypes):
 	type = type_to_set
+	
+func trigger_enter_ability(target:Character):
+	pass
+	
 #endregion

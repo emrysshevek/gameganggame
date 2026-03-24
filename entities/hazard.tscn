@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cw6kvldfrm6uu"]
+
+[ext_resource type="Script" uid="uid://tqhu30waoe6s" path="res://entities/hazard.gd" id="1_3vfwx"]
+[ext_resource type="Texture2D" uid="uid://ctq1pcee8ljv3" path="res://art/hazard.png" id="1_df0gq"]
+
+[node name="Hazard" type="Sprite2D" unique_id=2129939134]
+modulate = Color(1, 1, 0.06666667, 1)
+texture = ExtResource("1_df0gq")
+centered = false
+script = ExtResource("1_3vfwx")
+metadata/_custom_type_script = "uid://d4aab2bq15kxj"

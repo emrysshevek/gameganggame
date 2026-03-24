@@ -76,7 +76,7 @@ func create_cursor(new_character:Character, tile_position:Vector2):
 	new_cursor.set_sprite(load("res://art/cursor.png"))
 	new_cursor.grid_coordinates = tile_position
 	new_cursor.set_visual_position(Vector2(character_sprites[0].grid_coordinates.x * _tile_size.x, character_sprites[0].grid_coordinates.y * _tile_size.y))
-	new_cursor.set_type(GridSprite.sprite_types.ui)
+	#new_cursor.set_type(GridSprite.sprite_types.ui)
 	#the below switch of camera transform should happen when the PISM receives input to switch it to cursor mode
 	#new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
 	new_cursor.move_request.connect(grid_man._on_object_move_request)
