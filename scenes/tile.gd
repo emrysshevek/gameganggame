@@ -17,6 +17,7 @@ var _path_lines:Dictionary
 var _path_lines_minimap:Dictionary
 var a_star_id:int #used by A* for identifying tile
 var tile_size:Vector2
+@onready var hazard:Hazard = null
 @onready var _tile_bkd:Sprite2D = $Tile_Bkgd
 @onready var _highlight:Polygon2D = $Tile_Bkgd/SelectionHighlight
 var _revealed_texture:Resource
@@ -46,17 +47,19 @@ func reset_to_hidden():
 	_tile_bkd.texture = load("res://art/unrevealed_tile.png")
 	#_tile_bkd.self_modulate = Color("000000c0")
 	
-func explore(which_player:int):
+func explore(entering_character:Character):
 	if is_tile_revealed == false:
-		reveal(which_player)
+		reveal(entering_character)
 	is_tile_explored = true
 	_tile_bkd.self_modulate = Color("ffffff")
 	Utils.try_get_value_manager().gain_value(explore_value, 1)
-	tile_explored.emit(self, which_player)
+	tile_explored.emit(self, entering_character.character_id)
 	
-func reveal(which_player:int):
+func reveal(entering_character:Character):
 	is_tile_revealed = true
-	tile_revealed.emit(self, which_player)
+	tile_revealed.emit(self, entering_character)
+	if hazard != null:
+		hazard.visible = true
 	_tile_bkd.texture = _revealed_texture
 	_tile_bkd.self_modulate = Color("858585")
 	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
@@ -64,15 +67,26 @@ func reveal(which_player:int):
 			_path_lines[each_direction].visible = true
 			_path_lines_minimap[each_direction].visible = true
 			
-func enter(which_player:int):
+func enter(entering_character:Character):
 	if is_tile_explored == false:
-		explore(which_player)
-	tile_entered.emit(self, which_player)
-	pass
+		explore(entering_character)
+	tile_entered.emit(self, entering_character.character_id)
+	if hazard != null:
+		hazard.trigger_enter_ability(entering_character)
 	
-func exit(which_player:int):
-	tile_exited.emit(self, which_player)
-	pass
+func exit(exiting_character:Character):
+	tile_exited.emit(self, exiting_character.character_id)
+	if hazard != null:
+		hazard.trigger_exit_ability(exiting_character)
+
+func add_hazard(new_hazard:Hazard) -> bool:
+	if hazard == null:
+		hazard = new_hazard
+		new_hazard.grid_coordinates = grid_coordinates
+		add_child(new_hazard)
+		return true
+	else:
+		return false
 	
 func _set_random_explore_value():
 	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now

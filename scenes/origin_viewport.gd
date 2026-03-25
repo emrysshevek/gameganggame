@@ -55,9 +55,12 @@ func add_character(new_character:Character) -> CharacterSprite:
 	var grid_man_origin = grid_man.global_position
 	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
 	var coords = test_player_coords[len(character_sprites)-1]
-	
-	grid_man.testing_map_distance_algorithm(Vector2(coords),3,0)
 	new_character.grid_coordinates = coords
+	
+	#revealing starting tiles around each player
+	for each_tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
+		each_tile.explore(new_character)
+		
 	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
 	#character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)

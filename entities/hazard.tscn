@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://ctq1pcee8ljv3" path="res://art/hazard.png" id="1_df0gq"]
 
 [node name="Hazard" type="Sprite2D" unique_id=2129939134]
-modulate = Color(1, 1, 0.06666667, 1)
 texture = ExtResource("1_df0gq")
 centered = false
 script = ExtResource("1_3vfwx")
