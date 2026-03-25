@@ -179,12 +179,11 @@ func highlight_return():
 	scale = Vector2(1,1)
 #endregion
 
-
 #region Private Methods
 func _trigger_play_ability() -> void:
 	#targets[owning_character] = target_types.caster
 	#owning_character.movement += 3
-	targets.keys()[0].reveal(owning_character.character_id)
+	targets.keys()[0].reveal(owning_character)
 	for each_value_type in cost.keys():
 		Utils.try_get_value_manager().use_reserved_value(each_value_type, cost[each_value_type])
 	Events.card_played.emit(self) #then tell value manager to unreserve+spend the values this card reserved
@@ -198,8 +197,7 @@ func _trigger_discard_ability() -> void:
 
 #region Signal Connections
 func _on_button_pressed() -> void:
-	play()
-	clicked.emit()
+	pass
 	
 	
 func _on_focus_entered() -> void:

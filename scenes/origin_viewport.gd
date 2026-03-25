@@ -53,7 +53,7 @@ func add_character(new_character:Character) -> CharacterSprite:
 	create_cursor(new_character, new_character_sprite.grid_coordinates)
 	
 	var grid_man_origin = grid_man.global_position
-	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
+	var test_player_coords:Array = [Vector2(10,10), Vector2(11,10), Vector2(10,11), Vector2(11,11)]
 	var coords = test_player_coords[len(character_sprites)-1]
 	new_character.grid_coordinates = coords
 	

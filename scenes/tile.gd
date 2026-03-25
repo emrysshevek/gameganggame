@@ -17,6 +17,8 @@ var _path_lines:Dictionary
 var _path_lines_minimap:Dictionary
 var a_star_id:int #used by A* for identifying tile
 var tile_size:Vector2
+var grid_cards_face_down:GridCards
+var grid_cards_face_up:GridCards
 @onready var hazard:Hazard = null
 @onready var _tile_bkd:Sprite2D = $Tile_Bkgd
 @onready var _highlight:Polygon2D = $Tile_Bkgd/SelectionHighlight
@@ -60,6 +62,10 @@ func reveal(entering_character:Character):
 	tile_revealed.emit(self, entering_character)
 	if hazard != null:
 		hazard.visible = true
+	if grid_cards_face_down != null:
+		grid_cards_face_down.visible = true
+	if grid_cards_face_up != null:
+		grid_cards_face_up.visible = true
 	_tile_bkd.texture = _revealed_texture
 	_tile_bkd.self_modulate = Color("858585")
 	for each_direction in [GridManager.directions.north, GridManager.directions.east, GridManager.directions.south, GridManager.directions.west]:
@@ -73,11 +79,24 @@ func enter(entering_character:Character):
 	tile_entered.emit(self, entering_character.character_id)
 	if hazard != null:
 		hazard.trigger_enter_ability(entering_character)
+	pickup_cards(entering_character)
 	
 func exit(exiting_character:Character):
 	tile_exited.emit(self, exiting_character.character_id)
 	if hazard != null:
 		hazard.trigger_exit_ability(exiting_character)
+
+func pickup_cards(character:Character):
+	if grid_cards_face_up != null:
+		for i in grid_cards_face_up.pile.count:
+			var top_card = grid_cards_face_up.take_top_card()
+			top_card.owning_character = character
+			character.my_screen.card_manager.hand_pile.add_card(grid_cards_face_up.take_top_card())
+	if grid_cards_face_down != null:
+		for i in grid_cards_face_down.pile.count:
+			var top_card = grid_cards_face_down.take_top_card()
+			top_card.owning_character = character
+			character.my_screen.card_manager.hand_pile.add_card(top_card)
 
 func add_hazard(new_hazard:Hazard) -> bool:
 	if hazard == null:
@@ -87,6 +106,26 @@ func add_hazard(new_hazard:Hazard) -> bool:
 		return true
 	else:
 		return false
+	
+func add_grid_card(new_card:Card) -> void:
+	if new_card.is_faceup == true:
+		if grid_cards_face_up == null:
+			var new_grid_card_pile = GridCards.new()
+			new_grid_card_pile.set_facing(true)
+			grid_cards_face_up = new_grid_card_pile
+			add_child(new_grid_card_pile)
+			grid_cards_face_up.add_card(new_card)
+		else:
+			grid_cards_face_up.add_card(new_card)
+	else:
+		if grid_cards_face_down == null:
+			var new_grid_card_pile = GridCards.new()
+			new_grid_card_pile.set_facing(false)
+			grid_cards_face_down = new_grid_card_pile
+			add_child(new_grid_card_pile)
+			grid_cards_face_down.add_card(new_card)
+		else:
+			grid_cards_face_down.add_card(new_card)
 	
 func _set_random_explore_value():
 	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now
