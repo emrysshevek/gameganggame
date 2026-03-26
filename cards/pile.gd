@@ -88,6 +88,7 @@ func remove_card(_card: Card) -> void:
 	ordered_cards.erase(_card)
 	_reposition()
 	_card.pile = null
+	remove_child(_card)
 	card_removed.emit()
 	if count == 0:
 		emptied.emit()

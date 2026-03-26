@@ -66,8 +66,8 @@ func draw(_count:=1) -> void:
 	
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
-	discard_pile.add_card(_card)
-	
+	if _card not in character.queued_drop_cards:
+		discard_pile.add_card(_card)
 	
 func refill_draw() -> void:
 	discard_pile.shuffle()
@@ -121,11 +121,10 @@ func _handle_input():
 				pass
 				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
-			if hand_pile.count != 0:
-				hand_pile.ordered_cards[_selected_card_index].discard()
-				hand_pile.ordered_cards[_selected_card_index].highlight_return()
-				discard(hand_pile.ordered_cards[_selected_card_index])
-				_selected_card_index -= 1
+			hand_pile.ordered_cards[_selected_card_index].discard()
+			hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			discard(hand_pile.ordered_cards[_selected_card_index])
+			_selected_card_index -= 1
 
 #endregion
 	
@@ -155,7 +154,7 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
-		_selected_card_index = 2
+		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
 	card_being_played = null

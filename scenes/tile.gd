@@ -82,18 +82,22 @@ func enter(entering_character:Character):
 	pickup_cards(entering_character)
 	
 func exit(exiting_character:Character):
+	if exiting_character.queued_drop_cards.is_empty() == false:
+		exiting_character.drop_queued_loot_cards()
 	tile_exited.emit(self, exiting_character.character_id)
 	if hazard != null:
 		hazard.trigger_exit_ability(exiting_character)
 
 func pickup_cards(character:Character):
 	if grid_cards_face_up != null:
-		for i in grid_cards_face_up.pile.count:
+		var face_up_pile_count = grid_cards_face_up.pile.count
+		for i in face_up_pile_count:
 			var top_card = grid_cards_face_up.take_top_card()
 			top_card.owning_character = character
 			character.my_screen.card_manager.hand_pile.add_card(top_card)
 	if grid_cards_face_down != null:
-		for i in grid_cards_face_down.pile.count:
+		var face_down_pile_count = grid_cards_face_down.pile.count
+		for i in face_down_pile_count:
 			var top_card = grid_cards_face_down.take_top_card()
 			top_card.owning_character = character
 			character.my_screen.card_manager.hand_pile.add_card(top_card)

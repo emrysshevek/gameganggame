@@ -38,6 +38,7 @@ func setup_new_character(input_character_id:int, input_state_machine:PlayerInput
 
 func bind_screen(input_screen:PlayerScreen):
 	my_screen = input_screen
+	my_screen.card_manager.character = self
 	
 func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
@@ -103,7 +104,6 @@ func drop_queued_loot_cards():
 	queued_drop_cards.clear()
 
 func move(new_grid_position:Vector2, new_screen_position:Vector2):
-	drop_queued_loot_cards()
 	var old_grid_position = grid_coordinates
 	grid_coordinates = new_grid_position
 	movement -= 1
