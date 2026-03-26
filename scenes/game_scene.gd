@@ -5,6 +5,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @export var player_areas: Array[Control]
 @export var origin_viewport: OriginViewport
 @export var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
+@export var manual_set_number_of_players:int = 1
 
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
 @onready var player_viewport_scene := preload("res://scenes/player_subviewport.tscn")
@@ -17,7 +18,6 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @onready var _minimap_size:Vector2 = Vector2(200,200)
 @onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
 
-@onready var manual_set_number_of_players:int = 1
 
 var _player_sub_viewports:Dictionary[viewport_names, PlayerSubViewport]
 var _tile_size:Vector2
