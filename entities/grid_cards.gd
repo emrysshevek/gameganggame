@@ -11,7 +11,7 @@ func _ready() -> void:
 func set_facing(set_face_up:bool):
 	if set_face_up == true:
 		_face_up = true
-		texture = load("res://art/face_up_pile.png")
+		texture = load("res://art/face_up_cards.png")
 	else:
 		_face_up = false
 		texture = load("res://art/face_down_card.png")

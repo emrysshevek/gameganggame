@@ -18,10 +18,12 @@ var health_max:int = 5
 var health_current:int
 var deck:Deck
 var grid_coordinates:Vector2
+var current_floor:int
 var movement:int = 3
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 var character_color:Color
+var queued_drop_cards:Array[Card]
 @onready var type = Model.ObjectTypes.PLAYER_CHARACTER
 
 @onready var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
@@ -91,7 +93,17 @@ func _process(_delta: float) -> void:
 	if pis_machine.current_state == Model.InputState.MOVE:
 		_handle_input()
 
+func drop_queued_loot_cards():
+	if queued_drop_cards.is_empty() == false:
+		var drop_tile:Tile = Utils.try_get_grid_man().floor_maps[current_floor][grid_coordinates.x][grid_coordinates.y]
+		for each_card in queued_drop_cards:
+			my_screen.card_manager.remove_card(each_card)
+			each_card.owning_character = null
+			drop_tile.add_grid_card(each_card)
+	queued_drop_cards.clear()
+
 func move(new_grid_position:Vector2, new_screen_position:Vector2):
+	drop_queued_loot_cards()
 	var old_grid_position = grid_coordinates
 	grid_coordinates = new_grid_position
 	movement -= 1

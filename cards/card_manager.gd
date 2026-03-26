@@ -64,7 +64,6 @@ func draw(_count:=1) -> void:
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
 	
-	
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
 	discard_pile.add_card(_card)
@@ -85,6 +84,16 @@ func return_discard() -> void:
 	
 func shuffle_draw() -> void:
 	draw_pile.shuffle()
+	
+func remove_card(card:Card) -> void:
+	if card in deck.cards:
+		deck.remove_card(card)
+	if card in draw_pile.cards:
+		draw_pile.remove_card(card)
+	if card in hand_pile.cards:
+		hand_pile.remove_card(card)
+	if card in discard_pile.cards:
+		discard_pile.remove_card(card)
 #endregion
 
 
@@ -112,10 +121,11 @@ func _handle_input():
 				pass
 				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
-			hand_pile.ordered_cards[_selected_card_index].discard()
-			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
-			_selected_card_index -= 1
+			if hand_pile.count != 0:
+				hand_pile.ordered_cards[_selected_card_index].discard()
+				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+				discard(hand_pile.ordered_cards[_selected_card_index])
+				_selected_card_index -= 1
 
 #endregion
 	

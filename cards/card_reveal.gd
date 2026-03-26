@@ -10,13 +10,13 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	pass
 
-#region Private Methods
-func _trigger_play_ability() -> void:
-	targets.append(owning_character)
-	owning_character.movement += 3
-	
-
-func _trigger_discard_ability() -> void:
-	targets.append(owning_character)
-	owning_character.movement += 1
-#endregion
+##region Private Methods
+#func _trigger_play_ability() -> void:
+	#targets.append(owning_character)
+	#owning_character.movement += 3
+	#
+#
+#func _trigger_discard_ability() -> void:
+	#targets.append(owning_character)
+	#owning_character.movement += 1
+##endregion

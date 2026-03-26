@@ -10,4 +10,4 @@ func _trigger_play_ability() -> void:
 	
 func _trigger_discard_ability() -> void:
 	owning_character.movement += 1
-	#then remove from deck and drop on tile
+	owning_character.queued_drop_cards.append(self)

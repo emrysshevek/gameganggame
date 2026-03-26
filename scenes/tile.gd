@@ -91,7 +91,7 @@ func pickup_cards(character:Character):
 		for i in grid_cards_face_up.pile.count:
 			var top_card = grid_cards_face_up.take_top_card()
 			top_card.owning_character = character
-			character.my_screen.card_manager.hand_pile.add_card(grid_cards_face_up.take_top_card())
+			character.my_screen.card_manager.hand_pile.add_card(top_card)
 	if grid_cards_face_down != null:
 		for i in grid_cards_face_down.pile.count:
 			var top_card = grid_cards_face_down.take_top_card()
@@ -114,6 +114,8 @@ func add_grid_card(new_card:Card) -> void:
 			new_grid_card_pile.set_facing(true)
 			grid_cards_face_up = new_grid_card_pile
 			add_child(new_grid_card_pile)
+			if is_tile_revealed == true:
+				new_grid_card_pile.visible = true
 			grid_cards_face_up.add_card(new_card)
 		else:
 			grid_cards_face_up.add_card(new_card)
@@ -123,6 +125,8 @@ func add_grid_card(new_card:Card) -> void:
 			new_grid_card_pile.set_facing(false)
 			grid_cards_face_down = new_grid_card_pile
 			add_child(new_grid_card_pile)
+			if is_tile_revealed == true:
+				new_grid_card_pile.visible = true
 			grid_cards_face_down.add_card(new_card)
 		else:
 			grid_cards_face_down.add_card(new_card)
