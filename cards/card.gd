@@ -100,7 +100,7 @@ func validate_target(potential_target: Node, just_checking:bool) -> bool: #overw
 	# 	check type
 	# 	check range
 	
-	if just_checking or targets.size() >= targets_required.max_count:
+	if not just_checking and targets.size() >= targets_required.max_count:
 		return false
 	
 	if not("types" in potential_target and targets_required.type in potential_target.types):

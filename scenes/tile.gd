@@ -8,7 +8,7 @@ signal tile_exited(which_tile, which_player)
 #endregion
 
 #region properties
-@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY, Model.ObjectTypes.TILE, ]
+@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY, Model.ObjectTypes.TILE, Model.ObjectTypes.HIDDEN_TILE]
 var grid_coordinates:Vector2
 var explore_value:Model.CreatureValue
 var is_tile_explored:bool = false
