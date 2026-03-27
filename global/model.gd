@@ -25,6 +25,7 @@ enum CreatureValue {
 enum ObjectTypes {
 	TILE,
 	PLAYER_CHARACTER,
+	HAZARD,
 }
 
 enum CullingLayers {

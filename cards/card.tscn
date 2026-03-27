@@ -75,6 +75,7 @@ text = "placeholder description"
 autowrap_mode = 2
 
 [node name="Button" type="Button" parent="." unique_id=726739902]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
