@@ -8,6 +8,7 @@ signal tile_exited(which_tile, which_player)
 #endregion
 
 #region properties
+@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY, Model.ObjectTypes.TILE, ]
 var grid_coordinates:Vector2
 var explore_value:Model.CreatureValue
 var is_tile_explored:bool = false
@@ -43,6 +44,8 @@ func set_coordinates(coords:Vector2):
 func reset_to_hidden():
 	is_tile_explored = false
 	is_tile_revealed = false
+	types.erase(Model.ObjectTypes.REVEALED_TILE)
+	types.append(Model.ObjectTypes.HIDDEN_TILE)
 	_tile_bkd.texture = load("res://art/unrevealed_tile.png")
 	#_tile_bkd.self_modulate = Color("000000c0")
 	
@@ -56,6 +59,8 @@ func explore(which_player:int):
 	
 func reveal(which_player:int):
 	is_tile_revealed = true
+	types.erase(Model.ObjectTypes.HIDDEN_TILE)
+	types.append(Model.ObjectTypes.REVEALED_TILE)
 	tile_revealed.emit(self, which_player)
 	_tile_bkd.texture = _revealed_texture
 	_tile_bkd.self_modulate = Color("858585")

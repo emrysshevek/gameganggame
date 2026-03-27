@@ -179,9 +179,9 @@ func is_in_bounds(position_to_check:Vector2):
 	return true
 		
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
-	for each_tile in _get_all_tiles(floor):
-		if evaluating_card.validate_target(each_tile, true) == true:
-			each_tile.set_highlight(evaluating_card.owning_character.character_id, true)
+	for tile in _get_all_tiles(floor):
+		if not tile.is_tile_revealed and evaluating_card.validate_target(tile, true):
+			tile.set_highlight(evaluating_card.owning_character.character_id, true)
 
 func clear_highlights(for_character_id:int, floor:int):
 	for each_tile in _get_all_tiles(floor):
