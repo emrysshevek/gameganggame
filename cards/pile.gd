@@ -120,7 +120,6 @@ func _reposition() -> void:
 	for i in len(ordered_cards):
 		var card := ordered_cards[i]
 		curr_pos += spacing
-		card._description_label.text = str(i)
 		card.global_position = curr_pos
 		card.z_index = i
 

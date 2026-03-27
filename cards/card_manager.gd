@@ -10,9 +10,10 @@ extends Control
 
 var input_man:PlayerInputManager
 
-@onready var _selected_card_index:int = 2:
-	get():
-		return _selected_card_index
+var _selected_card_index_helper := 2 # pretend this doesn't exist :)
+var _selected_card_index:int = _selected_card_index_helper:
+	get:
+		return _selected_card_index_helper
 	set(new_value):
 		if hand_pile.count == 0:
 			new_value = -1
@@ -20,9 +21,9 @@ var input_man:PlayerInputManager
 			new_value = hand_pile.count - 1
 		elif new_value > hand_pile.count - 1:
 			new_value = 0
-		_selected_card_index = new_value
+		_selected_card_index_helper = new_value
 		if new_value != -1:
-			_card_selection_visuals(_selected_card_index)
+			_card_selection_visuals(_selected_card_index_helper)
 			
 var card_being_played:Card
 
@@ -99,7 +100,6 @@ func remove_card(card:Card) -> void:
 
 #region Private Methods
 func _handle_input():
-	# TODO: REMOVE!!!
 	if input_man.is_action_just_released("move_up"):
 		var card: Card = card_scene.instantiate()
 		deck.add_card(card)
@@ -154,6 +154,7 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
+	if new_state == Model.InputState.CARD:
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
