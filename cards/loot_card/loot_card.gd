@@ -5,8 +5,7 @@ func _ready() -> void:
 	target_range_max = 0
 
 func _trigger_play_ability() -> void:
-	print("loot card cannot be played")
-	pass
+	fail_to_play()
 	
 func _trigger_discard_ability() -> void:
 	owning_character.movement += 1

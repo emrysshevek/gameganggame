@@ -180,7 +180,7 @@ func highlight_return():
 	scale = Vector2(1,1)
 	
 func fail_to_play():
-	var new_tween = get_tree().create_tween()
+	var new_tween = self.create_tween()
 	new_tween.tween_property(self, "rotation_degrees", 15, Config.animation_speed * 0.1)
 	new_tween.parallel().tween_property(_frontside, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.1)
 	new_tween.tween_property(self, "rotation_degrees", -15, Config.animation_speed * 0.1)
