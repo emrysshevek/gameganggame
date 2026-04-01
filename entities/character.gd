@@ -67,6 +67,7 @@ func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
 func take_damage(amount:int):
 	health_current -= amount
 	health_changed.emit(self, health_current + amount, health_current)
+	character_sprite.damage_animation()
 	if health_current <= 0:
 		die()
 		

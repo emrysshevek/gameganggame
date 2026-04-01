@@ -62,10 +62,20 @@ func move_remote_camera(new_position:Vector2):
 func set_type(type_to_set:Model.ObjectTypes):
 	type = type_to_set
 	
-func trigger_enter_ability(target:Character):
+func damage_animation():
+	var new_tween = get_tree().create_tween()
+	var previous_color = self.self_modulate
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.5)
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.5)
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", previous_color, Config.animation_speed)
+	
+func trigger_enter_ability(target:Character): #override for hazards
 	pass
 	
-func trigger_exit_ability(target:Character):
+func trigger_exit_ability(target:Character): #override for hazards
 	pass
 	
 #endregion
