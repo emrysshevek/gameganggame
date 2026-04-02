@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://c06to58s7vdgr"]
+
+[ext_resource type="Script" uid="uid://c3yfssfvnuvip" path="res://creature_values/value_item.gd" id="1_xoppg"]
+
+[node name="ValueItem" type="VBoxContainer" unique_id=1360621311]
+script = ExtResource("1_xoppg")
+
+[node name="ValueNameLabel" type="Label" parent="." unique_id=572465448]
+layout_mode = 2
+
+[node name="ValueQuantityLabel" type="Label" parent="." unique_id=861471034]
+layout_mode = 2

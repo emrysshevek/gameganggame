@@ -1,5 +1,9 @@
 extends Node
 
+#region Creature Value
+signal value_changed(_value: Model.CreatureValue)
+#endregion
+
 #region Card
 signal card_played(_card: Card)
 signal card_discarded(_card: Card)
