@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dmdqd276wm0u5"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_wd2xg"]
+[ext_resource type="Script" uid="uid://bmgkdphxqd51b" path="res://cards/cards/reveal_tile/reveal_tile_card.gd" id="2_tedrl"]
+
+[node name="RevealTileCard" unique_id=693299294 instance=ExtResource("1_wd2xg")]
+script = ExtResource("2_tedrl")
+targets_required = null

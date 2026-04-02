@@ -10,7 +10,11 @@ signal started_turn(which_player)
 #endregion
 
 #region properties
-@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY, Model.ObjectTypes.CHARACTER]
+@export var types: Array[Model.ObjectTypes] = [
+	Model.ObjectTypes.ENTITY, 
+	Model.ObjectTypes.CHARACTER, 
+	Model.ObjectTypes.PLAYER_CHARACTER
+]
 
 var input_man:PlayerInputManager
 var pis_machine:PlayerInputStateMachine

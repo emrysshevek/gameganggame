@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dhnjgjksqxi52"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_y2rsa"]
+[ext_resource type="Script" uid="uid://dm6brxx3o0tfp" path="res://cards/cards/coordinate/coordinate_card.gd" id="2_37vpf"]
+[ext_resource type="Script" uid="uid://c53pw6ymaxio3" path="res://cards/target_requirement.gd" id="3_m52fo"]
+
+[sub_resource type="Resource" id="Resource_yux0q"]
+script = ExtResource("3_m52fo")
+type = 5
+min_count = 1
+max_count = 1
+metadata/_custom_type_script = "uid://c53pw6ymaxio3"
+
+[node name="Card" unique_id=693299294 instance=ExtResource("1_y2rsa")]
+script = ExtResource("2_37vpf")
+targets_required = SubResource("Resource_yux0q")

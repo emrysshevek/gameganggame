@@ -1,6 +1,5 @@
 extends Card
 
-
 func _trigger_play_ability() -> void:
-	owning_character.my_screen.card_manager.draw()
+	targets[0].reveal(owning_character.character_id)
 	super._trigger_play_ability()

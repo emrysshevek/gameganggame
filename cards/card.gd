@@ -121,6 +121,7 @@ func check_targetting_finished():
 	if targets.size() == targets_required.min_count:
 		Events.request_input_state_transition.emit(Model.InputState.CARD, owning_character)
 		_trigger_play_ability()
+		
 
 
 func get_my_target_types():
@@ -143,8 +144,6 @@ func highlight_return():
 
 #region Private Methods
 func _trigger_play_ability() -> void:
-	#owning_character.movement += 3
-	targets[0].reveal(owning_character.character_id)
 	for each_value_type in cost.keys():
 		Utils.try_get_value_manager().use_reserved_value(each_value_type, cost[each_value_type])
 	Events.card_played.emit(self) #then tell value manager to unreserve+spend the values this card reserved
