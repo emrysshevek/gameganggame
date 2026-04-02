@@ -18,7 +18,7 @@ var map_height:int = 20
 @onready var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
-var _loot_card_scene = preload("res://cards/loot_card/loot_card.tscn")
+var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 #endregion
 
 #region methods

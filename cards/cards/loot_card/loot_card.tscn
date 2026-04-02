@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cqiaio74dvrws"]
 
-[ext_resource type="Script" uid="uid://dj2u4sjhja5a4" path="res://cards/loot_card/loot_card.gd" id="1_gw2xc"]
+[ext_resource type="Script" uid="uid://dj2u4sjhja5a4" path="res://cards/cards/loot_card/loot_card.gd" id="1_gw2xc"]
 [ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_k157q"]
 
 [node name="LootCard" unique_id=693299294 instance=ExtResource("1_k157q")]

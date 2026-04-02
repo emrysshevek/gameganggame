@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://6hfind75kvh2"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_uq84f"]
+[ext_resource type="Script" uid="uid://c0s8d1vlppqv2" path="res://cards/cards/defang/defang_card.gd" id="2_vv2w6"]
+
+[node name="Card" unique_id=693299294 instance=ExtResource("1_uq84f")]
+script = ExtResource("2_vv2w6")
+targets_required = null
