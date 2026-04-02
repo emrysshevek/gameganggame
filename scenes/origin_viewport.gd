@@ -53,11 +53,14 @@ func add_character(new_character:Character) -> CharacterSprite:
 	create_cursor(new_character, new_character_sprite.grid_coordinates)
 	
 	var grid_man_origin = grid_man.global_position
-	var test_player_coords:Array = [Vector2(1,1), Vector2(15,1), Vector2(6,14), Vector2(12,19)]
+	var test_player_coords:Array = [Vector2(10,10), Vector2(11,10), Vector2(10,11), Vector2(11,11)]
 	var coords = test_player_coords[len(character_sprites)-1]
-	
-	grid_man.testing_map_distance_algorithm(Vector2(coords),3,0)
 	new_character.grid_coordinates = coords
+	
+	#revealing starting tiles around each player
+	for each_tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
+		each_tile.explore(new_character)
+		
 	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
 	#character_sprites[each_player].set_remote_camera_transform(_player_sub_viewports[player_viewport_names[each_player]].camera)
@@ -76,7 +79,7 @@ func create_cursor(new_character:Character, tile_position:Vector2):
 	new_cursor.set_sprite(load("res://art/cursor.png"))
 	new_cursor.grid_coordinates = tile_position
 	new_cursor.set_visual_position(Vector2(character_sprites[0].grid_coordinates.x * _tile_size.x, character_sprites[0].grid_coordinates.y * _tile_size.y))
-	new_cursor.set_type(GridSprite.sprite_types.ui)
+	#new_cursor.set_type(GridSprite.sprite_types.ui)
 	#the below switch of camera transform should happen when the PISM receives input to switch it to cursor mode
 	#new_cursor.set_remote_camera_transform(_player_sub_viewports[player_viewport_names[which_player_id]].camera)
 	new_cursor.move_request.connect(grid_man._on_object_move_request)

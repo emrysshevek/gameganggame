@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cqiaio74dvrws"]
+
+[ext_resource type="Script" uid="uid://dj2u4sjhja5a4" path="res://cards/loot_card/loot_card.gd" id="1_gw2xc"]
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_k157q"]
+
+[node name="LootCard" unique_id=693299294 instance=ExtResource("1_k157q")]
+custom_minimum_size = Vector2(0, 0)
+script = ExtResource("1_gw2xc")
+description = "Loot Card"
+
+[node name="Description" parent="MarginContainer/Front/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(870367591) index="1" unique_id=236576993]
+custom_minimum_size = Vector2(40, 50)
+text = "Testing loot card"

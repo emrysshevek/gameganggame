@@ -16,6 +16,9 @@ var level:int = 0 #dummy
 var map_width:int = 20
 var map_height:int = 20
 @onready var tile_size:Vector2 = Vector2(64,64)
+
+#Testing
+var _loot_card_scene = preload("res://cards/loot_card/loot_card.tscn")
 #endregion
 
 #region methods
@@ -49,6 +52,8 @@ func _ready() -> void:
 			#
 	floor_maps[level] = new_map_grid
 	generate_map(0)
+	generate_hazards(0, 10)
+	generate_loot_piles(0, 2)
 	#reveal_full_map()
 	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
@@ -92,6 +97,20 @@ func generate_map(level:int):
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
 		each_tile.reset_to_hidden()
 	map_generated.emit()
+
+func generate_hazards(level:int, frequency:int):
+	for each_tile in _get_all_tiles(level):
+		if randi_range(1,frequency) == frequency:
+			var new_hazard = Hazard.new()
+			each_tile.add_hazard(new_hazard)
+
+func generate_loot_piles(level:int, frequency:int):
+	for each_tile in _get_all_tiles(level):
+		if randi_range(1,frequency) == frequency:
+			for i in randi_range(1,3):
+				var new_card:LootCard = _loot_card_scene.instantiate()
+				new_card.is_faceup = false
+				each_tile.add_grid_card(new_card)	
 
 func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
@@ -188,21 +207,22 @@ func clear_highlights(for_character_id:int, floor:int):
 		each_tile.set_highlight(for_character_id, false)
 
 func move_object(object, tile_coord:Vector2, floor:int):
-	if object.type == GridSprite.sprite_types.character:
+	if object.type == Model.ObjectTypes.PLAYER_CHARACTER:
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
 			#clearing out movement after entering an unexplored tile
 			if floor_maps[floor][tile_coord.x][tile_coord.y].is_tile_explored == false:
 				object.movement = 1
-			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(0)
-			floor_maps[floor][tile_coord.x][tile_coord.y].enter(0)
+			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(object)
+			floor_maps[floor][tile_coord.x][tile_coord.y].enter(object)
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
+			
 			return true
-	elif object.type == GridSprite.sprite_types.ui:
+	else: #should be for ui elements, like the cursor
 		if is_in_bounds(tile_coord) == false:
 			return false
 		else:
@@ -211,9 +231,6 @@ func move_object(object, tile_coord:Vector2, floor:int):
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
-	else:
-		print("invalid sprite type: " + str(object.type))
-		assert(false)
 
 func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
 	#for each object on type_list (we'll have to make these lists) check grid coordinates
@@ -228,14 +245,14 @@ func _on_object_move_request(object, new_tile_position:Vector2):
 	move_object(object, new_tile_position, 0)
 		
 #region testing functions
-func reveal_full_map():
-	for each_tile in _get_all_tiles(0):
-		each_tile.explore(0)
+#func reveal_full_map():
+	#for each_tile in _get_all_tiles(0):
+		#each_tile.explore(0)
 		
-func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
-	var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
-	for each_tile in reached_tiles:
-		each_tile.explore(0)
+#func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
+	#var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
+	#for each_tile in reached_tiles:
+		#each_tile.explore(0)
 #endregion
 		
 func _import_pre_baked_map_section():

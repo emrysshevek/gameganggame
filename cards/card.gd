@@ -141,7 +141,6 @@ func highlight_return():
 	scale = Vector2(1,1)
 #endregion
 
-
 #region Private Methods
 func _trigger_play_ability() -> void:
 	for each_value_type in cost.keys():
@@ -156,8 +155,7 @@ func _trigger_discard_ability() -> void:
 
 #region Signal Connections
 func _on_button_pressed() -> void:
-	play()
-	clicked.emit()
+	pass
 	
 	
 func _on_focus_entered() -> void:
