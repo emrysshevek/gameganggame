@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cq0rkd2f0cx1d" path="res://cards/card.gd" id="1_ivai2"]
 [ext_resource type="PackedScene" uid="uid://ddbf7ide4v43w" path="res://components/focusable/focusable.tscn" id="2_nwofj"]
 
-[node name="Card" type="Control" unique_id=693299294 node_paths=PackedStringArray("_backside", "_frontside", "_description_label", "_costs_hbox")]
+[node name="Card" type="Control" unique_id=693299294 node_paths=PackedStringArray("_backside", "_frontside", "_description_label", "_costs_hbox", "_background_rect")]
 custom_minimum_size = Vector2(50, 75)
 layout_mode = 3
 anchors_preset = 0
@@ -18,6 +18,7 @@ _backside = NodePath("MarginContainer/Back")
 _frontside = NodePath("MarginContainer/Front")
 _description_label = NodePath("MarginContainer/Front/MarginContainer/VBoxContainer/Description")
 _costs_hbox = NodePath("MarginContainer/Front/MarginContainer/VBoxContainer/Costs")
+_background_rect = NodePath("ColorRect")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1177070234]
 layout_mode = 1

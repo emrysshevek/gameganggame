@@ -118,7 +118,7 @@ func _handle_input():
 				hand_pile.ordered_cards[_selected_card_index].play()
 				hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			else:
-				pass
+				Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
 				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()

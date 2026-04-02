@@ -101,6 +101,8 @@ func pickup_cards(character:Character):
 			var top_card = grid_cards_face_down.take_top_card()
 			top_card.owning_character = character
 			character.my_screen.card_manager.hand_pile.add_card(top_card)
+	if grid_cards_face_up != null || grid_cards_face_down != null:
+		Events.looted_cards.emit(character)
 
 func add_hazard(new_hazard:Hazard) -> bool:
 	if hazard == null:
