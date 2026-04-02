@@ -65,7 +65,6 @@ func set_type(type_to_set:Model.ObjectTypes):
 func damage_animation():
 	var new_tween = self.create_tween()
 	var previous_color = self.self_modulate
-	play_pop_up("damage", Color("b82d1d"))
 	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
 	new_tween.tween_property(self, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.5)
 	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
@@ -78,14 +77,14 @@ func play_pop_up(text:String, _set_color:Color):
 	#new_pop_up_label.visible = false
 	new_pop_up_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	new_pop_up_label.text = text
-	#set theme here maybe?
+	new_pop_up_label.position = Vector2(self.get_scaled_size().x / 2, 0)
+	new_pop_up_label.self_modulate = Color("ffffff00")
+	#set label theme here maybe?
 	add_child(new_pop_up_label)
-	new_pop_up_label.global_position = self.global_position
 	var new_tween = self.create_tween()
-	new_tween.tween_property(new_pop_up_label, "global_position", self.global_position - Vector2(2,10), Config.animation_speed)
-	new_tween.tween_property(new_pop_up_label, "self_modulate", Color(_set_color), Config.animation_speed)
-	new_tween.tween_property(new_pop_up_label, "self_modulate", Color("ffffff00"), Config.animation_speed)
-	
+	new_tween.tween_property(new_pop_up_label, "position", new_pop_up_label.position - Vector2(0,15), Config.animation_speed)
+	new_tween.parallel().tween_property(new_pop_up_label, "self_modulate", Color(_set_color), Config.animation_speed)
+	new_tween.tween_property(new_pop_up_label, "self_modulate", Color("ffffff00"), Config.animation_speed * 2)
 	
 func trigger_enter_ability(target:Character): #override for hazards
 	pass
