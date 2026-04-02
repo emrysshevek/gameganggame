@@ -25,6 +25,7 @@ enum CreatureValue {
 enum ObjectTypes {
 	TILE,
 	PLAYER_CHARACTER,
+	HAZARD,
 }
 
 enum CullingLayers {
@@ -49,7 +50,6 @@ class Action:
 	const TOGGLE_MAP = "toggle_map"
 	const TOGGLE_CURSOR = "toggle_cursor"
 	const DISCARD = "discard"
-
 
 class InputState:
 	const MOVE = "Move"
