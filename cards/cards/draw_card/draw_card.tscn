@@ -2,4 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_qqxrf"]
 
-[node name="Card" unique_id=693299294 instance=ExtResource("1_qqxrf")]
+[node name="DrawCard" unique_id=693299294 instance=ExtResource("1_qqxrf")]
+description = "draw card"
+targets_required = null

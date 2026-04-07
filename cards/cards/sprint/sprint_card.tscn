@@ -5,4 +5,5 @@
 
 [node name="Card" unique_id=693299294 instance=ExtResource("1_geq2c")]
 script = ExtResource("2_2pbdu")
+description = "Sprint"
 targets_required = null

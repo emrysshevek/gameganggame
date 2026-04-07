@@ -7,6 +7,8 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @export var _player_view_zoom:Vector2 = Vector2(1.6,1.6)
 @export var manual_set_number_of_players:int = 1
 
+@export var card_list: CardList
+
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
 @onready var player_viewport_scene := preload("res://scenes/player_subviewport.tscn")
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
@@ -54,7 +56,7 @@ func setup_players() -> void:
 		##deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-		for card_num in 5:
+		for card_scene in card_list.cards.values():
 			var new_card = card_scene.instantiate()
 			new_card.owning_character = new_character
 			new_deck.add_card(new_card)

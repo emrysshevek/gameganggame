@@ -93,7 +93,7 @@ func play() -> void:
 func validate_target(potential_target: Node, just_checking:bool) -> bool: #overwrite(?) this for sub-class cards
 	#called from the cursor when the player selects a target with the cursor in TARGET state -> just checking = false
 	#or called from grid_man when trying to find tiles to highlight -> just checking = true
-	#the OBJECT_TYPE of the target is already checked by grid man in get_tile_objects
+	#the OBJECT_TYPE of the target is already checked by grid man in get_tile
 	
 	# steps:
 	# 	check count

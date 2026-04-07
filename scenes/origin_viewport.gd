@@ -58,8 +58,10 @@ func add_character(new_character:Character) -> CharacterSprite:
 	new_character.grid_coordinates = coords
 	
 	#revealing starting tiles around each player
-	for each_tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
+	for each_tile: Tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
 		each_tile.explore(new_character)
+		if each_tile.grid_coordinates == new_character.grid_coordinates:
+			each_tile.call_deferred("enter", new_character)
 		
 	#_player_sub_viewports[player_viewport_names[each_player]].visible = true
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))

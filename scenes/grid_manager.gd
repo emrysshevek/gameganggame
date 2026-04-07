@@ -198,8 +198,9 @@ func is_in_bounds(position_to_check:Vector2):
 	return true
 		
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
+	var target_range := evaluating_card.targets_required.max_range
 	for tile in _get_all_tiles(floor):
-		if not tile.is_tile_revealed and evaluating_card.validate_target(tile, true):
+		if evaluating_card.validate_target(tile, true):
 			tile.set_highlight(evaluating_card.owning_character.character_id, true)
 
 func clear_highlights(for_character_id:int, floor:int):
@@ -207,7 +208,7 @@ func clear_highlights(for_character_id:int, floor:int):
 		each_tile.set_highlight(for_character_id, false)
 
 func move_object(object, tile_coord:Vector2, floor:int):
-	if object.type == Model.ObjectTypes.PLAYER_CHARACTER:
+	if Model.ObjectTypes.PLAYER_CHARACTER in object.types:
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
@@ -232,14 +233,14 @@ func move_object(object, tile_coord:Vector2, floor:int):
 			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
 
-func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
+func get_tile(grid_coordinates:Vector2) -> Tile:
 	#for each object on type_list (we'll have to make these lists) check grid coordinates
 	#return array of all objects + the tile itself that match these grid coordinates and type
 	#just returning the selected tile for now
 	return floor_maps[0][grid_coordinates.x][grid_coordinates.y]
 	
-func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
-	get_tile_objects(type, grid_coordinates)	
+func _on_get_tile_request(type, grid_coordinates:Vector2):
+	get_tile(grid_coordinates)	
 		
 func _on_object_move_request(object, new_tile_position:Vector2):
 	move_object(object, new_tile_position, 0)

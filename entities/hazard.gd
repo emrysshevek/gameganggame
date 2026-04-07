@@ -5,7 +5,6 @@ func _ready() -> void:
 	centered = false
 	set_sprite(load("res://art/hazard.png"))
 	self_modulate = Color("ffff11")
-	visible = false
 
 func trigger_enter_ability(target:Character):
 	#override from grid_sprite

@@ -7,9 +7,10 @@ signal move_request(which_sprite, requested_position)
 #endregion
 
 #region properties
+@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY]
+
 var grid_coordinates:Vector2
 var _remote_camera_transform:RemoteTransform2D
-var type:Model.ObjectTypes
 var input_man:PlayerInputManager
 #endregion
 
@@ -60,7 +61,7 @@ func move_remote_camera(new_position:Vector2):
 		_remote_camera_transform.global_position = new_position
 		
 func set_type(type_to_set:Model.ObjectTypes):
-	type = type_to_set
+	pass
 	
 func trigger_enter_ability(target:Character):
 	pass

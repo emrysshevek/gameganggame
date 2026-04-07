@@ -164,13 +164,6 @@ func _on_card_played(_card:Card):
 #endregion
 	
 #region Testing methods
-#func setup_testing_cards():
-	#var testing_cards:Array
-	#for i in 5:
-		#var card: Card = card_scene.instantiate()
-		#testing_cards.append(card)
-	#return testing_cards
-
 func turn_start_draw():
 	draw(5)
 	

@@ -6,7 +6,6 @@ var _face_up:bool
 func _ready() -> void:
 	centered = false
 	pile = Pile.new()
-	visible = false
 	
 func set_facing(set_face_up:bool):
 	if set_face_up == true:

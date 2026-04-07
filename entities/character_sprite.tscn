@@ -5,3 +5,4 @@
 [node name="CharacterSprite" type="Sprite2D" unique_id=85664507]
 centered = false
 script = ExtResource("1_wqaic")
+types = Array[int]([0, 4, 5])

@@ -19,10 +19,12 @@ signal started_turn(which_player)
 var input_man:PlayerInputManager
 var pis_machine:PlayerInputStateMachine
 var my_screen:PlayerScreen
+
 var character_id:int
 var health_max:int = 5
 var health_current:int
 var deck:Deck
+
 var grid_coordinates:Vector2
 var current_floor:int
 var movement:int = 3
@@ -50,7 +52,6 @@ func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
 	character_sprite.self_modulate = testing_player_colors[character_id]
-	character_sprite.type = Model.ObjectTypes.PLAYER_CHARACTER
 	add_child(character_sprite)
 	
 func bind_cursor_sprite(input_sprite:CursorSprite):
@@ -131,6 +132,7 @@ func get_my_current_playing_card():
 	return my_screen.card_manager.card_being_played
 
 #endregion
+
 
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR or new_state == Model.InputState.TARGET || old_state == Model.InputState.TARGET:
