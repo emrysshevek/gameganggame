@@ -103,7 +103,7 @@ func setup_minimap():
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]
 	var minimap_viewport = player_viewport_scene.instantiate()
 	add_child(minimap_viewport)
-	minimap_viewport.set_viewport_world(origin_viewport._world)
+	minimap_viewport.set_viewport_world(origin_viewport.world)
 	minimap_viewport.set_bounds(_minimap_size)
 	minimap_viewport.set_zoom(_minimap_zoom)
 	minimap_viewport.toggle_background()

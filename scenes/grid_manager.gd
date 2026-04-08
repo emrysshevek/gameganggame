@@ -7,15 +7,30 @@ signal map_generated()
 enum directions{north, east, south, west}
 
 #region properties
+#loading scenes
 var _tile_scene = preload("res://scenes/Tile.tscn")
+
+#odds that a path will be generated for each tile, starting with odds for 1 path, 2 paths, etc
 var _path_number_odds = [75,75,60,40]
+
+#used when creating tile paths
 var _direction_opposites:Dictionary
+
+#map of the grid used by A*, setup as [floor][grid_coordinate_x][grid_coordinate_y]
 var _a_star_floor_map = {}
+
+#map of the grid, setup as [floor][grid_coordinate_x][grid_coordinate_y]
 var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors 
+
+#level is not currently in use as we only have one floor levels right now
 var level:int = 0 #dummy
+
+#width and height of the map in tiles
 var map_width:int = 20
 var map_height:int = 20
-@onready var tile_size:Vector2 = Vector2(64,64)
+
+#size of each tile in pixels
+var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
 var _loot_card_scene = preload("res://cards/loot_card/loot_card.tscn")
@@ -23,14 +38,18 @@ var _loot_card_scene = preload("res://cards/loot_card/loot_card.tscn")
 
 #region methods
 func _ready() -> void:
+	#adding grid man to group in case anyone calls for grid man from utils
 	add_to_group(Config.GRID_MANAGER_GROUP)
+	
+	#setting up the direction opposites
 	_direction_opposites[directions.north] = directions.south
 	_direction_opposites[directions.east] = directions.west
 	_direction_opposites[directions.south] = directions.north
 	_direction_opposites[directions.west] = directions.east
+	
 	#initializing A* for map
 	_a_star_floor_map[level] = AStar2D.new()
-	#
+	
 	#initialize blank map grid
 	var new_map_grid = []
 	for x in range(map_width):
@@ -45,27 +64,30 @@ func _ready() -> void:
 			var a_star_point_id = _a_star_floor_map[0].get_available_point_id()
 			_a_star_floor_map[0].add_point(a_star_point_id, Vector2(new_tile.grid_coordinates.x, new_tile.grid_coordinates.y), 0)
 			new_tile.a_star_id = a_star_point_id
-			#
-			#testing visibility
+			
+			#setting up visible position of tiles
 			new_tile.set_coordinates(Vector2(x,y))
 			new_tile.position = Vector2(x * 64, y * 64)
-			#
+	#adding the newly generated map to the floor map grid
 	floor_maps[level] = new_map_grid
+	#generating all the parts of the map
 	generate_map(0)
 	generate_hazards(0, 10)
 	generate_loot_piles(0, 2)
-	#reveal_full_map()
-	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
 	
 func add_path(tile1:Tile, connection_direction_from_tile1:directions, tile2:Tile):
+	#registers a connection between two tiles, which will allow characters to move between them
+	#and will cause a visual path to appear between them
 	var new_path = path.new()
 	new_path.set_connections(tile1, tile2)
 	tile1.set_path(connection_direction_from_tile1, new_path)
 	tile2.set_path(_direction_opposites[connection_direction_from_tile1], new_path)
+	#currently we don't use blocked paths, but if we wanted to implement like, doors, we might want to
 	if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
 		_a_star_floor_map[level].connect_points(tile1.a_star_id, tile2.a_star_id,true)
 	
 func _get_all_tiles(level:int):
+	#just gets all the tiles on the map :)
 	var all_tiles:Array[Tile]
 	for each_y in map_height:
 		for each_x in map_width:
@@ -73,9 +95,11 @@ func _get_all_tiles(level:int):
 	return all_tiles
 	
 func generate_map(level:int):
+	#get all the tiles
 	for each_tile in _get_all_tiles(0):
 		var possible_tile_connections_by_path:Dictionary
-		#check which directions could have new paths added to them
+		#check which directions could have new paths added to them and add them to the possible list (dictionary)
+		#paths can't be added if there is already a path in that direction from the tile or if the tile is on the edge of the map
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
 			possible_tile_connections_by_path[directions.west] = floor_maps[level][each_tile.grid_coordinates.x - 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != 0 && each_tile.paths.keys().has(directions.north) == false:
@@ -85,26 +109,32 @@ func generate_map(level:int):
 		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
 			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
 		var possible_new_path_num = possible_tile_connections_by_path.size()
+		
+		#for each possible path as determined above...
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
 				#new paths are added if a random 'roll' is within a set range
 				var roll_for_new_path = randi_range(1,100)
 				if roll_for_new_path <= _path_number_odds[4 - possible_new_path_num]:
+					#adding new path
 					var connecting_tile_direction_from_origin_tile = possible_tile_connections_by_path.keys().pick_random()
 					add_path(each_tile, connecting_tile_direction_from_origin_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
+		#resetting the tiles to be hidden so the players can explore them later
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 
 func generate_hazards(level:int, frequency:int):
+	#makes hazards in random tiles. higher frequency value means fewer hazards
 	for each_tile in _get_all_tiles(level):
 		if randi_range(1,frequency) == frequency:
 			var new_hazard = Hazard.new()
 			each_tile.add_hazard(new_hazard)
 
 func generate_loot_piles(level:int, frequency:int):
+	#makes loot piles in random tiles, higher frequency value means fewer piles
 	for each_tile in _get_all_tiles(level):
 		if randi_range(1,frequency) == frequency:
 			for i in randi_range(1,3):
@@ -113,8 +143,11 @@ func generate_loot_piles(level:int, frequency:int):
 				each_tile.add_grid_card(new_card)	
 
 func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	#uses A* to determine if paths exist between the 'from' tile to the 'to' tile
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
+	
+	#get_id_path returns the array of A* id's of the piles in the shortest path
 	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	if path_between_points.is_empty() == true:
 		return false
@@ -123,17 +156,23 @@ func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	
 func get_reachable_tiles(level:int, starting_tile_coords:Vector2, range:int):
 	var starting_tile = floor_maps[level][starting_tile_coords.x][starting_tile_coords.y]
-	#get all tiles within range 1 of starting Tile, add them to checking_tiles
+	
+	#verifying range entered is possible
 	if range <= 0 || range >= map_width || range >= map_height:
 		#eventually change this to just filter the input to a valid max or min value
 		print("can't get reachable tiles for range: " + str(range))
 		assert(false)
+		
 	var return_array:Array[Tile]
 	var reachable_tile_ids:Array[int]
-	#get the 4 or less Tile ids surrounding the starting Tile and the reachable tiles
 	var starting_tile_ids:Array[int]
+	
+	#get the ids of the 4 or less tiles surrounding the starting Tile and the reachable tiles
 	starting_tile_ids.append(starting_tile.a_star_id)
 	reachable_tile_ids.append_array(_a_star_floor_map[level].get_point_connections(starting_tile.a_star_id))
+	
+	#search through path connections of each tile connected to the initial 4 (or less) that surround the starting tile
+	#and so on until 'range' is reached
 	for i in range:
 		var new_reachable_tile_ids:Array[int]
 		#for each of the 4 or less tiles around the starting Tile get all of their Tile connections
@@ -158,6 +197,7 @@ func get_reachable_tiles(level:int, starting_tile_coords:Vector2, range:int):
 	return return_array
 
 func get_tiles_in_crow_flies_range(floor:int, from_tile_coords:Vector2, distance:int) -> Array[Tile]:
+	#gets all tiles within a certain # of tiles, regardless of if they are reachable or not
 	var returning_tiles:Array[Tile]
 	for each_tile in _get_all_tiles(floor):
 		var tile_distance_from_target = abs(each_tile.grid_coordinates.x - from_tile_coords.x) + abs(each_tile.grid_coordinates.y - from_tile_coords.y)
@@ -166,16 +206,18 @@ func get_tiles_in_crow_flies_range(floor:int, from_tile_coords:Vector2, distance
 	return returning_tiles
 
 func get_crow_flies_distance(tile1_coords:Vector2, tile2_coords:Vector2):
+	#checks the distance between two tiles (in tiles) regardless of reachability
 	return abs(tile1_coords.x - tile2_coords.x) + abs(tile1_coords.y - tile2_coords.y)
 
 func get_distance(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	#uses A* to find the shortest distance between the two tiles, returns 0 if no path found
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
-	#returns distance required to move between the tiles, not as the crow flies
 	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	return path_between_points.size()
 		
 func is_directly_connected(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
+	#determines if two tiles are connected to each other using A*
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[level][to_tile_coords.x][to_tile_coords.y]
 	var point_connections = _a_star_floor_map[floor].get_point_connections(from_tile.a_star_id)
@@ -198,38 +240,48 @@ func is_in_bounds(position_to_check:Vector2):
 	return true
 		
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
+	#causes each tile that is a valid target or contains a valid target to become highlighted during targetting
+	#highlight is only visible to the player doing the highlighting
 	for each_tile in _get_all_tiles(floor):
 		if evaluating_card.validate_target(each_tile, true) == true:
 			each_tile.set_highlight(evaluating_card.owning_character.character_id, true)
 
 func clear_highlights(for_character_id:int, floor:int):
+	#removes the highlights from all tiles for the specified character
 	for each_tile in _get_all_tiles(floor):
 		each_tile.set_highlight(for_character_id, false)
 
 func move_object(object, tile_coord:Vector2, floor:int):
+	#moves a grid_sprite (like a character or cursor) around the map
 	if object.type == Model.ObjectTypes.PLAYER_CHARACTER:
+		#if the tile the character is trying to move to isn't connected by a path from their current tile they can't move to it
 		if is_directly_connected(floor, object.grid_coordinates, tile_coord) == false:
 			return false
 		else:
-			#clearing out movement after entering an unexplored tile
+			#clearing out movement (setting it to 1 so it drops to 0) after entering an unexplored tile
 			if floor_maps[floor][tile_coord.x][tile_coord.y].is_tile_explored == false:
 				object.movement = 1
+			
+			#calling exit for the object in its former tiles
 			floor_maps[floor][object.grid_coordinates.x][object.grid_coordinates.y].exit(object)
+			
+			#and enter for its new tiles
 			floor_maps[floor][tile_coord.x][tile_coord.y].enter(object)
+			
+			#drawing object in its new location
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
-			#return [new_sprite_tile_position, new_sprite_screen_position]
 			
 			return true
 	else: #should be for ui elements, like the cursor
+		#ensures cursor doesn't move out of bounds of map
 		if is_in_bounds(tile_coord) == false:
 			return false
 		else:
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
-			#return [new_sprite_tile_position, new_sprite_screen_position]
 			return true
 
 func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
@@ -242,19 +294,8 @@ func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
 	get_tile_objects(type, grid_coordinates)	
 		
 func _on_object_move_request(object, new_tile_position:Vector2):
-	move_object(object, new_tile_position, 0)
+	move_object(object, new_tile_position, 0)	
 		
-#region testing functions
-#func reveal_full_map():
-	#for each_tile in _get_all_tiles(0):
-		#each_tile.explore(0)
-		
-#func testing_map_distance_algorithm(starting_tile_coords:Vector2, range:int, level:int):
-	#var reached_tiles = get_reachable_tiles(level, Vector2(starting_tile_coords.x,starting_tile_coords.y), range)
-	#for each_tile in reached_tiles:
-		#each_tile.explore(0)
-#endregion
-		
-func _import_pre_baked_map_section():
+func _import_pre_baked_map_section(): #not used yet
 	pass
 #endregion
