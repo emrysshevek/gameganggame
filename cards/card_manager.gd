@@ -10,9 +10,10 @@ extends Control
 
 var input_man:PlayerInputManager
 
-@onready var _selected_card_index:int = 2:
-	get():
-		return _selected_card_index
+var _selected_card_index_helper := 2 # pretend this doesn't exist :)
+var _selected_card_index:int = _selected_card_index_helper:
+	get:
+		return _selected_card_index_helper
 	set(new_value):
 		if hand_pile.count == 0:
 			new_value = -1
@@ -20,9 +21,11 @@ var input_man:PlayerInputManager
 			new_value = hand_pile.count - 1
 		elif new_value > hand_pile.count - 1:
 			new_value = 0
-		_selected_card_index = new_value
+		_selected_card_index_helper = new_value
 		if new_value != -1:
-			_card_selection_visuals(_selected_card_index)
+			_card_selection_visuals(_selected_card_index_helper)
+			
+var card_being_played:Card
 
 @export var input_state_machine: PlayerInputStateMachine
 @export var input_manager: PlayerInputManager
@@ -35,6 +38,7 @@ func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
 	input_state_machine.state_switched.connect(_on_state_machine_switched)
+	Events.card_played.connect(_on_card_played)
 
 		
 func _process(_delta: float) -> void:
@@ -60,11 +64,10 @@ func draw(_count:=1) -> void:
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
 	
-	
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
-	discard_pile.add_card(_card)
-	
+	if _card not in character.queued_drop_cards:
+		discard_pile.add_card(_card)
 	
 func refill_draw() -> void:
 	discard_pile.shuffle()
@@ -81,12 +84,21 @@ func return_discard() -> void:
 	
 func shuffle_draw() -> void:
 	draw_pile.shuffle()
+	
+func remove_card(card:Card) -> void:
+	if card in deck.cards:
+		deck.remove_card(card)
+	if card in draw_pile.cards:
+		draw_pile.remove_card(card)
+	if card in hand_pile.cards:
+		hand_pile.remove_card(card)
+	if card in discard_pile.cards:
+		discard_pile.remove_card(card)
 #endregion
 
 
 #region Private Methods
 func _handle_input():
-	# TODO: REMOVE!!!
 	if input_man.is_action_just_released("move_up"):
 		var card: Card = card_scene.instantiate()
 		deck.add_card(card)
@@ -100,10 +112,13 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			hand_pile.ordered_cards[_selected_card_index].play()
-			hand_pile.ordered_cards[_selected_card_index].highlight_return()
-			discard(hand_pile.ordered_cards[_selected_card_index])
-			_selected_card_index -= 1
+			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
+				card_being_played = hand_pile.ordered_cards[_selected_card_index]
+				hand_pile.ordered_cards[_selected_card_index].play()
+				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+			else:
+				Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
+				#card can't be played due to not enough values
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
@@ -131,7 +146,6 @@ func _on_card_clicked(_card) -> void:
 	elif _card.pile == discard_pile:
 		pass
 
-
 func _on_draw_button_pressed() -> void:
 	if draw_pile.count == 0:
 		refill_draw()
@@ -139,16 +153,22 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
-		_selected_card_index = 2
+	if new_state == Model.InputState.CARD:
+		_selected_card_index = int(hand_pile.count / 2)
+		
+func _on_card_played(_card:Card):
+	card_being_played = null
+	discard(hand_pile.ordered_cards[_selected_card_index])
+	_selected_card_index -= 1
 #endregion
 	
 #region Testing methods
-func setup_testing_cards():
-	var testing_cards:Array
-	for i in 5:
-		var card: Card = card_scene.instantiate()
-		testing_cards.append(card)
-	return testing_cards
+#func setup_testing_cards():
+	#var testing_cards:Array
+	#for i in 5:
+		#var card: Card = card_scene.instantiate()
+		#testing_cards.append(card)
+	#return testing_cards
 
 func turn_start_draw():
 	draw(5)

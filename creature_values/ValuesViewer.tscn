@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://xoqfnqg446ge"]
+
+[ext_resource type="PackedScene" uid="uid://c06to58s7vdgr" path="res://creature_values/ValueItem.tscn" id="1_bjw1m"]
+
+[node name="ValuesViewer" type="HBoxContainer" unique_id=807887508]
+theme_override_constants/separation = 10
+
+[node name="Adaptability" parent="." unique_id=1360621311 instance=ExtResource("1_bjw1m")]
+layout_mode = 2
+
+[node name="Bravery" parent="." unique_id=37264662 instance=ExtResource("1_bjw1m")]
+layout_mode = 2
+target_value = 1
+
+[node name="Curiosity" parent="." unique_id=409506781 instance=ExtResource("1_bjw1m")]
+layout_mode = 2
+target_value = 2
+
+[node name="Dependability" parent="." unique_id=1087113627 instance=ExtResource("1_bjw1m")]
+layout_mode = 2
+target_value = 3
+
+[node name="Empathy" parent="." unique_id=830271398 instance=ExtResource("1_bjw1m")]
+layout_mode = 2
+target_value = 4

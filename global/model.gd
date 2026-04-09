@@ -11,6 +11,32 @@ enum Direction {
 	DOWN,
 }
 
+
+## Creature values.
+enum CreatureValue {
+	ADAPTABILITY,
+	BRAVERY,
+	CURIOSITY,
+	DEPENDABILITY,
+	EMPATHY
+}
+
+## Object Types.
+enum ObjectTypes {
+	TILE,
+	PLAYER_CHARACTER,
+	HAZARD,
+}
+
+enum CullingLayers {
+	VISIBLE_ALL,
+	VISIBLE_MINIMAP_ONLY,
+	VISIBLE_P1_ONLY,
+	VISIBLE_P2_ONLY,
+	VISIBLE_P3_ONLY,
+	VISIBLE_P4_ONLY,
+}
+
 ## Action StringNames. These should be a 1:1 mapping to the actions defined in
 ## the InputMap. Always reference actions through this class to ensure
 ## consistency and make modifications easier in the future.
@@ -26,9 +52,9 @@ class Action:
 	const TOGGLE_END_TURN = "toggle_end_turn"
 	const DISCARD = "discard"
 
-
 class InputState:
 	const MOVE = "Move"
 	const CARD = "Card"
 	const CURSOR = "Cursor"
 	const END = "End"
+	const TARGET = "Target"

@@ -4,7 +4,8 @@
 [ext_resource type="Script" uid="uid://cpf05jjwg0xm1" path="res://input/state_machine/player_input_cursor_state.gd" id="2_k6r1c"]
 [ext_resource type="Script" uid="uid://djvoq2nx6we67" path="res://input/state_machine/player_input_move_state.gd" id="3_u2irg"]
 [ext_resource type="Script" uid="uid://b1rv7a3mnyj7f" path="res://input/state_machine/player_input_card_state.gd" id="4_bmfje"]
-[ext_resource type="Script" uid="uid://vik6btknawnr" path="res://input/state_machine/player_input_end_state.gd" id="5_k6r1c"]
+[ext_resource type="Script" uid="uid://cvc4nuj4tdvdr" path="res://input/state_machine/player_input_targetting_state.gd" id="5_k6r1c"]
+[ext_resource type="Script" path="res://input/state_machine/player_input_end_state.gd" id="5_u2irg"]
 
 [node name="PlayerInputStateMachine" type="Node" unique_id=1913364748 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("1_cnwri")
@@ -20,4 +21,7 @@ script = ExtResource("2_k6r1c")
 script = ExtResource("4_bmfje")
 
 [node name="End" type="Node" parent="." unique_id=1064658350]
+script = ExtResource("5_u2irg")
+
+[node name="Target" type="Node" parent="." unique_id=1874594810]
 script = ExtResource("5_k6r1c")

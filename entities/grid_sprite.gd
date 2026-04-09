@@ -9,7 +9,7 @@ signal move_request(which_sprite, requested_position)
 #region properties
 var grid_coordinates:Vector2
 var _remote_camera_transform:RemoteTransform2D
-var type:sprite_types
+var type:Model.ObjectTypes
 var input_man:PlayerInputManager
 #endregion
 
@@ -59,6 +59,37 @@ func move_remote_camera(new_position:Vector2):
 	if _remote_camera_transform != null:
 		_remote_camera_transform.global_position = new_position
 		
-func set_type(type_to_set:sprite_types):
+func set_type(type_to_set:Model.ObjectTypes):
 	type = type_to_set
+	
+func damage_animation():
+	var new_tween = self.create_tween()
+	var previous_color = self.self_modulate
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.5)
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.5)
+	new_tween.tween_property(self, "self_modulate", Color("ffffff"), Config.animation_speed * 0.2)
+	new_tween.tween_property(self, "self_modulate", previous_color, Config.animation_speed)
+
+func play_pop_up(text:String, _set_color:Color):
+	var new_pop_up_label = Label.new()
+	#new_pop_up_label.visible = false
+	new_pop_up_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	new_pop_up_label.text = text
+	new_pop_up_label.position = Vector2(self.get_scaled_size().x / 2, 0)
+	new_pop_up_label.self_modulate = Color("ffffff00")
+	#set label theme here maybe?
+	add_child(new_pop_up_label)
+	var new_tween = self.create_tween()
+	new_tween.tween_property(new_pop_up_label, "position", new_pop_up_label.position - Vector2(0,15), Config.animation_speed)
+	new_tween.parallel().tween_property(new_pop_up_label, "self_modulate", Color(_set_color), Config.animation_speed)
+	new_tween.tween_property(new_pop_up_label, "self_modulate", Color("ffffff00"), Config.animation_speed * 2)
+	
+func trigger_enter_ability(target:Character): #override for hazards
+	pass
+	
+func trigger_exit_ability(target:Character): #override for hazards
+	pass
+	
 #endregion

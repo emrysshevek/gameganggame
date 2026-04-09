@@ -39,6 +39,10 @@ func get_bottom_card() -> Card:
 	remove_card(card)
 	return card
 
+func get_random_card() -> Card:
+	if cards.is_empty() == true:
+		return null
+	return cards.pick_random()
 	
 func shuffle() -> void:
 	ordered_cards.shuffle()
@@ -84,6 +88,7 @@ func remove_card(_card: Card) -> void:
 	ordered_cards.erase(_card)
 	_reposition()
 	_card.pile = null
+	remove_child(_card)
 	card_removed.emit()
 	if count == 0:
 		emptied.emit()
@@ -115,7 +120,6 @@ func _reposition() -> void:
 	for i in len(ordered_cards):
 		var card := ordered_cards[i]
 		curr_pos += spacing
-		card._description_label.text = str(i)
 		card.global_position = curr_pos
 		card.z_index = i
 
