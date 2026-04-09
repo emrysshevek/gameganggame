@@ -42,6 +42,7 @@ func setup_new_character(input_character_id:int, input_state_machine:PlayerInput
 	character_id = input_character_id
 	input_man = InputManager.get_player_input_manager(character_id)
 	pis_machine = input_state_machine
+	Events.looted_cards.connect(_on_looted_card)
 	return self
 
 func bind_screen(input_screen:PlayerScreen):
@@ -74,6 +75,8 @@ func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
 func take_damage(amount:int):
 	health_current -= amount
 	health_changed.emit(self, health_current + amount, health_current)
+	character_sprite.damage_animation()
+	character_sprite.play_pop_up("-" + str(amount) + "hp", Color("b82d1d"))
 	if health_current <= 0:
 		die()
 		
@@ -90,6 +93,7 @@ func forced_random_discard(number_of_cards:int):
 		var random_card = my_screen.card_manager.hand_pile.get_random_card()
 		if random_card != null:
 			my_screen.card_manager.discard(my_screen.card_manager.hand_pile.get_random_card())
+	character_sprite.play_pop_up("forced discard: " + str(number_of_cards), Color("b82d1d"))
 
 func end_turn():
 	ended_turn.emit(self)
@@ -147,3 +151,8 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		Utils.try_get_grid_man().highlight_targettable_tiles(get_my_current_playing_card(), grid_coordinates, 0)
 	if old_state == Model.InputState.TARGET:
 		Utils.try_get_grid_man().clear_highlights(character_id, 0)
+
+
+func _on_looted_card(_character:Character):
+	if _character == self:
+		character_sprite.play_pop_up("Looted", Color("#d4ff3b"))

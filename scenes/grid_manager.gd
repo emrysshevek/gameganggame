@@ -19,6 +19,7 @@ var map_height:int = 20
 
 #Testing
 var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
+var test_map_on:bool = true
 #endregion
 
 #region methods
@@ -31,6 +32,17 @@ func _ready() -> void:
 	#initializing A* for map
 	_a_star_floor_map[level] = AStar2D.new()
 	#
+	floor_maps[level] = setup_map_grid(map_width, map_height)
+	if test_map_on == false:
+		generate_map(0)
+		generate_hazards(0, 10)
+		generate_loot_piles(0, 2)
+	else:
+		setup_test_map(0)
+	#reveal_full_map()
+	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
+	
+func setup_map_grid(width:int, height:int) -> Array:
 	#initialize blank map grid
 	var new_map_grid = []
 	for x in range(map_width):
@@ -50,20 +62,74 @@ func _ready() -> void:
 			new_tile.set_coordinates(Vector2(x,y))
 			new_tile.position = Vector2(x * 64, y * 64)
 			#
-	floor_maps[level] = new_map_grid
-	generate_map(0)
-	generate_hazards(0, 10)
-	generate_loot_piles(0, 2)
-	#reveal_full_map()
-	#testing_map_distance_algorithm(Vector2(3,3), 3, 0)
+	return new_map_grid
 	
-func add_path(tile1:Tile, connection_direction_from_tile1:directions, tile2:Tile):
+func setup_test_map(level:int):
+	var current_floor_tiles = floor_maps[level]
+	var tiles:Array[Tile] = _get_all_tiles(level)
+	##setting up blank, fully connected outer tiles
+	for each_tile in tiles:
+		if each_tile.grid_coordinates.x < 8 or each_tile.grid_coordinates.x > 13 and each_tile.grid_coordinates.y < 8 or each_tile.grid_coordinates.y > 13:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+		##setting up accessible player spawn rooms
+		elif each_tile.grid_coordinates.x == 10 or each_tile.grid_coordinates.x == 11 and each_tile.grid_coordinates.y == 10 or each_tile.grid_coordinates.y == 11:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+	##setting up inaccessable room at 9,9
+	#for each_tile in get_tiles_in_crow_flies_range(level, Vector2i(9,9), 1):
+		#remove_path(current_floor_tiles[9][9], each_tile)
+	##loot pile rooms at 10,9 + 11,9 + 11,12
+	add_loot_pile(current_floor_tiles[10][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[11][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[10][10])
+	add_loot_pile(current_floor_tiles[11][9])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[11][10])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[12][9])
+	add_loot_pile(current_floor_tiles[11][12])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[11][11])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[12][12])
+	##hazards in rooms 12,9 + 12,10 + 12,12
+	add_hazard(current_floor_tiles[12][9])
+	add_path(current_floor_tiles[12][9], current_floor_tiles[12][10])
+	add_hazard(current_floor_tiles[12][10])
+	add_path(current_floor_tiles[12][10], current_floor_tiles[11][10])
+	##other testing room connections 9,10 + 9,11 + 9,12 + 10,11 + 10,12
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[8][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][11], current_floor_tiles[10][11])
+	add_path(current_floor_tiles[9][12], current_floor_tiles[10][12])
+	add_path(current_floor_tiles[10][11], current_floor_tiles[10][12])
+	for each_tile in tiles:
+		each_tile.reset_to_hidden()
+	map_generated.emit()
+	
+func add_path(tile1:Tile, tile2:Tile):
+	var connection_direction = get_path_direction(tile1, tile2)
 	var new_path = path.new()
 	new_path.set_connections(tile1, tile2)
-	tile1.set_path(connection_direction_from_tile1, new_path)
-	tile2.set_path(_direction_opposites[connection_direction_from_tile1], new_path)
+	tile1.add_path(connection_direction, new_path)
+	tile2.add_path(_direction_opposites[connection_direction], new_path)
 	if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
 		_a_star_floor_map[level].connect_points(tile1.a_star_id, tile2.a_star_id,true)
+	
+func remove_path(tile1:Tile, tile2:Tile):
+	pass
+	
+func get_path_direction(tile1:Tile, tile2:Tile) -> directions:
+	var connection_direction:directions
+	if tile1.grid_coordinates.x < tile2.grid_coordinates.x:
+		connection_direction = directions.east
+	elif tile1.grid_coordinates.x > tile2.grid_coordinates.x:
+		connection_direction = directions.west
+	elif tile1.grid_coordinates.y < tile2.grid_coordinates.y:
+		connection_direction = directions.south
+	else:
+		connection_direction = directions.north
+	return connection_direction
 	
 func _get_all_tiles(level:int):
 	var all_tiles:Array[Tile]
@@ -91,7 +157,7 @@ func generate_map(level:int):
 				var roll_for_new_path = randi_range(1,100)
 				if roll_for_new_path <= _path_number_odds[4 - possible_new_path_num]:
 					var connecting_tile_direction_from_origin_tile = possible_tile_connections_by_path.keys().pick_random()
-					add_path(each_tile, connecting_tile_direction_from_origin_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
+					add_path(each_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
@@ -101,16 +167,22 @@ func generate_map(level:int):
 func generate_hazards(level:int, frequency:int):
 	for each_tile in _get_all_tiles(level):
 		if randi_range(1,frequency) == frequency:
-			var new_hazard = Hazard.new()
-			each_tile.add_hazard(new_hazard)
+			add_hazard(each_tile)
+
+func add_hazard(tile:Tile) -> void:
+	var new_hazard = Hazard.new()
+	tile.add_hazard(new_hazard)
 
 func generate_loot_piles(level:int, frequency:int):
 	for each_tile in _get_all_tiles(level):
 		if randi_range(1,frequency) == frequency:
-			for i in randi_range(1,3):
-				var new_card:LootCard = _loot_card_scene.instantiate()
-				new_card.is_faceup = false
-				each_tile.add_grid_card(new_card)	
+			add_loot_pile(each_tile)
+
+func add_loot_pile(tile:Tile) -> void:
+	for i in randi_range(1,3):
+		var new_card:LootCard = _loot_card_scene.instantiate()
+		new_card.is_faceup = false
+		tile.add_grid_card(new_card)	
 
 func is_reachable(floor:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var from_tile = floor_maps[level][from_tile_coords.x][from_tile_coords.y]

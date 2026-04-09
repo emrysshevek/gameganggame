@@ -103,6 +103,8 @@ func pickup_cards(character:Character):
 			var top_card = grid_cards_face_down.take_top_card()
 			top_card.owning_character = character
 			character.my_screen.card_manager.hand_pile.add_card(top_card)
+	if grid_cards_face_up != null || grid_cards_face_down != null:
+		Events.looted_cards.emit(character)
 
 func add_hazard(new_hazard:Hazard) -> bool:
 	if hazard == null:
@@ -158,11 +160,14 @@ func get_contents(types:Array[Model.ObjectTypes]=[]) -> Array[Node]:
 func _set_random_explore_value():
 	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now
 	
-func set_path(direction:int, path_obj:path):
+func add_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
 	_path_lines[direction].show()
 	_path_lines_minimap[direction].show()
 
+	
+func remove_path(direction:int):
+	paths[direction] = null
 	
 func set_highlight(for_character_id:int, highlight_on:bool):
 	if highlight_on == true:

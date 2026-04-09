@@ -10,7 +10,7 @@ min_count = 1
 max_count = 1
 max_range = 3
 
-[node name="Card" type="Control" unique_id=693299294 node_paths=PackedStringArray("_backside", "_frontside", "_description_label", "_costs_hbox")]
+[node name="Card" type="Control" unique_id=693299294 node_paths=PackedStringArray("_backside", "_frontside", "_description_label", "_costs_hbox", "_background_rect")]
 custom_minimum_size = Vector2(50, 75)
 layout_mode = 3
 anchors_preset = 0
@@ -22,6 +22,7 @@ _backside = NodePath("MarginContainer/Back")
 _frontside = NodePath("MarginContainer/Front")
 _description_label = NodePath("MarginContainer/Front/MarginContainer/VBoxContainer/Description")
 _costs_hbox = NodePath("MarginContainer/Front/MarginContainer/VBoxContainer/Costs")
+_background_rect = NodePath("ColorRect")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1177070234]
 layout_mode = 1

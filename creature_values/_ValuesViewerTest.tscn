@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://yx5i1iyi4uge"]
+
+[ext_resource type="Script" uid="uid://dac642oxkkd1j" path="res://creature_values/_values_viewer_test.gd" id="1_c56l5"]
+[ext_resource type="PackedScene" uid="uid://ck6os832o7j48" path="res://creature_values/ValueManager.tscn" id="1_fw0k8"]
+[ext_resource type="PackedScene" uid="uid://xoqfnqg446ge" path="res://creature_values/ValuesViewer.tscn" id="2_c56l5"]
+
+[node name="ValuesViewerTest" type="Control" unique_id=723760535]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_c56l5")
+
+[node name="ValueManager" parent="." unique_id=323409287 instance=ExtResource("1_fw0k8")]
+
+[node name="ValuesViewer" parent="." unique_id=1422545383 instance=ExtResource("2_c56l5")]
+layout_mode = 0

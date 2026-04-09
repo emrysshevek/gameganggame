@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://o1a5lvw41j55" path="res://scenes/game_scene.gd" id="1_xy3my"]
 [ext_resource type="Resource" uid="uid://djw3kvd8qov77" path="res://cards/cards/card_list.tres" id="2_7s5hy"]
-[ext_resource type="PackedScene" uid="uid://ck6os832o7j48" path="res://scenes/ValueManager.tscn" id="2_18ig4"]
+[ext_resource type="PackedScene" uid="uid://ck6os832o7j48" path="res://creature_values/ValueManager.tscn" id="2_18ig4"]
 [ext_resource type="PackedScene" uid="uid://dxpo0yea3rw7f" path="res://scenes/origin_viewport.tscn" id="2_cxv17"]
+[ext_resource type="PackedScene" uid="uid://xoqfnqg446ge" path="res://creature_values/ValuesViewer.tscn" id="4_18ig4"]
 
 [node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("origin_viewport")]
 script = ExtResource("1_xy3my")
@@ -23,6 +24,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="ValuesViewer" parent="PlayerAreas/Control" unique_id=807887508 instance=ExtResource("4_18ig4")]
+z_index = 5
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -10.5
+offset_right = 10.5
+offset_bottom = 50.0
+grow_horizontal = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PlayerAreas/Control" unique_id=607298520]
 layout_mode = 1

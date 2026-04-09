@@ -9,6 +9,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 
 @export var card_list: CardList
 
+@onready var notification_log_scene := preload("res://components/notification_log.tscn")
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
 @onready var player_viewport_scene := preload("res://scenes/player_subviewport.tscn")
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
@@ -32,7 +33,11 @@ var _minimap_coord_4p:Vector2
 func _ready() -> void:
 	_tile_size = grid_man.tile_size
 	setup_players()
-	setup_minimap().reparent($PlayerAreas/Control)
+	var minimap:PlayerSubViewport = setup_minimap()
+	minimap.reparent($PlayerAreas/Control)
+	var notif_log = notification_log_scene.instantiate()
+	$PlayerAreas/Control.add_child(notif_log)
+	notif_log.position = Vector2(minimap.position.x, minimap.position.y + _minimap_size.y)
 #endregion
 
 

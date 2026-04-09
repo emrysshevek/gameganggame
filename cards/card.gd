@@ -26,6 +26,7 @@ var is_faceup: bool = true
 @export var _frontside: Node
 @export var _description_label: Label
 @export var _costs_hbox: HBoxContainer
+@export var _background_rect: ColorRect
 
 var owning_character:Character
 #endregion
@@ -71,8 +72,8 @@ func value_check() -> bool:
 		if value_man.get_value(each_value_type) >= cost[each_value_type]:
 			pass
 		else:
+			fail_to_play()
 			return false
-			#make card play 'cant be played' animation or sound
 	for each_value_type in cost.keys():
 		value_man.reserve_value(each_value_type, cost[each_value_type])
 	return true
@@ -139,6 +140,14 @@ func highlight_react() -> void:
 	
 func highlight_return():
 	scale = Vector2(1,1)
+	
+func fail_to_play():
+	var new_tween = self.create_tween()
+	new_tween.tween_property(self, "rotation_degrees", 15, Config.animation_speed * 0.1)
+	new_tween.parallel().tween_property(_frontside, "self_modulate", Color("#b82d1d"), Config.animation_speed * 0.1)
+	new_tween.tween_property(self, "rotation_degrees", -15, Config.animation_speed * 0.1)
+	new_tween.parallel().tween_property(_frontside, "self_modulate", Color("#ffffff"), Config.animation_speed * 0.1)
+	new_tween.tween_property(self, "rotation_degrees", 0, Config.animation_speed * 0.1)
 #endregion
 
 #region Private Methods

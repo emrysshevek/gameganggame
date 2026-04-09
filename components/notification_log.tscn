@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://53fkdoqcq0da"]
+
+[ext_resource type="Script" uid="uid://bqiggx2u7k5j3" path="res://components/notification_log.gd" id="1_dui1h"]
+
+[node name="NotificationLog" type="Control" unique_id=312626902]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dui1h")
+
+[node name="TextLines" type="VBoxContainer" parent="." unique_id=293521334]
+layout_mode = 0
+offset_right = 136.0
+offset_bottom = 132.0
+
+[node name="Label1" type="Label" parent="TextLines" unique_id=1375016893]
+layout_mode = 2
+text = "Test"
+
+[node name="Label2" type="Label" parent="TextLines" unique_id=1070861663]
+layout_mode = 2
+text = "Test"
+
+[node name="Label3" type="Label" parent="TextLines" unique_id=1524208928]
+layout_mode = 2
+text = "Test"
+
+[node name="Label4" type="Label" parent="TextLines" unique_id=1761422464]
+layout_mode = 2
+text = "Test"
+
+[node name="Label5" type="Label" parent="TextLines" unique_id=1944513594]
+layout_mode = 2
+text = "Test"

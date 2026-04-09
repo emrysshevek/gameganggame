@@ -1,29 +1,18 @@
 class_name ValueManager
 extends Node
 
-#region Signals
-signal creature_value_increased(which_value, amount)
-signal creature_value_decreased(which_value, amount)
-signal creature_values_reduced()
-signal creature_values_cleared()
-#endregion
-
 
 #region Properties
-static var _creature_values: Array[Model.CreatureValue] = [0,0,0,0,0]
-static var _reserved_values: Array[Model.CreatureValue] = [0,0,0,0,0]
-static var _value_names: Array[String] = [
-	"adaptability",
-	"bravery",
-	"curiosity",
-	"dependability",
-	"empathy",
-]
+static var _creature_values: Dictionary[Model.CreatureValue, int] = {}
+static var _reserved_values: Dictionary[Model.CreatureValue, int] = {}
 #endregion
 
 
 #region Public Methods
 func _ready() -> void:
+	for i in range(Config.CREATURE_VALUE_COUNT):
+		_creature_values[i as Model.CreatureValue] = 0
+		_reserved_values[i as Model.CreatureValue] = 0
 	add_to_group(Config.VALUE_MANAGER_GROUP)
 
 
@@ -33,7 +22,9 @@ func get_value(value: Model.CreatureValue) -> int:
 
 func gain_value(value: Model.CreatureValue, quantity: int = 1) -> void:
 	_increase_value(value, quantity)
-	print("added " + str(quantity) + " " + Model.CreatureValue.keys()[value])
+	print('added %d %s' % [
+		quantity, Utils.value_to_string(value)
+	])
 
 
 func reserve_value(value: Model.CreatureValue, quantity: int = 1) -> bool:
@@ -65,35 +56,40 @@ func use_value(value: Model.CreatureValue, quantity: int = 1) -> bool:
 	var next_value = _get_next_value(value)
 	_decrease_value(value, quantity)
 	_increase_value(next_value, quantity)
+	print('transformed %d %s into %d %s' % [
+		quantity, Utils.value_to_string(value),
+		quantity, Utils.value_to_string(next_value)
+	])
 	return true
 #endregion
 
 
 #region Private Methods
 func _get_next_value(which_value: Model.CreatureValue) -> Model.CreatureValue:
-	return (which_value + 1) % len(_creature_values)
+	var next_value = (which_value + 1) % Config.CREATURE_VALUE_COUNT
+	return next_value as Model.CreatureValue
 
 
 func _increase_value(which_value: Model.CreatureValue, amount: int) -> int:
 	_creature_values[which_value] += amount
-	creature_value_increased.emit(_creature_values[which_value], amount)
+	Events.value_changed.emit(which_value)
 	return _creature_values[which_value]
 
 
 func _decrease_value(which_value: Model.CreatureValue, amount: int) -> int:
 	_creature_values[which_value] -= amount
-	creature_value_decreased.emit(which_value, amount)
+	Events.value_changed.emit(which_value)
 	return _creature_values[which_value]
 
 
 func reduce_values() -> void:
-	for i in len(_creature_values):
+	for i in Config.CREATURE_VALUE_COUNT:
 		_creature_values[i] /= 2
-	creature_values_reduced.emit()
+		Events.value_changed.emit(i as Model.CreatureValue)
 
 
 func clear_values() -> void:
-	for i in len(_creature_values):
+	for i in Config.CREATURE_VALUE_COUNT:
 		_creature_values[i] = 0
-	creature_values_cleared.emit()
+		Events.value_changed.emit(i as Model.CreatureValue)
 #endregion
