@@ -140,8 +140,11 @@ func add_grid_card(new_card:Card) -> void:
 func _set_random_explore_value():
 	explore_value = Model.CreatureValue.values().pick_random() #default quantity of 1 always for now
 	
-func set_path(direction:int, path_obj:path):
+func add_path(direction:int, path_obj:path):
 	paths[direction] = path_obj
+	
+func remove_path(direction:int):
+	paths[direction] = null
 	
 func set_highlight(for_character_id:int, highlight_on:bool):
 	if highlight_on == true:
