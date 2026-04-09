@@ -32,6 +32,8 @@ var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 var character_color:Color
 var queued_drop_cards:Array[Card]
+
+@onready var status_manager: StatusManager = $StatusManager
 @onready var type = Model.ObjectTypes.PLAYER_CHARACTER
 
 @onready var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]

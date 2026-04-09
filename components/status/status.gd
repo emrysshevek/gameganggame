@@ -20,7 +20,7 @@ func apply(target: Node) -> bool:
 	return true
 	
 	
-func remove(target: Node) -> bool:
+func remove() -> bool:
 	return true
 
 

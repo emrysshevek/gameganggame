@@ -1,7 +1,7 @@
 class_name StatusManager
 extends Node
 
-@export var statuses: Array[Status]
+var statuses: Array[Status]
 
 
 func add_status(_status: Status) -> bool:
@@ -9,19 +9,18 @@ func add_status(_status: Status) -> bool:
 		if _status.status_name == status.status_name:
 			status.update(_status)
 			return true
-	
-	if not _status.apply_to(owner):
+
+	if not _status.apply(owner):
 		return false
-		
-	_status.reparent(self)
-	statuses.append(statuses)
+
+	statuses.append(_status)
 	return true
 
 
 func remove_status(_status: Status) -> bool:
 	for status in statuses:
 		if status.status_name == _status.status_name:
+			status.remove()
 			statuses.erase(status)
-			status.queue_free()
 			return true
 	return false

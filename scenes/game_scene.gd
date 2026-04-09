@@ -1,3 +1,4 @@
+class_name GameScene
 extends Node2D
 
 enum viewport_names{p1, p2, p3, p4, origin, minimap}
@@ -8,6 +9,8 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @export var manual_set_number_of_players:int = 1
 
 @export var card_list: CardList
+
+var characters: Array[Character] = []
 
 @onready var notification_log_scene := preload("res://components/notification_log.tscn")
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
@@ -58,6 +61,7 @@ func setup_players() -> void:
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
 		
 		new_character.setup_new_character(i, pis_machine)
+		characters.append(new_character)
 		##deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
