@@ -78,10 +78,10 @@ func _ready() -> void:
 func add_path(tile1:Tile, connection_direction_from_tile1:directions, tile2:Tile):
 	#registers a connection between two tiles, which will allow characters to move between them
 	#and will cause a visual path to appear between them
-	var new_path = path.new()
+	var new_path = Path.new()
 	new_path.set_connections(tile1, tile2)
-	tile1.set_path(connection_direction_from_tile1, new_path)
-	tile2.set_path(_direction_opposites[connection_direction_from_tile1], new_path)
+	tile1.add_path(connection_direction_from_tile1, new_path)
+	tile2.add_path(_direction_opposites[connection_direction_from_tile1], new_path)
 	#currently we don't use blocked paths, but if we wanted to implement like, doors, we might want to
 	if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
 		_a_star_floor_map[level].connect_points(tile1.a_star_id, tile2.a_star_id,true)
