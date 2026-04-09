@@ -272,7 +272,7 @@ func is_in_bounds(position_to_check:Vector2):
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
 	var target_range := evaluating_card.targets_required.max_range
 	for tile in _get_all_tiles(floor):
-		if evaluating_card.validate_target(tile, true):
+		if evaluating_card.validate_target(tile):
 			tile.set_highlight(evaluating_card.owning_character.character_id, true)
 
 func clear_highlights(for_character_id:int, floor:int):

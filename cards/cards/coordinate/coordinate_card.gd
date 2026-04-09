@@ -1,10 +1,10 @@
 extends Card
 
-func validate_target(potential_target: Node, just_checking:bool) -> bool:
+func validate_target(potential_target: Node) -> bool:
 	if potential_target == self:
 		return false
 		
-	return super.validate_target(potential_target, just_checking)
+	return super.validate_target(potential_target)
 	
 	
 func _trigger_play_ability() -> void:

@@ -79,6 +79,10 @@ func value_check() -> bool:
 	return true
 
 
+func discard() -> void:
+	_trigger_discard_ability()
+	Events.card_discarded.emit(self)
+
 func play() -> void:
 	#check if targetting is needed by the card
 	if targets_required == null:
@@ -91,17 +95,20 @@ func play() -> void:
 		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
 
 
-func validate_target(potential_target: Node, just_checking:bool) -> bool: #overwrite(?) this for sub-class cards
-	#called from the cursor when the player selects a target with the cursor in TARGET state -> just checking = false
-	#or called from grid_man when trying to find tiles to highlight -> just checking = true
-	#the OBJECT_TYPE of the target is already checked by grid man in get_tile
+func try_add_target(potential_target: Node) -> bool:
+	if not validate_target(potential_target):
+		return false
+		
+	targets.append(potential_target)
+	check_targetting_finished()
+	return true
 	
-	# steps:
-	# 	check count
-	# 	check type
-	# 	check range
-	
-	if not just_checking and targets.size() >= targets_required.max_count:
+
+func validate_target(potential_target: Node) -> bool: 
+	# Overwrite this for sub-class cards
+	# Called from grid_man when trying to find tiles to highlight
+
+	if targets.size() >= targets_required.max_count:
 		return false
 	
 	if not("types" in potential_target and targets_required.type in potential_target.types):
@@ -111,9 +118,6 @@ func validate_target(potential_target: Node, just_checking:bool) -> bool: #overw
 	var distance:int = Utils.try_get_grid_man().get_crow_flies_distance(potential_target.grid_coordinates, owners_location)
 	if distance > targets_required.max_range or distance < targets_required.min_range:
 		return false
-	
-	if not just_checking:
-		targets.append(potential_target)
 		
 	return true
 	
@@ -122,16 +126,12 @@ func check_targetting_finished():
 	if targets.size() == targets_required.min_count:
 		Events.request_input_state_transition.emit(Model.InputState.CARD, owning_character)
 		_trigger_play_ability()
-		
 
 
 func get_my_target_types():
 	return targets_required.keys()
 	
 
-func discard() -> void:
-	_trigger_discard_ability()
-	Events.card_discarded.emit(self)
 	
 
 func highlight_react() -> void:

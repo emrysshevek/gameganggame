@@ -26,9 +26,9 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_left"):
 			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
 		elif input_man.is_action_just_released(Model.Action.SELECT) && input_state_machine.current_state == Model.InputState.TARGET:
-			if character_ref.get_my_current_playing_card() != null:
-				var current_card = character_ref.get_my_current_playing_card()
+			var current_card = character_ref.get_my_current_playing_card()
+			if current_card != null:
 				var grid_man = Utils.try_get_grid_man()
-				var object = grid_man.get_tile(grid_coordinates).get_contents([current_card.targets_required.type])[0]
-				if current_card.validate_target(object, false):
-					current_card.check_targetting_finished()
+				var objects = grid_man.get_tile(grid_coordinates).get_contents([current_card.targets_required.type])
+				if len(objects) > 0:
+					current_card.try_add_target(objects[0])
