@@ -108,7 +108,8 @@ func setup_players() -> void:
 		#deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-		for card_scene in card_list.cards.values():
+		for x in 5:
+			var card_scene = card_list.cards.values()[0]
 			var new_card = card_scene.instantiate()
 			new_deck.add_card(new_card)
 
