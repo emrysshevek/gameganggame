@@ -18,6 +18,7 @@ var _controller_events = [
 	Model.Action.DESELECT,
 	Model.Action.TOGGLE_MAP,
 	Model.Action.TOGGLE_CURSOR,
+	Model.Action.TOGGLE_END_TURN,
 	Model.Action.DISCARD,
 ]
 

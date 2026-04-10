@@ -18,6 +18,7 @@ var deck:Deck
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 
+
 #used for identifying character, also eventually for controller mapping i think
 var character_id:int
 
@@ -73,6 +74,7 @@ func bind_cursor_sprite(input_sprite:CursorSprite):
 
 func bind_deck(new_deck:Deck):
 	deck = new_deck
+	deck.character = self
 	add_child(deck)
 
 func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):

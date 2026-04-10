@@ -5,8 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dxpo0yea3rw7f" path="res://scenes/origin_viewport.tscn" id="2_cxv17"]
 [ext_resource type="PackedScene" uid="uid://xoqfnqg446ge" path="res://creature_values/ValuesViewer.tscn" id="4_18ig4"]
 
-[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("origin_viewport")]
-script = ExtResource("1_xy3my")
+[node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("player_areas", "origin_viewport") groups=["game_scene"]]script = ExtResource("1_xy3my")
 origin_viewport = NodePath("OriginViewportController")
 
 [node name="ValueManager" parent="." unique_id=323409287 instance=ExtResource("2_18ig4")]

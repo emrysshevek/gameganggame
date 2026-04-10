@@ -4,7 +4,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 
 #region Properties
 #modify this to set number of players manually, max 4
-@export var manual_set_number_of_players:int = 1
+@export var number_of_players:int = 1
 
 #loading scenes
 @onready var notification_log_scene := preload("res://components/notification_log.tscn")
@@ -19,6 +19,9 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 #config of minimap size and zoom factor
 @onready var _minimap_zoom:Vector2 = Vector2(0.2,0.2)
 @onready var _minimap_size:Vector2 = Vector2(200,200)
+@onready var grid_man:GridManager = $OriginViewportController/OriginViewportContainer/OriginViewport/GridManager
+
+var player_screens: Array[PlayerScreen]
 
 @export var player_areas: Array[Control]
 @export var origin_viewport: OriginViewport
@@ -30,13 +33,22 @@ var _minimap_coord_3p:Vector2
 var _minimap_coord_4p:Vector2
 #endregion
 
+var _player_turn_end: Array[bool] = []
+
 #region Built-in methods
 func _ready() -> void:
+	start_game()
+	Events.player_turn_ended.connect(_on_player_turn_ended)
+#endregion
+
+
+#region Public Methods
+func start_game() -> void:
 	#setting up tile size variable as it is used frequently to determine screen placement of objects
 	_tile_size = Utils.try_get_grid_man().tile_size
 	
 	#create character object, character sprite, cursor, deck, etc
-	setup_players(manual_set_number_of_players)
+	setup_players()
 	
 	#setup minimap and add it to the tree + in the correct location on the screen
 	var minimap:PlayerSubViewport = setup_minimap()
@@ -46,12 +58,32 @@ func _ready() -> void:
 	var notif_log = notification_log_scene.instantiate()
 	$PlayerAreas/Control.add_child(notif_log)
 	notif_log.position = Vector2(minimap.position.x, minimap.position.y + _minimap_size.y)
+	
+	Events.game_started.emit()
+	start_round()
+	
+	
+func start_round() -> void:
+	for i in player_screens.size():
+		player_screens[i].start_turn()
+		_player_turn_end[i] = false
+	Events.round_started.emit()
+	
+	
+func end_round() -> void:
+	for player in player_screens:
+		player.end_turn()
+		
+	Events.round_ended.emit()
+	start_round()
+
 #endregion
 
 
 #region Private Methods
-func setup_players(number_of_players:int) -> void:
+func setup_players() -> void:
 	for i in number_of_players:
+		_player_turn_end.append(false)
 		#creating the control that will contain the players 'screen'
 		var new_player_area:Control = Control.new()
 		new_player_area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -76,9 +108,9 @@ func setup_players(number_of_players:int) -> void:
 		new_character.bind_deck(new_deck)
 		for card_num in 5:
 			var new_card = card_scene.instantiate()
-			new_card.owning_character = new_character
 			new_deck.add_card(new_card)
-		
+
+
 		#adds the new character to the viewport so they are visible on the map
 		origin_viewport.add_character(new_character)
 		
@@ -97,6 +129,7 @@ func setup_players(number_of_players:int) -> void:
 		player_screen.origin_viewport = origin_viewport
 		player_screen.player_id = i
 		player_areas[i].add_child(player_screen)
+		player_screens.append(player_screen)
 		
 		# character setup
 		new_character.bind_screen(player_screen)
@@ -140,4 +173,12 @@ func setup_minimap():
 	minimap_viewport.move_camera(minimap_camera_center_position)
 	_player_sub_viewports[viewport_names.minimap] = minimap_viewport
 	return minimap_viewport	
+#endregion
+
+
+#region Signal methods
+func _on_player_turn_ended(_character: Character) -> void:
+	_player_turn_end[_character.character_id] = true
+	if _player_turn_end.all(func(x): return x):
+		end_round()
 #endregion

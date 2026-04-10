@@ -105,7 +105,8 @@ func validate_range(possible_target_location:Vector2) -> bool:
 		return false
 	else:
 		return true
-	
+
+
 func check_targetting_finished():
 	if targets_required.size() > targets.size():
 		pass #stay in targetting mode, indicate player to continue pickig targets
@@ -187,6 +188,7 @@ func fail_to_play():
 	new_tween.parallel().tween_property(_frontside, "self_modulate", Color("#ffffff"), Config.animation_speed * 0.1)
 	new_tween.tween_property(self, "rotation_degrees", 0, Config.animation_speed * 0.1)
 #endregion
+
 
 #region Private Methods
 func _trigger_play_ability() -> void:
