@@ -152,6 +152,14 @@ func add_hazard(new_hazard:Hazard) -> bool:
 	else:
 		#if for some reason you tried to add a hazard to a tile with a hazard on it, it wouldn't work
 		return false
+		
+
+func remove_hazard() -> void:
+	if hazard == null:
+		return
+		
+	hazard.queue_free()
+	hazard = null
 	
 func add_grid_card(new_card:Card) -> void:
 	#when players drop cards or when cards are added during map generation this function
