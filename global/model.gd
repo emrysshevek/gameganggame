@@ -23,8 +23,14 @@ enum CreatureValue {
 
 ## Object Types.
 enum ObjectTypes {
+	ENTITY,
 	TILE,
+	REVEALED_TILE,
+	HIDDEN_TILE,
+	CHARACTER,
 	PLAYER_CHARACTER,
+	NON_PLAYER_CHARACTER,
+	CARD,
 	HAZARD,
 }
 

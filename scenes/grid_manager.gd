@@ -33,7 +33,8 @@ var map_height:int = 20
 var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
-var _loot_card_scene = preload("res://cards/loot_card/loot_card.tscn")
+var test_map_on:bool = true
+var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 #endregion
 
 #region methods
@@ -75,16 +76,29 @@ func _ready() -> void:
 	generate_hazards(0, 10)
 	generate_loot_piles(0, 2)
 	
-func add_path(tile1:Tile, connection_direction_from_tile1:directions, tile2:Tile):
-	#registers a connection between two tiles, which will allow characters to move between them
-	#and will cause a visual path to appear between them
+func add_path(tile1:Tile, tile2:Tile):
+	var connection_direction = get_path_direction(tile1, tile2)
 	var new_path = Path.new()
 	new_path.set_connections(tile1, tile2)
-	tile1.add_path(connection_direction_from_tile1, new_path)
-	tile2.add_path(_direction_opposites[connection_direction_from_tile1], new_path)
-	#currently we don't use blocked paths, but if we wanted to implement like, doors, we might want to
+	tile1.add_path(connection_direction, new_path)
+	tile2.add_path(_direction_opposites[connection_direction], new_path)
 	if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
 		_a_star_floor_map[level].connect_points(tile1.a_star_id, tile2.a_star_id,true)
+	
+func remove_path(tile1:Tile, tile2:Tile):
+	pass
+	
+func get_path_direction(tile1:Tile, tile2:Tile) -> directions:
+	var connection_direction:directions
+	if tile1.grid_coordinates.x < tile2.grid_coordinates.x:
+		connection_direction = directions.east
+	elif tile1.grid_coordinates.x > tile2.grid_coordinates.x:
+		connection_direction = directions.west
+	elif tile1.grid_coordinates.y < tile2.grid_coordinates.y:
+		connection_direction = directions.south
+	else:
+		connection_direction = directions.north
+	return connection_direction
 	
 func _get_all_tiles(_level:int):
 	#just gets all the tiles on the map :)
@@ -94,37 +108,32 @@ func _get_all_tiles(_level:int):
 			all_tiles.append(floor_maps[_level][each_x][each_y])
 	return all_tiles
 	
-func generate_map(_level:int):
-	#get all the tiles
+func generate_map(level:int):
 	for each_tile in _get_all_tiles(0):
 		var possible_tile_connections_by_path:Dictionary
-		#check which directions could have new paths added to them and add them to the possible list (dictionary)
-		#paths can't be added if there is already a path in that direction from the tile or if the tile is on the edge of the map
+		#check which directions could have new paths added to them
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
-			possible_tile_connections_by_path[directions.west] = floor_maps[_level][each_tile.grid_coordinates.x - 1][each_tile.grid_coordinates.y]
+			possible_tile_connections_by_path[directions.west] = floor_maps[level][each_tile.grid_coordinates.x - 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != 0 && each_tile.paths.keys().has(directions.north) == false:
-			possible_tile_connections_by_path[directions.north] = floor_maps[_level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y - 1]
+			possible_tile_connections_by_path[directions.north] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y - 1]
 		if each_tile.grid_coordinates.x != map_width - 1 && each_tile.paths.keys().has(directions.east) == false:
-			possible_tile_connections_by_path[directions.east] = floor_maps[_level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
+			possible_tile_connections_by_path[directions.east] = floor_maps[level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
-			possible_tile_connections_by_path[directions.south] = floor_maps[_level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
+			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
 		var possible_new_path_num = possible_tile_connections_by_path.size()
-		
-		#for each possible path as determined above...
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
 				#new paths are added if a random 'roll' is within a set range
 				var roll_for_new_path = randi_range(1,100)
 				if roll_for_new_path <= _path_number_odds[4 - possible_new_path_num]:
-					#adding new path
 					var connecting_tile_direction_from_origin_tile = possible_tile_connections_by_path.keys().pick_random()
-					add_path(each_tile, connecting_tile_direction_from_origin_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
+					add_path(each_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
-		#resetting the tiles to be hidden so the players can explore them later
 		each_tile.reset_to_hidden()
 	map_generated.emit()
+
 
 func generate_hazards(_level:int, frequency:int):
 	#makes hazards in random tiles. higher frequency value means fewer hazards
@@ -239,12 +248,17 @@ func is_in_bounds(position_to_check:Vector2):
 		return false
 	return true
 		
-func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, _level:int):
+func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
 	#causes each tile that is a valid target or contains a valid target to become highlighted during targetting
 	#highlight is only visible to the player doing the highlighting
-	for each_tile in _get_all_tiles(_level):
-		if evaluating_card.validate_target(each_tile, true) == true:
-			each_tile.set_highlight(evaluating_card.owning_character.character_id, true)
+	for tile in _get_all_tiles(floor):
+		var contents = tile.get_contents([evaluating_card.targets_required.type])
+		if contents.size() > 0:
+			for item in contents:
+				if evaluating_card.validate_target(item):
+					tile.set_highlight(evaluating_card.owning_character.character_id, true)
+					break
+
 
 func clear_highlights(for_character_id:int, _level:int):
 	#removes the highlights from all tiles for the specified character
@@ -253,7 +267,7 @@ func clear_highlights(for_character_id:int, _level:int):
 
 func move_object(object, tile_coord:Vector2, _level:int):
 	#moves a grid_sprite (like a character or cursor) around the map
-	if object.type == Model.ObjectTypes.PLAYER_CHARACTER:
+	if Model.ObjectTypes.PLAYER_CHARACTER in object.types:
 		#if the tile the character is trying to move to isn't connected by a path from their current tile they can't move to it
 		if is_directly_connected(_level, object.grid_coordinates, tile_coord) == false:
 			return false
@@ -284,14 +298,14 @@ func move_object(object, tile_coord:Vector2, _level:int):
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
 			return true
 
-func get_tile_objects(type:Model.ObjectTypes, grid_coordinates:Vector2): #make this use target_types enum?
+func get_tile(grid_coordinates:Vector2) -> Tile:
 	#for each object on type_list (we'll have to make these lists) check grid coordinates
 	#return array of all objects + the tile itself that match these grid coordinates and type
 	#just returning the selected tile for now
 	return floor_maps[0][grid_coordinates.x][grid_coordinates.y]
 	
-func _on_get_tile_objects_request(type, grid_coordinates:Vector2):
-	get_tile_objects(type, grid_coordinates)	
+func _on_get_tile_request(type, grid_coordinates:Vector2):
+	get_tile(grid_coordinates)	
 		
 func _on_object_move_request(object, new_tile_position:Vector2):
 	move_object(object, new_tile_position, 0)	

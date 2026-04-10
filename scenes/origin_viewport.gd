@@ -61,6 +61,8 @@ func add_character(new_character:Character) -> CharacterSprite:
 	#revealing starting tiles around each player after they spawn
 	for each_tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
 		each_tile.explore(new_character)
+		if each_tile.grid_coordinates == new_character.grid_coordinates:
+			each_tile.call_deferred("enter", new_character)
 		
 	#setting up the character sprites visual position and minimap sprite
 	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))

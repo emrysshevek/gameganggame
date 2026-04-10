@@ -7,4 +7,5 @@
 texture = ExtResource("1_df0gq")
 centered = false
 script = ExtResource("1_3vfwx")
+types = Array[int]([0, 8])
 metadata/_custom_type_script = "uid://d4aab2bq15kxj"

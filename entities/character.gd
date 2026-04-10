@@ -10,11 +10,18 @@ signal started_turn(which_player)
 #endregion
 
 #region properties
+@export var types: Array[Model.ObjectTypes] = [
+	Model.ObjectTypes.ENTITY, 
+	Model.ObjectTypes.CHARACTER, 
+	Model.ObjectTypes.PLAYER_CHARACTER
+]
+
 #machines and other character child objects
 var input_man:PlayerInputManager
 var pis_machine:PlayerInputStateMachine
 var my_screen:PlayerScreen
 var deck:Deck
+
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 
@@ -61,7 +68,6 @@ func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
 	character_sprite.self_modulate = testing_player_colors[character_id]
-	character_sprite.type = Model.ObjectTypes.PLAYER_CHARACTER
 	add_child(character_sprite)
 	
 func bind_cursor_sprite(input_sprite:CursorSprite):
@@ -160,6 +166,7 @@ func get_my_current_playing_card():
 	return my_screen.card_manager.card_being_played
 #endregion
 
+
 #region Signal Functions
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR or new_state == Model.InputState.TARGET || old_state == Model.InputState.TARGET:
@@ -173,12 +180,15 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		else:
 			#otherwise camera follows the character sprite
 			character_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
-		if new_state == Model.InputState.TARGET:
-			#when switching to target state we want to highlight tiles the card can target
-			Utils.try_get_grid_man().highlight_targettable_tiles(get_my_current_playing_card(), grid_coordinates, 0)
-		if old_state == Model.InputState.TARGET:
-			#and when exiting target state we want those highlights cleared
-			Utils.try_get_grid_man().clear_highlights(character_id, 0)
+			
+	if new_state == Model.InputState.TARGET:
+		#when switching to target state we want to highlight tiles the card can target
+		Utils.try_get_grid_man().highlight_targettable_tiles(get_my_current_playing_card(), grid_coordinates, 0)
+		
+	if old_state == Model.InputState.TARGET:
+		#and when exiting target state we want those highlights cleared
+		Utils.try_get_grid_man().clear_highlights(character_id, 0)
+
 
 func _on_looted_card(_character:Character):
 	if _character == self:

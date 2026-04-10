@@ -7,11 +7,12 @@ signal move_request(which_sprite, requested_position)
 #endregion
 
 #region properties
+@export var types: Array[Model.ObjectTypes] = [Model.ObjectTypes.ENTITY]
+
 var grid_coordinates:Vector2
 
 #remote camera transform is used when one of the players viewports are following a character/cursor around
 var _remote_camera_transform:RemoteTransform2D
-var type:Model.ObjectTypes
 var input_man:PlayerInputManager
 #endregion
 
@@ -76,7 +77,8 @@ func move_remote_camera(new_position:Vector2):
 		
 func set_type(type_to_set:Model.ObjectTypes):
 	#type of the grid sprite, currently used for card targetting
-	type = type_to_set
+	types.append(type_to_set)
+	
 	
 func damage_animation():
 	#simple little 'animation' that happens when a character is damaged

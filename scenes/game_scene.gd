@@ -6,6 +6,8 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 #modify this to set number of players manually, max 4
 @export var number_of_players:int = 1
 
+@export var card_list: CardList
+
 #loading scenes
 @onready var notification_log_scene := preload("res://components/notification_log.tscn")
 @onready var player_screen_scene := preload("res://scenes/player_screen.tscn")
@@ -106,7 +108,8 @@ func setup_players() -> void:
 		#deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-		for card_num in 5:
+		for x in 5:
+			var card_scene = card_list.cards.values()[0]
 			var new_card = card_scene.instantiate()
 			new_deck.add_card(new_card)
 

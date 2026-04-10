@@ -1,9 +1,5 @@
 class_name LootCard extends Card
 
-func _ready() -> void:
-	targets_required[Model.ObjectTypes.PLAYER_CHARACTER] = 1
-	target_range_max = 0
-
 func _trigger_play_ability() -> void:
 	fail_to_play()
 	

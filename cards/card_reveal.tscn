@@ -1,8 +1,31 @@
 [gd_scene format=3 uid="uid://dvools0wa7hvv"]
 
 [ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_8dfu3"]
-[ext_resource type="Script" uid="uid://citmq7p5t65jv" path="res://cards/card_reveal.gd" id="2_mi6jk"]
+
+[sub_resource type="GDScript" id="GDScript_8dfu3"]
+script/source = "extends Card
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	pass
+
+##region Private Methods
+#func _trigger_play_ability() -> void:
+	#targets.append(owning_character)
+	#owning_character.movement += 3
+	#
+#
+#func _trigger_discard_ability() -> void:
+	#targets.append(owning_character)
+	#owning_character.movement += 1
+##endregion
+"
 
 [node name="Card_Reveal" unique_id=693299294 instance=ExtResource("1_8dfu3")]
-script = ExtResource("2_mi6jk")
-cost = Dictionary[int, int]({})
+script = SubResource("GDScript_8dfu3")
