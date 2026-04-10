@@ -89,9 +89,12 @@ func setup_players() -> void:
 		
 		new_character.setup_new_character(i, pis_machine)
 		##deck setup
-		var new_deck = deck_scene.instantiate()
+		var new_deck: Deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-
+		for card_num in 5:
+			var new_card = card_scene.instantiate()
+			new_deck.add_card(new_card)
+			
 		##
 		new_character.bind_pis_machine(pis_machine)
 		origin_viewport.add_character(new_character) #i should be character id in this case

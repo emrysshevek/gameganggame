@@ -53,7 +53,6 @@ func set_deck(_deck: Deck) -> void:
 	deck.card_added.connect(_on_deck_card_added)
 	deck.card_removed.connect(_on_deck_card_removed)
 	for card in deck.cards:
-		card.clicked.connect(func(): _on_card_clicked(card))
 		draw_pile.add_card(card)
 	draw_pile.shuffle()
 	

@@ -1,27 +1,15 @@
 [gd_scene format=3 uid="uid://c5egmq5hekfcm"]
 
 [ext_resource type="Script" uid="uid://ch1dspc8o4jm5" path="res://cards/deck.gd" id="1_tsdm7"]
-[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="2_5u6tc"]
 
-[node name="Deck" type="Node2D" unique_id=1175242253 node_paths=PackedStringArray("cards", "cards_node", "deck_view", "vbox")]
+[node name="Deck" type="Node2D" unique_id=1175242253 node_paths=PackedStringArray("cards_node", "deck_view", "vbox")]
 script = ExtResource("1_tsdm7")
-cards = [NodePath("Cards/Card"), NodePath("Cards/Card2"), NodePath("Cards/Card3"), NodePath("Cards/Card4"), NodePath("Cards/Card5")]
 cards_node = NodePath("Cards")
 deck_view = NodePath("DeckView")
 vbox = NodePath("DeckView/Control/MarginContainer/ScrollContainer/VBoxContainer")
 
 [node name="Cards" type="Node2D" parent="." unique_id=902692365]
 visible = false
-
-[node name="Card" parent="Cards" unique_id=693299294 instance=ExtResource("2_5u6tc")]
-
-[node name="Card2" parent="Cards" unique_id=1649627878 instance=ExtResource("2_5u6tc")]
-
-[node name="Card3" parent="Cards" unique_id=805553038 instance=ExtResource("2_5u6tc")]
-
-[node name="Card4" parent="Cards" unique_id=1810396815 instance=ExtResource("2_5u6tc")]
-
-[node name="Card5" parent="Cards" unique_id=43531686 instance=ExtResource("2_5u6tc")]
 
 [node name="DeckView" type="CanvasLayer" parent="." unique_id=51572081]
 visible = false

@@ -23,7 +23,7 @@ var movement:int = 3
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 var character_color:Color
-var queued_drop_cards:Array[Card]
+var queued_drop_cards: Array[Card]
 @onready var type = Model.ObjectTypes.PLAYER_CHARACTER
 
 @onready var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
@@ -58,6 +58,7 @@ func bind_cursor_sprite(input_sprite:CursorSprite):
 
 func bind_deck(new_deck:Deck):
 	deck = new_deck
+	deck.character = self
 	add_child(deck)
 
 func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
