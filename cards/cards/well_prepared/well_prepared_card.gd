@@ -6,3 +6,5 @@ func _trigger_play_ability() -> void:
 	
 	for character in characters:
 		character.status_manager.add_status(WellPreparedStatus.new())
+		
+	super._trigger_play_ability()

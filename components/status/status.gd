@@ -1,6 +1,8 @@
 class_name Status
 
-var entity: Entity
+signal remove_status(status: Status)
+
+var entity: Node
 var icon: ImageTexture
 var status_name: String
 
@@ -17,6 +19,7 @@ func _init(val: int) -> void:
 
 
 func apply(target: Node) -> bool:
+	entity = target
 	return true
 	
 	
@@ -29,4 +32,4 @@ func update(status: Status) -> void:
 
 
 func trigger_effect() -> void:
-	pass
+	print("Triggering status effect: ", status_name)

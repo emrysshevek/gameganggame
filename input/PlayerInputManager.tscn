@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://chwf5egtrovu"]
+
+[ext_resource type="Script" uid="uid://35gkc54eku74" path="res://input/player_input_manager.gd" id="1_jeaip"]
+[ext_resource type="PackedScene" uid="uid://didf61okrlv8y" path="res://input/state_machine/PlayerInputStateMachine.tscn" id="2_gtb87"]
+
+[node name="PlayerInputManager" type="Node" unique_id=834405233]
+script = ExtResource("1_jeaip")
+
+[node name="PlayerInputStateMachine" parent="." unique_id=1913364748 instance=ExtResource("2_gtb87")]

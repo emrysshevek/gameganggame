@@ -12,12 +12,14 @@ func add_status(_status: Status) -> bool:
 
 	if not _status.apply(owner):
 		return false
-
+	
+	_status.remove_status.connect(remove_status)
 	statuses.append(_status)
 	return true
 
 
 func remove_status(_status: Status) -> bool:
+	print("Removing status: ", _status.status_name)
 	for status in statuses:
 		if status.status_name == _status.status_name:
 			status.remove()

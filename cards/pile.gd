@@ -29,6 +29,9 @@ func _ready() -> void:
 
 #region Methods
 func get_top_card() -> Card:
+	if len(cards) == 0:
+		return null
+		
 	var card = cards[0]
 	remove_card(cards[0])
 	return card

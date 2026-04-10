@@ -37,7 +37,6 @@ var card_being_played:Card
 func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
-		turn_start_draw()
 	input_state_machine.state_switched.connect(_on_state_machine_switched)
 	Events.card_played.connect(_on_card_played)
 
@@ -54,21 +53,29 @@ func set_deck(_deck: Deck) -> void:
 	deck.card_added.connect(_on_deck_card_added)
 	deck.card_removed.connect(_on_deck_card_removed)
 	for card in deck.cards:
-		card.clicked.connect(func(): _on_card_clicked(card))
 		draw_pile.add_card(card)
 	draw_pile.shuffle()
 	
 func draw(_count:=1) -> void:			
-	if draw_pile.count < _count:
-		refill_draw()
 	for i in _count:
+		if draw_pile.count == 0:
+			if discard_pile.count == 0:
+				print("Not enough cards to draw")
+				return
+			else:
+				refill_draw()
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
+		
+func discard_hand() -> void:
+	while hand_pile.count > 0:
+		discard(hand_pile.ordered_cards[0])
 	
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
 	if _card not in character.queued_drop_cards:
 		discard_pile.add_card(_card)
+	
 	
 func refill_draw() -> void:
 	discard_pile.shuffle()
@@ -158,6 +165,9 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
+	if not _card in deck.cards:
+		return
+		
 	card_being_played = null
 	discard(hand_pile.ordered_cards[_selected_card_index])
 	_selected_card_index -= 1

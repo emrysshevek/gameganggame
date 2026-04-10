@@ -84,6 +84,7 @@ func discard() -> void:
 	Events.card_discarded.emit(self)
 
 func play() -> void:
+	print("Playing card: ", description)
 	#check if targetting is needed by the card
 	if targets_required == null:
 		#no targetting needed, only affects caster. some other types may not require targetting and can be added here
@@ -147,6 +148,7 @@ func fail_to_play():
 	new_tween.parallel().tween_property(_frontside, "self_modulate", Color("#ffffff"), Config.animation_speed * 0.1)
 	new_tween.tween_property(self, "rotation_degrees", 0, Config.animation_speed * 0.1)
 #endregion
+
 
 #region Private Methods
 func _trigger_play_ability() -> void:

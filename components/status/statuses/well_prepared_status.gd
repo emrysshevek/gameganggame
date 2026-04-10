@@ -11,15 +11,21 @@ func _init(val:=3) -> void:
 func apply(target: Node) -> bool:
 	if not target is Character:
 		return false
-		
+	
+	super.apply(target)
 	character = target as Character
 	
-	# TODO: connect to turn start signal
+	character.started_turn.connect(_on_turn_started)
 	return true
 	
 
-func _on_turn_started() -> void:
+func trigger_effect() -> void:
+	super.trigger_effect()
 	character.my_screen.card_manager.draw()
 	value -= 1
 	if value == 0:
-		remove()
+		remove_status.emit(self)
+
+
+func _on_turn_started(character: Character) -> void:
+	trigger_effect()

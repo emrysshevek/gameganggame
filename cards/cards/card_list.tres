@@ -1,20 +1,12 @@
 [gd_resource type="Resource" script_class="CardList" format=3 uid="uid://djw3kvd8qov77"]
 
-[ext_resource type="PackedScene" uid="uid://dhnjgjksqxi52" path="res://cards/cards/coordinate/coordinate_card.tscn" id="1_gs2od"]
 [ext_resource type="Script" uid="uid://b7kssvx2gf4j3" path="res://cards/cards/card_list.gd" id="1_p6edn"]
-[ext_resource type="PackedScene" uid="uid://6hfind75kvh2" path="res://cards/cards/defang/defang_card.tscn" id="2_jsrv2"]
-[ext_resource type="PackedScene" uid="uid://c1nfp633qvi8b" path="res://cards/cards/dig/dig_card.tscn" id="3_hu8k6"]
+[ext_resource type="PackedScene" uid="uid://b3so36e5gicv3" path="res://cards/cards/well_prepared/well_prepared_card.tscn" id="2_r4ysr"]
 [ext_resource type="PackedScene" uid="uid://dmdqd276wm0u5" path="res://cards/cards/reveal_tile/reveal_tile_card.tscn" id="4_5t7bn"]
-[ext_resource type="PackedScene" uid="uid://8mjys7n1mcms" path="res://cards/cards/draw_card/draw_card.tscn" id="4_hy721"]
-[ext_resource type="PackedScene" uid="uid://cbq4dufqb8nt2" path="res://cards/cards/sprint/sprint_card.tscn" id="6_khsxp"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
-"coordinate": ExtResource("1_gs2od"),
-"defang": ExtResource("2_jsrv2"),
-"dig": ExtResource("3_hu8k6"),
-"draw": ExtResource("4_hy721"),
 "reveal_tile": ExtResource("4_5t7bn"),
-"sprint": ExtResource("6_khsxp")
+"well_prepared": ExtResource("2_r4ysr")
 })
