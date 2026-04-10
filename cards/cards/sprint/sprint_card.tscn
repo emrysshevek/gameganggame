@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cbq4dufqb8nt2"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_2pbdu"]
+[ext_resource type="Script" uid="uid://beq88splo2lor" path="res://cards/cards/sprint/sprint_card.gd" id="2_c7l72"]
+
+[node name="SprintCard" unique_id=693299294 instance=ExtResource("1_2pbdu")]
+script = ExtResource("2_c7l72")
+description = "Sprint"
+targets_required = null
