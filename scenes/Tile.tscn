@@ -78,6 +78,10 @@ points = PackedVector2Array(65, 60, 125, 60)
 width = 20.0
 default_color = Color(0.5254902, 0.6862745, 0.9882353, 1)
 
+[node name="Overlay" type="Polygon2D" parent="Tile_Bkgd" unique_id=2127146897]
+visible = false
+color = Color(0.52156866, 0.52156866, 0.52156866, 1)
+
 [node name="SelectionHighlight" type="Polygon2D" parent="Tile_Bkgd" unique_id=1783550796]
 visibility_layer = 0
 color = Color(1, 1, 0.40392157, 0.3254902)

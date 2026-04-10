@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://djvoq2nx6we67" path="res://input/state_machine/player_input_move_state.gd" id="3_u2irg"]
 [ext_resource type="Script" uid="uid://b1rv7a3mnyj7f" path="res://input/state_machine/player_input_card_state.gd" id="4_bmfje"]
 [ext_resource type="Script" uid="uid://cvc4nuj4tdvdr" path="res://input/state_machine/player_input_targetting_state.gd" id="5_k6r1c"]
-[ext_resource type="Script" path="res://input/state_machine/player_input_end_state.gd" id="5_u2irg"]
+[ext_resource type="Script" uid="uid://vik6btknawnr" path="res://input/state_machine/player_input_end_state.gd" id="5_u2irg"]
 
 [node name="PlayerInputStateMachine" type="Node" unique_id=1913364748 node_paths=PackedStringArray("initial_state")]
 script = ExtResource("1_cnwri")
