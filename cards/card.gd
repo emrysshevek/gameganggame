@@ -148,6 +148,7 @@ func fail_to_play():
 	new_tween.tween_property(self, "rotation_degrees", 0, Config.animation_speed * 0.1)
 #endregion
 
+
 #region Private Methods
 func _trigger_play_ability() -> void:
 	for each_value_type in cost.keys():

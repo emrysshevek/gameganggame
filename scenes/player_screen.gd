@@ -4,6 +4,7 @@ extends Control
 
 @export var player_sub_viewport: PlayerSubViewport
 @export var card_manager: CardManager
+@export var turn_ended_overlay: ColorRect
 
 @export var player_id: int
 @export var origin_viewport: OriginViewport
@@ -20,6 +21,23 @@ extends Control
 func _ready() -> void:
 	_setup_player_viewport()
 	_setup_card_area()
+	turn_ended_overlay.hide()
+	
+	Events.round_started.connect(_on_round_started)
+	Events.player_turn_ended.connect(_on_player_turn_ended)
+	
+	
+func start_turn() -> void:
+	card_manager.turn_start_draw()
+	
+	
+func end_turn() -> void:
+	for card in card_manager.hand_pile.cards:
+		card_manager.discard(card)
+	
+	
+func toggle_turn_ended() -> void:
+	turn_ended_overlay.visible = !turn_ended_overlay.visible
 
 
 func _setup_card_area() -> void:
@@ -43,8 +61,17 @@ func _setup_player_viewport() -> void:
 	player_culling_dictionary[this_player_only_culling_layer] = true
 	var camera_limits = origin_viewport._camera_limits
 	
-	player_sub_viewport.set_viewport_world(origin_viewport._world)
+	player_sub_viewport.set_viewport_world(origin_viewport.world)
 	player_sub_viewport.set_zoom(_player_view_zoom)
 	player_sub_viewport.set_camera_limits(camera_limits["Left"], camera_limits["Top"], camera_limits["Right"], camera_limits["Bottom"])
 	player_sub_viewport.set_layers_visible(player_culling_dictionary)
+	
+
+func _on_round_started() -> void:
+	turn_ended_overlay.hide()
+	
+
+func _on_player_turn_ended(_character: Character) -> void:
+	if _character.character_id == player_id:
+		turn_ended_overlay.show()
 	

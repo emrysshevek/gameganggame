@@ -37,7 +37,6 @@ var card_being_played:Card
 func _ready() -> void:
 	if deck != null:
 		set_deck(deck)
-		turn_start_draw()
 	input_state_machine.state_switched.connect(_on_state_machine_switched)
 	Events.card_played.connect(_on_card_played)
 
@@ -54,7 +53,6 @@ func set_deck(_deck: Deck) -> void:
 	deck.card_added.connect(_on_deck_card_added)
 	deck.card_removed.connect(_on_deck_card_removed)
 	for card in deck.cards:
-		card.clicked.connect(func(): _on_card_clicked(card))
 		draw_pile.add_card(card)
 	draw_pile.shuffle()
 	

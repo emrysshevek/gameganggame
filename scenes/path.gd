@@ -1,4 +1,4 @@
-class_name path extends Node2D
+class_name Path extends Node2D
 
 #region properties
 var blocked:bool = false #determines if A* will see this as a valid path

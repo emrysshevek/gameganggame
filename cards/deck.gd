@@ -29,6 +29,7 @@ func add_card(_card: Card) -> void:
 		cards_node.add_child(_card)
 	else:
 		_card.reparent(cards_node)
+	_card.owning_character = character
 	card_added.emit(_card)
 	
 
