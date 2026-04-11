@@ -15,6 +15,7 @@ func add_status(_status: Status) -> bool:
 	
 	_status.remove_status.connect(remove_status)
 	statuses.append(_status)
+	print("added status ", _status.status_name, " to ", owner.name)
 	return true
 
 

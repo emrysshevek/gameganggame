@@ -66,11 +66,13 @@ func draw(_count:=1) -> void:
 				refill_draw()
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
-		
+
+
 func discard_hand() -> void:
 	while hand_pile.count > 0:
 		discard(hand_pile.ordered_cards[0])
-	
+
+
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
 	if _card not in character.queued_drop_cards:
