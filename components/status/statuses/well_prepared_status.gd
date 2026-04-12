@@ -1,6 +1,8 @@
 class_name WellPreparedStatus
 extends Status
 
+## Well Prepared X: At the start of the next X turns, draw a card
+
 var character: Character
 
 func _init(val:=3) -> void:
