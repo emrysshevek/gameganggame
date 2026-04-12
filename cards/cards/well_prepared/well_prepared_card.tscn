@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b3so36e5gicv3"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_xao22"]
+[ext_resource type="Script" uid="uid://bqgxkjfwkxhrl" path="res://cards/cards/well_prepared/well_prepared_card.gd" id="2_kggf1"]
+
+[node name="WellPreparedCard" unique_id=693299294 instance=ExtResource("1_xao22")]
+script = ExtResource("2_kggf1")
+description = "Well Prepared"
+targets_required = null

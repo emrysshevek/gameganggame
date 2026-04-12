@@ -10,6 +10,8 @@ signal started_turn(which_player)
 #endregion
 
 #region properties
+#setting type of character object
+@export var status_manager: StatusManager
 @export var types: Array[Model.ObjectTypes] = [
 	Model.ObjectTypes.ENTITY, 
 	Model.ObjectTypes.CHARACTER, 
@@ -24,6 +26,8 @@ var deck:Deck
 
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
+
+@onready var type = Model.ObjectTypes.PLAYER_CHARACTER
 
 
 #used for identifying character, also eventually for controller mapping i think
@@ -43,8 +47,6 @@ var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b8
 #these are the loot cards the player has discarded that are waiting to drop into the tile they exit when they move
 var queued_drop_cards:Array[Card]
 
-#setting type of character object
-var type = Model.ObjectTypes.PLAYER_CHARACTER
 #endregion
 
 #region methods
@@ -118,9 +120,11 @@ func forced_random_discard(number_of_cards:int):
 	character_sprite.play_pop_up("forced discard: " + str(number_of_cards), Color("b82d1d"))
 
 func end_turn():
+	my_screen.card_manager.discard_hand()
 	ended_turn.emit(self)
 
 func start_turn():
+	my_screen.card_manager.turn_start_draw()
 	started_turn.emit(self)
 	
 func _process(_delta: float) -> void:

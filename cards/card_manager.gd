@@ -57,16 +57,25 @@ func set_deck(_deck: Deck) -> void:
 	draw_pile.shuffle()
 	
 func draw(_count:=1) -> void:			
-	if draw_pile.count < _count:
-		refill_draw()
 	for i in _count:
+		if draw_pile.count == 0:
+			if discard_pile.count == 0:
+				print("Not enough cards to draw")
+				return
+			else:
+				refill_draw()
 		var card := draw_pile.get_top_card()
 		hand_pile.add_card(card)
+		
+func discard_hand() -> void:
+	while hand_pile.count > 0:
+		discard(hand_pile.ordered_cards[0])
 	
 func discard(_card: Card) -> void:
 	_card.pile.remove_card(_card)
 	if _card not in character.queued_drop_cards:
 		discard_pile.add_card(_card)
+	
 	
 func refill_draw() -> void:
 	discard_pile.shuffle()
@@ -156,6 +165,9 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
+	if not _card in deck.cards:
+		return
+		
 	card_being_played = null
 	discard(hand_pile.ordered_cards[_selected_card_index])
 	_selected_card_index -= 1

@@ -1,10 +1,12 @@
 [gd_resource type="Resource" script_class="CardList" format=3 uid="uid://djw3kvd8qov77"]
 
 [ext_resource type="Script" uid="uid://b7kssvx2gf4j3" path="res://cards/cards/card_list.gd" id="1_p6edn"]
+[ext_resource type="PackedScene" uid="uid://b3so36e5gicv3" path="res://cards/cards/well_prepared/well_prepared_card.tscn" id="2_r4ysr"]
 [ext_resource type="PackedScene" uid="uid://dmdqd276wm0u5" path="res://cards/cards/reveal_tile/reveal_tile_card.tscn" id="4_5t7bn"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
-"reveal_tile": ExtResource("4_5t7bn")
+"reveal_tile": ExtResource("4_5t7bn"),
+"well_prepared": ExtResource("2_r4ysr")
 })

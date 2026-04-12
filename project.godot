@@ -28,6 +28,10 @@ Utils="*uid://ue67nbskm8v0"
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
 
+[global_group]
+
+game_scene=""
+
 [input]
 
 move_left={

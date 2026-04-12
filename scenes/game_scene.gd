@@ -1,3 +1,4 @@
+class_name GameScene
 extends Node2D
 
 enum viewport_names{p1, p2, p3, p4, origin, minimap}
@@ -7,6 +8,8 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 @export var number_of_players:int = 1
 
 @export var card_list: CardList
+
+var characters: Array[Character] = []
 
 #loading scenes
 @onready var notification_log_scene := preload("res://components/notification_log.tscn")
@@ -66,15 +69,15 @@ func start_game() -> void:
 	
 	
 func start_round() -> void:
-	for i in player_screens.size():
-		player_screens[i].start_turn()
+	for i in characters.size():
+		characters[i].start_turn()
 		_player_turn_end[i] = false
 	Events.round_started.emit()
 	
 	
 func end_round() -> void:
-	for player in player_screens:
-		player.end_turn()
+	for character in characters:
+		character.end_turn()
 		
 	Events.round_ended.emit()
 	start_round()
@@ -99,34 +102,32 @@ func setup_players() -> void:
 			$PlayerAreas/Control/VBoxContainer/BotRow.add_child(new_player_area)
 			
 		#setup new character and their input manager and state machines
-		var new_character = Character.new()
+		var new_character = preload("res://entities/character.tscn").instantiate()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
 		new_character.setup_new_character(i, pis_machine)
 		new_character.bind_pis_machine(pis_machine)
+		characters.append(new_character)
 		
 		#deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
-		for x in 5:
-			var card_scene = card_list.cards.values()[0]
+		for x in max(5, card_list.cards.size()):
+			var card_scene = card_list.cards.values()[x % card_list.cards.size()]
 			var new_card = card_scene.instantiate()
 			new_deck.add_card(new_card)
 
-
 		#adds the new character to the viewport so they are visible on the map
 		origin_viewport.add_character(new_character)
-		
-		#creating the players screen, which hosts the card manager and deck
-		var player_screen: PlayerScreen = player_screen_scene.instantiate()
-		player_screen.card_manager.deck = new_deck
 		
 		# pis machine setup
 		pis_machine.character = new_character
 		add_child(pis_machine)
 		pis_machine.owner = self
 		
-		# player screen setup
+		#creating the players screen, which hosts the card manager and deck
+		var player_screen: PlayerScreen = player_screen_scene.instantiate()
+		player_screen.card_manager.deck = new_deck
 		player_screen.card_manager.input_man = player_input_manager
 		player_screen.card_manager.input_state_machine = pis_machine
 		player_screen.origin_viewport = origin_viewport

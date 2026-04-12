@@ -84,6 +84,7 @@ func discard() -> void:
 	Events.card_discarded.emit(self)
 
 func play() -> void:
+	print("Playing card: ", description)
 	#check if targetting is needed by the card
 	if targets_required == null:
 		#no targetting needed, only affects caster. some other types may not require targetting and can be added here

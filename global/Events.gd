@@ -32,3 +32,10 @@ signal character_damaged(_character: Character, _amount:int, effect_source)
 signal looted_cards(_character: Character)
 signal forced_discard(_character: Character, effect_source)
 #endregion
+
+#region Status
+signal status_applied(_status: Status, target: Node)
+signal status_added(_status: Status, target: Node)
+signal status_removed(_status: Status, target: Node)
+signal status_triggered(_status: Status, target: Node)
+#endregion

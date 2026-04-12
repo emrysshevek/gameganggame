@@ -27,24 +27,11 @@ func _ready() -> void:
 	Events.player_turn_ended.connect(_on_player_turn_ended)
 	
 	
-func start_turn() -> void:
-	card_manager.turn_start_draw()
-	
-	
-func end_turn() -> void:
-	for card in card_manager.hand_pile.cards:
-		card_manager.discard(card)
-	
-	
 func toggle_turn_ended() -> void:
 	turn_ended_overlay.visible = !turn_ended_overlay.visible
 
 
 func _setup_card_area() -> void:
-	## Set up card area
-	var deck = deck_scene.instantiate()
-	add_child(deck)
-	card_manager.set_deck(deck)
 	card_manager.set_input_man(InputManager.get_player_input_manager(player_id))
 	
 	
