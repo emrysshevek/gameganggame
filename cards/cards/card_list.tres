@@ -2,11 +2,21 @@
 
 [ext_resource type="Script" uid="uid://b7kssvx2gf4j3" path="res://cards/cards/card_list.gd" id="1_p6edn"]
 [ext_resource type="PackedScene" uid="uid://b3so36e5gicv3" path="res://cards/cards/well_prepared/well_prepared_card.tscn" id="2_r4ysr"]
+[ext_resource type="PackedScene" uid="uid://cbq4dufqb8nt2" path="res://cards/cards/sprint/sprint_card.tscn" id="3_4e6cq"]
 [ext_resource type="PackedScene" uid="uid://dmdqd276wm0u5" path="res://cards/cards/reveal_tile/reveal_tile_card.tscn" id="4_5t7bn"]
+[ext_resource type="PackedScene" uid="uid://6hfind75kvh2" path="res://cards/cards/defang/defang_card.tscn" id="4_jsrv2"]
+[ext_resource type="PackedScene" uid="uid://c1nfp633qvi8b" path="res://cards/cards/dig/dig_card.tscn" id="5_hu8k6"]
+[ext_resource type="PackedScene" uid="uid://bakduutvsha55" path="res://cards/cards/pathbreaker/pathbreaker_card.tscn" id="6_5t7bn"]
+[ext_resource type="PackedScene" uid="uid://dnojbgbc2wt4b" path="res://cards/cards/feelz_no_painz/feelz_no_painz_card.tscn" id="7_hy721"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
+"defang": ExtResource("4_jsrv2"),
+"dig": ExtResource("5_hu8k6"),
+"feelz_no_painz": ExtResource("7_hy721"),
+"pathbreaker": ExtResource("6_5t7bn"),
 "reveal_tile": ExtResource("4_5t7bn"),
+"sprint": ExtResource("3_4e6cq"),
 "well_prepared": ExtResource("2_r4ysr")
 })

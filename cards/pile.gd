@@ -32,21 +32,25 @@ func get_top_card() -> Card:
 	if len(cards) == 0:
 		return null
 		
-	var card = cards[0]
-	remove_card(cards[0])
+	var card = ordered_cards[0]
+	remove_card(card)
 	return card
 	
 
 func get_bottom_card() -> Card:
-	var card = cards[-1]
+	var card = ordered_cards[-1]
 	remove_card(card)
 	return card
+
 
 func get_random_card() -> Card:
 	if cards.is_empty() == true:
 		return null
-	return cards.pick_random()
-	
+	var card = ordered_cards.pick_random()
+	remove_card(card)
+	return card
+
+
 func shuffle() -> void:
 	ordered_cards.shuffle()
 	shuffled.emit()
