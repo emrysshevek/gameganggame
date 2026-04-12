@@ -167,9 +167,6 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
-	if not _card in deck.cards:
-		return
-		
 	card_being_played = null
 	discard(hand_pile.ordered_cards[_selected_card_index])
 	_selected_card_index -= 1

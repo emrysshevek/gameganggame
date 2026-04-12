@@ -40,3 +40,10 @@ signal tile_exited(_tile: Tile, _character: Character)
 signal tile_revealed(_tile: Tile, _character: Character)
 signal tile_explored(_tile: Tile, _character: Character)
 #endregion
+
+#region Status
+signal status_applied(_status: Status, target: Node)
+signal status_added(_status: Status, target: Node)
+signal status_removed(_status: Status, target: Node)
+signal status_triggered(_status: Status, target: Node)
+#endregion

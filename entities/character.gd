@@ -27,8 +27,6 @@ var deck:Deck
 var character_sprite:CharacterSprite
 var cursor_sprite:CursorSprite
 
-@onready var type = Model.ObjectTypes.PLAYER_CHARACTER
-
 
 #used for identifying character, also eventually for controller mapping i think
 var character_id:int
