@@ -67,8 +67,8 @@ func add_card(_card: Card, _position:int=-1, _shuffle=false) -> void:
 	# cards are added to bottom of pile by default
 	# to insert to a specific index, set value of position
 	assert(_card not in cards)
-	if count == 0:
-		_position = 0
+	if _position == -1:
+		_position = count
 	cards.append(_card)
 	ordered_cards.insert(_position, _card)
 	
