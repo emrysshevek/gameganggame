@@ -10,20 +10,15 @@ extends Control
 
 var input_man:PlayerInputManager
 
-var _selected_card_index_helper := 2 # pretend this doesn't exist :)
-var _selected_card_index:int = _selected_card_index_helper:
-	get:
-		return _selected_card_index_helper
+var _selected_card_index:int = 2:
 	set(new_value):
 		if hand_pile.count == 0:
 			new_value = -1
-		elif new_value < 0:
-			new_value = hand_pile.count - 1
-		elif new_value > hand_pile.count - 1:
-			new_value = 0
-		_selected_card_index_helper = new_value
+		else:
+			new_value = new_value % hand_pile.count
+		_selected_card_index = new_value
 		if new_value != -1:
-			_card_selection_visuals(_selected_card_index_helper)
+			_card_selection_visuals(_selected_card_index)
 			
 var card_being_played:Card
 
@@ -74,7 +69,7 @@ func discard_hand() -> void:
 
 
 func discard(_card: Card) -> void:
-	_card.pile.remove_card(_card)
+	hand_pile.remove_card(_card)
 	if _card not in character.queued_drop_cards:
 		discard_pile.add_card(_card)
 	
@@ -125,10 +120,11 @@ func _handle_input():
 			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
 				card_being_played = hand_pile.ordered_cards[_selected_card_index]
 				hand_pile.ordered_cards[_selected_card_index].play()
-				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+				pass
 			else:
 				Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
 				#card can't be played due to not enough values
+			print("finished playing card")
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
@@ -163,7 +159,8 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
-	if new_state == Model.InputState.CARD:
+	if new_state == Model.InputState.CARD and old_state != Model.InputState.TARGET:
+		# Should only trigger in situations where there was no previously selected card
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
