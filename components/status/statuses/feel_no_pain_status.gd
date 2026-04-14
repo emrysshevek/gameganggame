@@ -2,6 +2,9 @@ class_name FeelNoPainStatus
 extends CharacterStatus
 
 
+## Feel No Pain X: For next X rounds, gain B when taking damage
+
+
 func _init(val:int) -> void:
 	super._init(val)
 	status_name = "Feel No Pain"

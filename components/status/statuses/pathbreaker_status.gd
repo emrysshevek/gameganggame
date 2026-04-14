@@ -2,6 +2,9 @@ class_name PathbreakerStatus
 extends CharacterStatus
 
 
+## Pathbreaker X: For next X moves, gain 1 movement when exploring a tile
+
+
 func _init(val:=1) -> void:
 	super._init(val)
 	status_name = "Pathbreaker"

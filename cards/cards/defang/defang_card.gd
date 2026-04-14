@@ -1,5 +1,7 @@
 extends Card
 
+## Defang: Remove a hazard from an adjacent tile (range 1)
+
 
 func _trigger_play_ability() -> void:
 	var hazard := targets[0] as Hazard

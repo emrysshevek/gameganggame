@@ -1,5 +1,7 @@
 extends Card
 
+## Dig: Create a path from your current tile to a neighboring revealed tile
+
 
 func _trigger_play_ability() -> void:
 	var grid_man := Utils.try_get_grid_man()
