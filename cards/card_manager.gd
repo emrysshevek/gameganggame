@@ -15,9 +15,9 @@ var _selected_card_index:int = 2:
 		if hand_pile.count == 0:
 			new_value = -1
 		else:
-			new_value = new_value % hand_pile.count
+			new_value = posmod(new_value, hand_pile.count)
 		_selected_card_index = new_value
-		if new_value != -1:
+		if _selected_card_index != -1:
 			_card_selection_visuals(_selected_card_index)
 			
 var card_being_played:Card
@@ -114,6 +114,7 @@ func _handle_input():
 	if hand_pile.count > 0:
 		if input_man.is_action_just_released("move_left"):
 			_selected_card_index -= 1
+			pass
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
@@ -164,9 +165,6 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		_selected_card_index = int(hand_pile.count / 2)
 		
 func _on_card_played(_card:Card):
-	if not _card in deck.cards:
-		return
-		
 	card_being_played = null
 	discard(hand_pile.ordered_cards[_selected_card_index])
 	_selected_card_index -= 1
