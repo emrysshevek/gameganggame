@@ -116,7 +116,7 @@ func forced_random_discard(number_of_cards:int):
 	for i in number_of_cards:
 		var random_card = my_screen.card_manager.hand_pile.get_random_card()
 		if random_card != null:
-			my_screen.card_manager.discard(my_screen.card_manager.hand_pile.get_random_card())
+			my_screen.card_manager.discard_pile.add_card(random_card)
 	character_sprite.play_pop_up("forced discard: " + str(number_of_cards), Color("b82d1d"))
 
 func end_turn():
@@ -149,6 +149,7 @@ func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	grid_coordinates = new_grid_position
 	movement -= 1
 	character_sprite.position = new_screen_position
+	Events.character_moved.emit(self, old_grid_position, new_grid_position)
 	moved.emit(self, old_grid_position, new_grid_position)
 	
 func _handle_input():

@@ -7,6 +7,7 @@
 custom_minimum_size = Vector2(0, 0)
 script = ExtResource("1_gw2xc")
 description = "Loot Card"
+targets_required = null
 
 [node name="Description" parent="MarginContainer/Front/MarginContainer/VBoxContainer" parent_id_path=PackedInt32Array(870367591) index="1" unique_id=236576993]
 custom_minimum_size = Vector2(40, 50)

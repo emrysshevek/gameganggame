@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://dnojbgbc2wt4b"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_cuevx"]
+[ext_resource type="Script" uid="uid://cllgym0y1rr0m" path="res://cards/cards/feelz_no_painz/feelz_no_painz_card.gd" id="2_vidt5"]
+
+[node name="FeelzNoPainzCard" unique_id=693299294 instance=ExtResource("1_cuevx")]
+script = ExtResource("2_vidt5")
+description = "Feelz No Painz"
+targets_required = null

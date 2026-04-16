@@ -133,6 +133,7 @@ func setup_players() -> void:
 		player_screen.origin_viewport = origin_viewport
 		player_screen.player_id = i
 		player_areas[i].add_child(player_screen)
+		player_screen.card_manager.shuffle_draw()
 		player_screens.append(player_screen)
 		
 		# character setup

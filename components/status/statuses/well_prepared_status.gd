@@ -29,5 +29,5 @@ func trigger_effect() -> void:
 		remove_status.emit(self)
 
 
-func _on_turn_started(character: Character) -> void:
+func _on_turn_started(_character: Character) -> void:
 	trigger_effect()
