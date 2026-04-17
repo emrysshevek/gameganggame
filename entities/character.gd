@@ -39,7 +39,12 @@ var health_current:int
 var grid_coordinates:Vector2
 var current_floor:int
 #movement starts at 3 so character can move a big right at the game start, for testing
-var movement:int = 3
+var movement:int = 3 :
+	set(new_val):
+		var old_val := movement
+		movement = new_val
+		Events.character_movement_value_changed.emit(self, old_val, new_val)
+		
 #colors define color of the sprite and minimap icon
 var character_color:Color
 var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]

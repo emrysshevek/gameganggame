@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c1nfp633qvi8b" path="res://cards/cards/dig/dig_card.tscn" id="5_hu8k6"]
 [ext_resource type="PackedScene" uid="uid://bakduutvsha55" path="res://cards/cards/pathbreaker/pathbreaker_card.tscn" id="6_5t7bn"]
 [ext_resource type="PackedScene" uid="uid://dnojbgbc2wt4b" path="res://cards/cards/feelz_no_painz/feelz_no_painz_card.tscn" id="7_hy721"]
+[ext_resource type="PackedScene" uid="uid://do7xr2it6xfih" path="res://cards/cards/no_time_to_waste/no_time_to_waste_card.tscn" id="8_khsxp"]
 
 [resource]
 script = ExtResource("1_p6edn")
@@ -15,6 +16,7 @@ cards = Dictionary[String, PackedScene]({
 "defang": ExtResource("4_jsrv2"),
 "dig": ExtResource("5_hu8k6"),
 "feelz_no_painz": ExtResource("7_hy721"),
+"no_time_to_waste": ExtResource("8_khsxp"),
 "pathbreaker": ExtResource("6_5t7bn"),
 "reveal_tile": ExtResource("4_5t7bn"),
 "sprint": ExtResource("3_4e6cq"),
