@@ -109,9 +109,6 @@ func enter(entering_character:Character):
 	tile_entered.emit(self, entering_character.character_id)
 	if hazard != null:
 		hazard.trigger_enter_ability(entering_character)
-	#if any cards are on the tile in either grid pile they are currently all picked up and added
-	#to the characters hand
-	pickup_cards(entering_character)
 	characters.append(entering_character)
 	Events.tile_entered.emit(self, entering_character)
 
