@@ -1,6 +1,8 @@
 class_name NoTimeToWasteStatus
 extends CharacterStatus
 
+## No Time To Waste X: For next X rounds, whenever you gain movement, gain one more
+
 var can_apply: bool = true
 
 func _init(val: int) -> void:
