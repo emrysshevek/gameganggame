@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cs10s4igty4ad"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_p8gcx"]
+[ext_resource type="Script" uid="uid://rxj45v4qbre5" path="res://cards/cards/clean_house/clean_house_card.gd" id="2_h7itx"]
+
+[node name="CleanHouseCard" unique_id=693299294 instance=ExtResource("1_p8gcx")]
+script = ExtResource("2_h7itx")
+description = "Clean House"
+targets_required = null

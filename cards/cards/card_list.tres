@@ -8,15 +8,27 @@
 [ext_resource type="PackedScene" uid="uid://c1nfp633qvi8b" path="res://cards/cards/dig/dig_card.tscn" id="5_hu8k6"]
 [ext_resource type="PackedScene" uid="uid://bakduutvsha55" path="res://cards/cards/pathbreaker/pathbreaker_card.tscn" id="6_5t7bn"]
 [ext_resource type="PackedScene" uid="uid://dnojbgbc2wt4b" path="res://cards/cards/feelz_no_painz/feelz_no_painz_card.tscn" id="7_hy721"]
+[ext_resource type="PackedScene" uid="uid://cs10s4igty4ad" path="res://cards/cards/clean_house/clean_house_card.tscn" id="8_khsxp"]
+[ext_resource type="PackedScene" uid="uid://ww4t00vbsf14" path="res://cards/cards/trade/trade_card.tscn" id="9_4im7e"]
+[ext_resource type="PackedScene" uid="uid://b5yi5nqgjiud5" path="res://cards/cards/money_move/money_move_card.tscn" id="10_j8rf1"]
+[ext_resource type="PackedScene" uid="uid://buwi5r6lw6da1" path="res://cards/cards/strong_back/strong_back_card.tscn" id="11_7spg2"]
+[ext_resource type="PackedScene" uid="uid://cb57hwhxnsg4g" path="res://cards/cards/free_draw/free_draw_card.tscn" id="12_60ltf"]
+[ext_resource type="PackedScene" uid="uid://djehepjb3ffgx" path="res://cards/cards/extra_bandages/extra_bandages_card.tscn" id="13_7jtia"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
+"clean_house": ExtResource("8_khsxp"),
 "defang": ExtResource("4_jsrv2"),
 "dig": ExtResource("5_hu8k6"),
+"extra_bandages": ExtResource("13_7jtia"),
 "feelz_no_painz": ExtResource("7_hy721"),
+"free_draw": ExtResource("12_60ltf"),
+"money_move": ExtResource("10_j8rf1"),
 "pathbreaker": ExtResource("6_5t7bn"),
 "reveal_tile": ExtResource("4_5t7bn"),
 "sprint": ExtResource("3_4e6cq"),
+"strong_back": ExtResource("11_7spg2"),
+"trade": ExtResource("9_4im7e"),
 "well_prepared": ExtResource("2_r4ysr")
 })

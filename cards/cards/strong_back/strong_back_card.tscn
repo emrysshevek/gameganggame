@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://buwi5r6lw6da1"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_v3ub1"]
+[ext_resource type="Script" uid="uid://o4t2m2ph7ro1" path="res://cards/cards/strong_back/strong_back_card.gd" id="2_ubk2o"]
+
+[node name="StrongBackCard" unique_id=693299294 instance=ExtResource("1_v3ub1")]
+script = ExtResource("2_ubk2o")
+description = "Strong Back"
+targets_required = null

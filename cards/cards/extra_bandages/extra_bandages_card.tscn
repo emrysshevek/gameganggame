@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://djehepjb3ffgx"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_ov7fl"]
+[ext_resource type="Script" uid="uid://vwi0iehf662j" path="res://cards/cards/extra_bandages/extra_bandages_card.gd" id="2_n3drm"]
+
+[node name="ExtraBandagesCard" unique_id=693299294 instance=ExtResource("1_ov7fl")]
+script = ExtResource("2_n3drm")
+description = "Extra Bandages"
+targets_required = null

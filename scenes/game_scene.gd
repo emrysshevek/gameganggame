@@ -57,13 +57,17 @@ func start_game() -> void:
 	
 	#setup minimap and add it to the tree + in the correct location on the screen
 	var minimap:PlayerSubViewport = setup_minimap()
+	minimap.name = "minimap"
 	minimap.reparent($PlayerAreas/Control)
 	
 	#setup notif log that appears under the minimap
 	var notif_log = notification_log_scene.instantiate()
 	$PlayerAreas/Control.add_child(notif_log)
-	notif_log.position = Vector2(minimap.position.x, minimap.position.y + _minimap_size.y)
-	
+	#sets the notif log position based on number of players, as minimap position changes based on number of players
+	if number_of_players == 1 or number_of_players == 4:
+		notif_log.position = Vector2(minimap.position.x, minimap.position.y + _minimap_size.y)
+	else:
+		notif_log.position = Vector2(minimap.position.x, minimap.position.y - _minimap_size.y)
 	Events.game_started.emit()
 	start_round()
 	
@@ -144,11 +148,13 @@ func setup_players() -> void:
 func setup_minimap():
 	#configure size and placement of minimap depending on number of players
 	_minimap_size = Vector2(((Utils.try_get_grid_man().map_width * _tile_size.x) * _minimap_zoom.x), ((Utils.try_get_grid_man().map_height * _tile_size.y) * _minimap_zoom.y))
-	_minimap_coord_1p = Vector2(DisplayServer.window_get_size().x - _minimap_size.x, 0)
-	_minimap_coord_2p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y) - _minimap_size.y)
-	_minimap_coord_3p = Vector2((0), (DisplayServer.window_get_size().y) - _minimap_size.y)
-	_minimap_coord_4p = Vector2((DisplayServer.window_get_size().x / 2) - _minimap_size.x/2, (DisplayServer.window_get_size().y / 2) - _minimap_size.y/2)
-	
+	_minimap_coord_1p = Vector2($PlayerAreas/Control.size.x - _minimap_size.x, 0)
+	_minimap_coord_2p = Vector2(($PlayerAreas/Control.size.x / 2) - _minimap_size.x/2, ($PlayerAreas/Control.size.y) - _minimap_size.y)
+	_minimap_coord_3p = Vector2((0), ($PlayerAreas/Control.size.y) - _minimap_size.y)
+	_minimap_coord_4p = Vector2(($PlayerAreas/Control.size.x / 2) - _minimap_size.x/2, ($PlayerAreas/Control.size.y / 2) - _minimap_size.y/2)
+	print(str(DisplayServer.window_get_size()))
+	print(str(_minimap_size))
+	print(str(_minimap_coord_1p))
 	#setting up the minimap viewport visuals
 	var minimap_coords = [_minimap_coord_1p, _minimap_coord_2p, _minimap_coord_3p, _minimap_coord_4p]
 	var minimap_viewport = player_viewport_scene.instantiate()

@@ -35,7 +35,7 @@ var character_id:int
 
 #character basic info
 var health_max:int = 5
-var health_current:int
+var health_current:int = health_max
 var grid_coordinates:Vector2
 var current_floor:int
 #movement starts at 3 so character can move a big right at the game start, for testing

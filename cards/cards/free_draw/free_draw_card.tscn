@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cb57hwhxnsg4g"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_nmgwl"]
+[ext_resource type="Script" uid="uid://dhuauc0xlyseo" path="res://cards/cards/free_draw/free_draw_card.gd" id="2_fapd0"]
+
+[node name="FreeDrawCard" unique_id=693299294 instance=ExtResource("1_nmgwl")]
+script = ExtResource("2_fapd0")
+description = "Free Draw"
+targets_required = null

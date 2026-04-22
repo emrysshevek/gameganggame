@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b5yi5nqgjiud5"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_nd4dh"]
+[ext_resource type="Script" uid="uid://bm6hya4tib30i" path="res://cards/cards/money_move/money_move_card.gd" id="2_al8sb"]
+
+[node name="MoneyMoveCard" unique_id=693299294 instance=ExtResource("1_nd4dh")]
+script = ExtResource("2_al8sb")
+description = "Money Move"
+targets_required = null
