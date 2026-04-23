@@ -14,11 +14,14 @@
 [ext_resource type="PackedScene" uid="uid://buwi5r6lw6da1" path="res://cards/cards/strong_back/strong_back_card.tscn" id="11_7spg2"]
 [ext_resource type="PackedScene" uid="uid://cb57hwhxnsg4g" path="res://cards/cards/free_draw/free_draw_card.tscn" id="12_60ltf"]
 [ext_resource type="PackedScene" uid="uid://djehepjb3ffgx" path="res://cards/cards/extra_bandages/extra_bandages_card.tscn" id="13_7jtia"]
+[ext_resource type="PackedScene" uid="uid://djysq56t166h1" path="res://cards/cards/replenish/replenish_card.tscn" id="14_k1gya"]
+[ext_resource type="PackedScene" uid="uid://bf7q5wtxvr7p1" path="res://cards/cards/cycle/cycle_card.tscn" id="15_k0f5a"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
 "clean_house": ExtResource("8_khsxp"),
+"cycle": ExtResource("15_k0f5a"),
 "defang": ExtResource("4_jsrv2"),
 "dig": ExtResource("5_hu8k6"),
 "extra_bandages": ExtResource("13_7jtia"),
@@ -26,6 +29,7 @@ cards = Dictionary[String, PackedScene]({
 "free_draw": ExtResource("12_60ltf"),
 "money_move": ExtResource("10_j8rf1"),
 "pathbreaker": ExtResource("6_5t7bn"),
+"replenish": ExtResource("14_k1gya"),
 "reveal_tile": ExtResource("4_5t7bn"),
 "sprint": ExtResource("3_4e6cq"),
 "strong_back": ExtResource("11_7spg2"),

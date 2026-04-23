@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://djysq56t166h1"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_7sbpw"]
+[ext_resource type="Script" uid="uid://duhdr0twfacpq" path="res://cards/cards/replenish/replenish_card.gd" id="2_v3i56"]
+
+[node name="ReplenishCard" unique_id=693299294 instance=ExtResource("1_7sbpw")]
+script = ExtResource("2_v3i56")
+description = "Replenish"
+targets_required = null
