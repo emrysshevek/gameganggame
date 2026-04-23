@@ -52,5 +52,5 @@ func update(status: Status) -> void:
 
 ## Pretty obvious imo. Remember to call `super.trigger_effect()` to maintain print logging
 func trigger_effect() -> void:
-	print("Triggering status effect: ", status_name)
+	print("Triggered status effect: ", status_name)
 	Events.status_triggered.emit(self, entity)
