@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://yovmcage7tff"]
 
-[ext_resource type="Script" uid="uid://b3ivlbcctk37a" path="res://entities/character.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://b3ivlbcctk37a" path="res://character/character.gd" id="1_3vyb7"]
 [ext_resource type="PackedScene" uid="uid://be5uh583wd7s8" path="res://components/status/status_manager.tscn" id="2_owk0i"]
 
 [node name="Player" type="Node2D" unique_id=2004547568 node_paths=PackedStringArray("status_manager")]
