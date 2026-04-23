@@ -14,5 +14,8 @@ metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
 [node name="DefangCard" unique_id=693299294 instance=ExtResource("1_uq84f")]
 script = ExtResource("2_i0r6h")
+cost = Dictionary[int, int]({
+1: 1
+})
 description = "Defang"
 targets_required = SubResource("Resource_l2bpm")

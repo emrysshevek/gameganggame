@@ -1,6 +1,6 @@
 extends Card
 
-## Reveal tile: Reveal a tile in range 3
+## Examine: Reveal a tile in range 3
 
 func _trigger_play_ability() -> void:
 	(targets[0] as Tile).reveal(owning_character)
