@@ -5,7 +5,10 @@
 
 [node name="HealingAuraCard" unique_id=693299294 instance=ExtResource("1_w0ut5")]
 script = ExtResource("2_btdx2")
+target_range = 3
+heal_amount = 3
 cost = Dictionary[int, int]({
 4: 3
 })
+description = "Healing Aura"
 targets_required = null

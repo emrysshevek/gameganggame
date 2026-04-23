@@ -11,6 +11,10 @@ min_count = 1
 max_count = 1
 metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
-[node name="Card" unique_id=693299294 instance=ExtResource("1_mbx0c")]
+[node name="CautionCard" unique_id=693299294 instance=ExtResource("1_mbx0c")]
 script = ExtResource("2_1tjxp")
+cost = Dictionary[int, int]({
+1: 2
+})
+description = "Caution"
 targets_required = SubResource("Resource_ij7ju")
