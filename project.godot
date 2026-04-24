@@ -31,6 +31,7 @@ window/stretch/aspect="expand"
 [global_group]
 
 game_scene=""
+targetable=""
 
 [input]
 

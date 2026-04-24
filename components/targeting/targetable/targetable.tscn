@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://byviwa78adtju"]
+
+[ext_resource type="Script" uid="uid://mcv6t807g48g" path="res://components/targeting/targetable/targetable.gd" id="1_1psrb"]
+
+[node name="Targetable" type="Node" unique_id=965386928 groups=["targetable"]]
+script = ExtResource("1_1psrb")
