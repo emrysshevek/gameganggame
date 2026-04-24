@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_cttry"]
 [ext_resource type="Script" uid="uid://6el62nqujp4q" path="res://cards/cards/cycle/cycle_card.gd" id="2_8w4pl"]
 
-[node name="Card" unique_id=693299294 instance=ExtResource("1_cttry")]
+[node name="CycleCard" unique_id=693299294 instance=ExtResource("1_cttry")]
 script = ExtResource("2_8w4pl")
 cost = Dictionary[int, int]({
 0: 2
