@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://do7xr2it6xfih"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_2firj"]
+[ext_resource type="Script" uid="uid://btc523xeitggc" path="res://cards/cards/no_time_to_waste/no_time_to_waste_card.gd" id="2_utroa"]
+
+[node name="NoTimeToWasteCard" unique_id=693299294 instance=ExtResource("1_2firj")]
+script = ExtResource("2_utroa")
+description = "No Time To Waste"
+targets_required = null
