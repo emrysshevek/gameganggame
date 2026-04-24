@@ -44,6 +44,8 @@ signal tile_revealed(_tile: Tile, _character: Character)
 signal tile_explored(_tile: Tile, _character: Character)
 #endregion
 
+signal hazard_will_trigger(_hazard: Hazard, _character: Character)
+
 #region Status
 signal status_applied(_status: Status, target: Node)
 signal status_added(_status: Status, target: Node)

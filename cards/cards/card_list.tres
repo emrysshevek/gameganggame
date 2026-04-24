@@ -8,15 +8,21 @@
 [ext_resource type="PackedScene" uid="uid://c1nfp633qvi8b" path="res://cards/cards/dig/dig_card.tscn" id="5_hu8k6"]
 [ext_resource type="PackedScene" uid="uid://bakduutvsha55" path="res://cards/cards/pathbreaker/pathbreaker_card.tscn" id="6_5t7bn"]
 [ext_resource type="PackedScene" uid="uid://dnojbgbc2wt4b" path="res://cards/cards/feelz_no_painz/feelz_no_painz_card.tscn" id="7_hy721"]
+[ext_resource type="PackedScene" uid="uid://ncwhp71mgugu" path="res://cards/cards/healing_aura/healing_aura_card.tscn" id="8_4im7e"]
+[ext_resource type="PackedScene" uid="uid://cwu27t77xpy8" path="res://cards/cards/caution/caution_card.tscn" id="9_j8rf1"]
+[ext_resource type="PackedScene" uid="uid://n258lqdbijua" path="res://cards/cards/lucky_look/lucky_look_card.tscn" id="10_j8rf1"]
 [ext_resource type="PackedScene" uid="uid://do7xr2it6xfih" path="res://cards/cards/no_time_to_waste/no_time_to_waste_card.tscn" id="8_khsxp"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
+"caution": ExtResource("9_j8rf1"),
 "defang": ExtResource("4_jsrv2"),
 "dig": ExtResource("5_hu8k6"),
 "examine": ExtResource("4_5t7bn"),
 "feelz_no_painz": ExtResource("7_hy721"),
+"healing_aura": ExtResource("8_4im7e"),
+"lucky_look": ExtResource("10_j8rf1"),
 "no_time_to_waste": ExtResource("8_khsxp"),
 "pathbreaker": ExtResource("6_5t7bn"),
 "sprint": ExtResource("3_4e6cq"),
