@@ -5,5 +5,8 @@
 
 [node name="StrongBackCard" unique_id=693299294 instance=ExtResource("1_v3ub1")]
 script = ExtResource("2_ubk2o")
+cost = Dictionary[int, int]({
+3: 1
+})
 description = "Strong Back"
 targets_required = null

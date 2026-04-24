@@ -5,5 +5,8 @@
 
 [node name="CleanHouseCard" unique_id=693299294 instance=ExtResource("1_p8gcx")]
 script = ExtResource("2_h7itx")
+cost = Dictionary[int, int]({
+3: 1
+})
 description = "Clean House"
 targets_required = null

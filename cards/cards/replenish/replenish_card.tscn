@@ -5,5 +5,8 @@
 
 [node name="ReplenishCard" unique_id=693299294 instance=ExtResource("1_7sbpw")]
 script = ExtResource("2_v3i56")
+cost = Dictionary[int, int]({
+0: 1
+})
 description = "Replenish"
 targets_required = null

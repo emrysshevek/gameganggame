@@ -5,5 +5,8 @@
 
 [node name="TradeCard" unique_id=693299294 instance=ExtResource("1_tyk6b")]
 script = ExtResource("2_ld76h")
+cost = Dictionary[int, int]({
+1: 1
+})
 description = "Trade"
 targets_required = null
