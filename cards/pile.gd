@@ -32,21 +32,25 @@ func get_top_card() -> Card:
 	if len(cards) == 0:
 		return null
 		
-	var card = cards[0]
-	remove_card(cards[0])
+	var card = ordered_cards[0]
+	remove_card(card)
 	return card
 	
 
 func get_bottom_card() -> Card:
-	var card = cards[-1]
+	var card = ordered_cards[-1]
 	remove_card(card)
 	return card
+
 
 func get_random_card() -> Card:
 	if cards.is_empty() == true:
 		return null
-	return cards.pick_random()
-	
+	var card = ordered_cards.pick_random()
+	remove_card(card)
+	return card
+
+
 func shuffle() -> void:
 	ordered_cards.shuffle()
 	shuffled.emit()
@@ -63,8 +67,8 @@ func add_card(_card: Card, _position:int=-1, _shuffle=false) -> void:
 	# cards are added to bottom of pile by default
 	# to insert to a specific index, set value of position
 	assert(_card not in cards)
-	if count == 0:
-		_position = 0
+	if _position == -1:
+		_position = count
 	cards.append(_card)
 	ordered_cards.insert(_position, _card)
 	

@@ -154,8 +154,8 @@ func fail_to_play():
 func _trigger_play_ability() -> void:
 	for each_value_type in cost.keys():
 		Utils.try_get_value_manager().use_reserved_value(each_value_type, cost[each_value_type])
-	Events.card_played.emit(self) 
-	
+	Events.card_played.emit(self)
+
 
 func _trigger_discard_ability() -> void:
 	owning_character.movement += 1

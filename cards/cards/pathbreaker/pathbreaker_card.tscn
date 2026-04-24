@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://bakduutvsha55"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_mab87"]
+[ext_resource type="Script" uid="uid://d4ny7g0c7juix" path="res://cards/cards/pathbreaker/pathbreaker_card.gd" id="2_0vbsl"]
+
+[node name="PathbreakerCard" unique_id=693299294 instance=ExtResource("1_mab87")]
+script = ExtResource("2_0vbsl")
+cost = Dictionary[int, int]({
+1: 1
+})
+description = "Pathbreaker"
+targets_required = null

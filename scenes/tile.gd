@@ -82,6 +82,7 @@ func explore(entering_character:Character):
 	_shading_overlay.visible = false
 	Utils.try_get_value_manager().gain_value(explore_value, 1)
 	tile_explored.emit(self, entering_character.character_id)
+	Events.tile_explored.emit(self, entering_character)
 	
 func reveal(entering_character:Character):
 	#to be used when a tile is made visible by some card effect but the tile hasn't been explored yet
@@ -98,6 +99,7 @@ func reveal(entering_character:Character):
 		if paths.keys().has(each_direction):
 			_path_lines[each_direction].visible = true
 			_path_lines_minimap[each_direction].visible = true
+	Events.tile_revealed.emit(self, entering_character)
 	
 
 func enter(entering_character:Character):
@@ -107,10 +109,8 @@ func enter(entering_character:Character):
 	tile_entered.emit(self, entering_character.character_id)
 	if hazard != null:
 		hazard.trigger_enter_ability(entering_character)
-	#if any cards are on the tile in either grid pile they are currently all picked up and added
-	#to the characters hand
-	pickup_cards(entering_character)
 	characters.append(entering_character)
+	Events.tile_entered.emit(self, entering_character)
 
 
 func exit(exiting_character:Character):
@@ -122,6 +122,7 @@ func exit(exiting_character:Character):
 	if hazard != null:
 		hazard.trigger_exit_ability(exiting_character)
 	characters.erase(exiting_character)
+	Events.tile_exited.emit(self, exiting_character)
 
 
 func pickup_cards(character:Character):
@@ -152,6 +153,14 @@ func add_hazard(new_hazard:Hazard) -> bool:
 	else:
 		#if for some reason you tried to add a hazard to a tile with a hazard on it, it wouldn't work
 		return false
+		
+
+func remove_hazard() -> void:
+	if hazard == null:
+		return
+		
+	hazard.queue_free()
+	hazard = null
 	
 func add_grid_card(new_card:Card) -> void:
 	#when players drop cards or when cards are added during map generation this function
