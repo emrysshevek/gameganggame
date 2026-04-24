@@ -11,13 +11,11 @@
 [ext_resource type="PackedScene" uid="uid://ncwhp71mgugu" path="res://cards/cards/healing_aura/healing_aura_card.tscn" id="8_4im7e"]
 [ext_resource type="PackedScene" uid="uid://cwu27t77xpy8" path="res://cards/cards/caution/caution_card.tscn" id="9_j8rf1"]
 [ext_resource type="PackedScene" uid="uid://n258lqdbijua" path="res://cards/cards/lucky_look/lucky_look_card.tscn" id="10_j8rf1"]
-[ext_resource type="PackedScene" uid="uid://bf7q5wtxvr7p1" path="res://cards/cards/cycle/cycle_card.tscn" id="11_7spg2"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
 "caution": ExtResource("9_j8rf1"),
-"cycle": ExtResource("11_7spg2"),
 "defang": ExtResource("4_jsrv2"),
 "dig": ExtResource("5_hu8k6"),
 "examine": ExtResource("4_5t7bn"),

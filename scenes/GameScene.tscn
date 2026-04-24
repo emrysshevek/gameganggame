@@ -8,6 +8,7 @@
 
 [node name="GameScene" type="Node2D" unique_id=408761751 node_paths=PackedStringArray("origin_viewport") groups=["game_scene"]]
 script = ExtResource("1_xy3my")
+number_of_players = 2
 card_list = ExtResource("2_7s5hy")
 origin_viewport = NodePath("OriginViewportController")
 

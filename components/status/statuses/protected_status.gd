@@ -27,11 +27,13 @@ func trigger_effect() -> void:
 	
 	value -= 1
 	if value <= 0:
-		remove()
+		remove_status.emit(self)
 
 
 func _on_hazard_will_trigger(hazard: Hazard, character: Character) -> void:
 	if character != self.character:
 		return 
+		
+	self.hazard = hazard
 	
 	trigger_effect()
