@@ -222,7 +222,7 @@ func get_distance(_level:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	#uses A* to find the shortest distance between the two tiles, returns 0 if no path found
 	var from_tile = floor_maps[_level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[_level][to_tile_coords.x][to_tile_coords.y]
-	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
+	var path_between_points:Array = _a_star_floor_map[_level].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	return path_between_points.size()
 		
 func is_directly_connected(_level:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
