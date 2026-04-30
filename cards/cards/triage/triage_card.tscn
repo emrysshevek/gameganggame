@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ern8fpw14agn"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_kg4ua"]
+[ext_resource type="Script" uid="uid://c1rdtt3018l66" path="res://cards/cards/triage/triage_card.gd" id="2_88mgt"]
+
+[node name="TriageCard" unique_id=693299294 instance=ExtResource("1_kg4ua")]
+script = ExtResource("2_88mgt")
+effect_range = 3
+heal_amount = 3
+description = "Triage"
+targets_required = null
