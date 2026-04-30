@@ -160,7 +160,7 @@ func _on_draw_button_pressed() -> void:
 func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD or old_state == Model.InputState.CARD:
 		_toggle_visibility()
-	if new_state == Model.InputState.CARD and old_state != Model.InputState.TARGET:
+	if new_state == Model.InputState.CARD and old_state != Model.InputState.TARGET_CURSOR:
 		# Should only trigger in situations where there was no previously selected card
 		_selected_card_index = int(hand_pile.count / 2)
 		

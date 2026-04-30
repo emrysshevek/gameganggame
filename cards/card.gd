@@ -93,7 +93,7 @@ func play() -> void:
 	else:
 		targets.clear()
 		#call state machine to switch to 'targetting' state, pass it card owner so events knows who is calling for switch
-		Events.request_input_state_transition.emit(Model.InputState.TARGET, owning_character)
+		Events.request_input_state_transition.emit(targets_required.target_state, owning_character)
 
 
 func try_add_target(potential_target: Node) -> bool:
