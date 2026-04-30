@@ -72,9 +72,12 @@ func _ready() -> void:
 	#adding the newly generated map to the floor map grid
 	floor_maps[level] = new_map_grid
 	#generating all the parts of the map
-	generate_map(0)
-	generate_hazards(0, 10)
-	generate_loot_piles(0, 2)
+	if test_map_on == false:
+		generate_map(0)
+		generate_hazards(0, 10)
+		generate_loot_piles(0, 2)
+	else:
+		setup_test_map(0)
 	
 func add_path(tile1:Tile, tile2:Tile):
 	var connection_direction = get_path_direction(tile1, tile2)
@@ -134,6 +137,58 @@ func generate_map(level:int):
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 
+func setup_test_map(level:int):
+	var current_floor_tiles = floor_maps[level]
+	var tiles:Array[Tile] = _get_all_tiles(level)
+	##setting up blank, fully connected outer tiles
+	for each_tile in tiles:
+		if each_tile.grid_coordinates.x < 8 or each_tile.grid_coordinates.x > 13 and each_tile.grid_coordinates.y < 8 or each_tile.grid_coordinates.y > 13:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+		##setting up accessible player spawn rooms
+		elif each_tile.grid_coordinates.x == 10 or each_tile.grid_coordinates.x == 11 and each_tile.grid_coordinates.y == 10 or each_tile.grid_coordinates.y == 11:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+	##setting up inaccessable room at 9,9
+	#for each_tile in get_tiles_in_crow_flies_range(level, Vector2i(9,9), 1):
+		#remove_path(current_floor_tiles[9][9], each_tile)
+	##loot pile rooms at 10,9 + 11,9 + 11,12
+	add_loot_pile(current_floor_tiles[10][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[11][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[10][10])
+	add_loot_pile(current_floor_tiles[11][9])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[11][10])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[12][9])
+	add_loot_pile(current_floor_tiles[11][12])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[11][11])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[12][12])
+	##hazards in rooms 12,9 + 12,10 + 12,12
+	add_hazard(current_floor_tiles[12][9])
+	add_path(current_floor_tiles[12][9], current_floor_tiles[12][10])
+	add_hazard(current_floor_tiles[12][10])
+	add_path(current_floor_tiles[12][10], current_floor_tiles[11][10])
+	##other testing room connections 9,10 + 9,11 + 9,12 + 10,11 + 10,12
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[8][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][11], current_floor_tiles[10][11])
+	add_path(current_floor_tiles[9][12], current_floor_tiles[10][12])
+	add_path(current_floor_tiles[10][11], current_floor_tiles[10][12])
+	for each_tile in tiles:
+		each_tile.reset_to_hidden()
+	map_generated.emit()
+
+func add_hazard(tile:Tile) -> void:
+	var new_hazard = Hazard.new()
+	tile.add_hazard(new_hazard)
+
+func add_loot_pile(tile:Tile) -> void:
+	for i in randi_range(1,3):
+		var new_card:LootCard = _loot_card_scene.instantiate()
+		new_card.is_faceup = false
+		tile.add_grid_card(new_card)	
 
 func generate_hazards(_level:int, frequency:int):
 	#makes hazards in random tiles. higher frequency value means fewer hazards
