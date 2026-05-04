@@ -5,7 +5,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 
 #region Properties
 #modify this to set number of players manually, max 4
-@export var number_of_players:int = 1
+@onready var number_of_players:int = Config.player_count
 
 @export var card_list: CardList
 

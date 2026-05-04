@@ -50,3 +50,5 @@ signal status_added(_status: Status, target: Node)
 signal status_removed(_status: Status, target: Node)
 signal status_triggered(_status: Status, target: Node)
 #endregion
+
+signal resources_cached(_count:int)
