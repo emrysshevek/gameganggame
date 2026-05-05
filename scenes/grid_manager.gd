@@ -42,7 +42,7 @@ var map_height:int = 20
 var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
-var test_map_on:bool = true
+var test_map_on:bool = false
 var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 #endregion
 
@@ -131,7 +131,7 @@ func _get_all_tiles(_level:int):
 	return all_tiles
 	
 func generate_map(level:int):
-	for each_tile in _get_all_tiles(0):
+	for each_tile: Tile in _get_all_tiles(0):
 		var possible_tile_connections_by_path:Dictionary
 		#check which directions could have new paths added to them
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
@@ -142,6 +142,7 @@ func generate_map(level:int):
 			possible_tile_connections_by_path[directions.east] = floor_maps[level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
 			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
+		
 		var possible_new_path_num = possible_tile_connections_by_path.size()
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
@@ -153,6 +154,14 @@ func generate_map(level:int):
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
+		
+		# Make sure all starting tiles are connected to each other
+		if each_tile is StartingTile:
+			for neighbor_offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+				var neighbor = get_tile(Vector2i(each_tile.grid_coordinates) + neighbor_offset)
+				if neighbor is StartingTile and get_path_direction(each_tile, neighbor) not in each_tile.paths.keys():
+					add_path(each_tile, neighbor)
+					
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 

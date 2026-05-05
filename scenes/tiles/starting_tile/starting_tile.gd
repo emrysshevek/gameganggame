@@ -2,7 +2,8 @@ class_name StartingTile
 extends Tile
 
 
-## spawns corresponding player at start of game. 
+## spawns corresponding player at start of game.
+## always has a path to neighboring start tiles
 ## Guarantees a path to the storage cache
 ## cannot have a hazard or resource card at start of round
 
@@ -12,6 +13,10 @@ var player_id: int
 func _ready() -> void:
 	super._ready()
 	Events.game_started.connect(_on_game_started)
+	
+	
+func add_hazard(new_hazard:Hazard) -> bool:
+	return false
 
 
 func spawn_character() -> void:
