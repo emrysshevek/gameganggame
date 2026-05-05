@@ -9,6 +9,11 @@ extends Tile
 var player_id: int
 
 
+func _ready() -> void:
+	super._ready()
+	Events.game_started.connect(_on_game_started)
+
+
 func spawn_character() -> void:
 	var grid_man := Utils.try_get_grid_man()
 	var game_scene := Utils.try_get_game_scene()
@@ -29,3 +34,7 @@ func spawn_character() -> void:
 	character.character_sprite.set_type(Model.ObjectTypes.CHARACTER)
 	
 	enter(character)
+
+
+func _on_game_started() -> void:
+	spawn_character()
