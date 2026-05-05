@@ -52,22 +52,6 @@ func add_character(new_character:Character) -> CharacterSprite:
 	_input_managers.append(new_character_sprite.input_man)
 	create_cursor(new_character, new_character_sprite.grid_coordinates)
 	
-	#determining spawn location of the character and assigning it
-	var grid_man_origin = grid_man.global_position
-	var test_player_coords:Array = [Vector2(10,10), Vector2(11,10), Vector2(10,11), Vector2(11,11)]
-	var coords = test_player_coords[len(character_sprites)-1]
-	new_character.grid_coordinates = coords
-
-	#revealing starting tiles around each player after they spawn
-	for each_tile in grid_man.get_reachable_tiles(0, new_character.grid_coordinates, 1):
-		each_tile.explore(new_character)
-		if each_tile.grid_coordinates == new_character.grid_coordinates:
-			each_tile.call_deferred("enter", new_character)
-		
-	#setting up the character sprites visual position and minimap sprite
-	new_character_sprite.set_visual_position(Vector2(coords.x * _tile_size.x, coords.y * _tile_size.y))
-	new_character_sprite.set_minimap_sprite(load("res://art/character_minimap_icon.png"), Color("#f3e100"))
-	new_character_sprite.set_type(GridSprite.sprite_types.character)
 	return new_character_sprite
 		
 		
