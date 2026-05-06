@@ -44,6 +44,7 @@ var _player_turn_end: Array[bool] = []
 func _ready() -> void:
 	start_game()
 	Events.player_turn_ended.connect(_on_player_turn_ended)
+	Events.game_won.connect(_on_game_won)
 #endregion
 
 
@@ -186,4 +187,8 @@ func _on_player_turn_ended(_character: Character) -> void:
 	_player_turn_end[_character.character_id] = true
 	if _player_turn_end.all(func(x): return x):
 		end_round()
+		
+		
+func _on_game_won() -> void:
+	print("GAME WON")
 #endregion

@@ -5,3 +5,13 @@
 
 [node name="CacheTile" unique_id=477134848 instance=ExtResource("1_vua80")]
 script = ExtResource("2_lgy72")
+
+[node name="Tile_Bkgd" parent="." index="0" unique_id=107649264]
+modulate = Color(0.3764706, 1, 0.40392157, 1)
+
+[node name="Label" type="Label" parent="Front" parent_id_path=PackedInt32Array(52007739) index="9" unique_id=1965851138]
+offset_left = 32.0
+offset_top = 41.0
+offset_right = 72.0
+offset_bottom = 64.0
+text = "0/3"

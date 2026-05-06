@@ -15,7 +15,7 @@ func _ready() -> void:
 	Events.game_started.connect(_on_game_started)
 	
 	
-func add_hazard(new_hazard:Hazard) -> bool:
+func add_hazard(_new_hazard:Hazard) -> bool:
 	return false
 
 

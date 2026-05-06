@@ -18,6 +18,8 @@ signal card_removed_from_deck(_card: Card, _deck: Deck)
 #region Turn
 signal game_started()
 signal game_ended()
+signal game_won()
+signal game_lost()
 signal round_started()
 signal round_ended()
 signal player_turn_ended(_character: Character)

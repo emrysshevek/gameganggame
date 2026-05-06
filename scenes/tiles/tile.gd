@@ -111,6 +111,9 @@ func enter(entering_character:Character):
 		hazard.trigger_enter_ability(entering_character)
 	characters.append(entering_character)
 	Events.tile_entered.emit(self, entering_character)
+	
+	# TODO: For testing only, remove when finished
+	pickup_cards(entering_character)
 
 
 func exit(exiting_character:Character):

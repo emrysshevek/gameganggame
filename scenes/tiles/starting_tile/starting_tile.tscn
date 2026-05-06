@@ -5,3 +5,6 @@
 
 [node name="StartingTile" unique_id=477134848 instance=ExtResource("1_d3vv6")]
 script = ExtResource("2_q4j2o")
+
+[node name="Tile_Bkgd" parent="." index="0" unique_id=107649264]
+modulate = Color(1, 1, 0.24705882, 1)

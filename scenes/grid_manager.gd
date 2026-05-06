@@ -30,19 +30,13 @@ var level:int = 0 #dummy
 #width and height of the map in tiles
 var map_width:int = 20
 var map_height:int = 20
-@onready var center_tile := Vector2i(map_width/2, map_height/2)
-@onready var starting_positions: Array[Vector2i] = [
-		center_tile,
-		center_tile + Vector2i.RIGHT,
-		center_tile + Vector2i.DOWN,
-		center_tile + Vector2i.RIGHT + Vector2i.DOWN
-	]
+
 
 #size of each tile in pixels
 var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
-var test_map_on:bool = false
+var test_map_on:bool = true
 var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 #endregion
 
@@ -62,20 +56,14 @@ func _ready() -> void:
 	
 	#initialize blank map grid
 	var new_map_grid = []
+	var unique_tiles = _generate_unique_tile_positions()
 	for x in range(map_width):
 		new_map_grid.append([])
 		new_map_grid[x] = []
 		for y in range(map_height):
-			var new_tile: Tile
-			var player_id = starting_positions.find(Vector2i(x,y))
-			if player_id >= 0 and player_id < Config.player_count:
-				var start: StartingTile = preload("res://scenes/tiles/starting_tile/starting_tile.tscn").instantiate()
-				start.player_id = player_id
-				new_tile = start
-				print("Adding start tile for player ", str(player_id), " to tile ", str(Vector2i(x,y)))
-			else:
+			var new_tile: Tile = unique_tiles.get(Vector2i(x,y))
+			if new_tile == null:
 				new_tile = _tile_scene.instantiate()
-				
 			self.add_child(new_tile)
 			new_map_grid[x].append([])
 			new_map_grid[x][y]=new_tile
@@ -90,6 +78,7 @@ func _ready() -> void:
 			new_tile.position = Vector2(x * 64, y * 64)
 	#adding the newly generated map to the floor map grid
 	floor_maps[level] = new_map_grid
+	
 	#generating all the parts of the map
 	if test_map_on == false:
 		generate_map(0)
@@ -97,6 +86,37 @@ func _ready() -> void:
 		generate_loot_piles(0, 2)
 	else:
 		setup_test_map(0)
+		
+func _generate_unique_tile_positions() -> Dictionary[Vector2i, Tile]:
+	var position_to_tile: Dictionary[Vector2i, Tile] = {}
+	
+	# generate starting positions in the center of the map
+	var center_tile := Vector2i(map_width/2, map_height/2)
+	var starting_positions: Array[Vector2i] = [
+		center_tile,
+		center_tile + Vector2i.RIGHT,
+		center_tile + Vector2i.DOWN,
+		center_tile + Vector2i.RIGHT + Vector2i.DOWN
+	]
+	for i in Config.player_count:
+		var start_tile: StartingTile = preload("res://scenes/tiles/starting_tile/starting_tile.tscn").instantiate()
+		start_tile.player_id = i
+		starting_tiles.append(start_tile)
+		position_to_tile[starting_positions[i]] = start_tile
+		print("Added start tile for player ", str(i), " at position ", str(starting_positions[i]))
+		
+	# generate random cache position at least half the radius of the map away in both directions
+	var radius := Vector2i(map_width/2, map_height/2)
+	var min_dist := radius/2
+	var quadrant := Vector2i([-1, 1].pick_random(), [-1,1].pick_random())
+	var cache_pos := Vector2i(randi_range(min_dist.x, radius.x), randi_range(min_dist.y, radius.y))
+	cache_pos = (quadrant * cache_pos) + radius
+	cache_tile = preload("res://scenes/tiles/cache/cache_tile.tscn").instantiate()
+	position_to_tile[cache_pos] = cache_tile
+	print("Added cache tile at position ", str(cache_pos))
+	
+	return position_to_tile
+	
 	
 func add_path(tile1:Tile, tile2:Tile):
 	var connection_direction = get_path_direction(tile1, tile2)
