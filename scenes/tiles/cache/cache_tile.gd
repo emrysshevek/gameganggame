@@ -3,8 +3,6 @@ extends Tile
 
 
 ## caches ALL resource cards from deck when player enters tile
-## must be connected to all starting tiles
-## cannot have a hazard or resource card at start of round
 ## when enough resources have been cached, win the game
 
 @export var required_cards_per_player := 1
@@ -24,6 +22,7 @@ func enter(entering_character:Character):
 	var cards: Array[Card] = []
 	var cm := entering_character.my_screen.card_manager
 	
+	# cache resource cards in all piles
 	cards.append_array(cm.hand_pile.cards.filter(func(x): return x is LootCard))
 	cards.append_array(cm.draw_pile.cards.filter(func(x): return x is LootCard))
 	cards.append_array(cm.discard_pile.cards.filter(func(x): return x is LootCard))
@@ -46,4 +45,4 @@ func add_hazard(_new_hazard:Hazard) -> bool:
 	
 	
 func _update_label() -> void:
-	label.text = str(total_count) + "//" + str(required_cards_per_player * Config.player_count)
+	label.text = str(total_count) + "/" + str(required_cards_per_player * Config.player_count)
