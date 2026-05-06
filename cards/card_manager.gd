@@ -118,13 +118,20 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
-				card_being_played = hand_pile.ordered_cards[_selected_card_index]
-				hand_pile.ordered_cards[_selected_card_index].play()
-				pass
+			if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
+				hand_pile.ordered_cards[_selected_card_index].discard()
+				hand_pile.ordered_cards[_selected_card_index].highlight_return()
+				discard(hand_pile.ordered_cards[_selected_card_index])
+				_selected_card_index -= 1
+				Events.request_input_state_transition.emit(Model.InputState.CARD, card_being_played.owning_character)
 			else:
-				Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
-				#card can't be played due to not enough values
+				if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
+					card_being_played = hand_pile.ordered_cards[_selected_card_index]
+					hand_pile.ordered_cards[_selected_card_index].play()
+					pass
+				else:
+					Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
+					#card can't be played due to not enough values
 			print("finished playing card")
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
@@ -146,6 +153,8 @@ func _on_deck_card_removed(_card) -> void:
 	
 	
 func _on_card_clicked(_card) -> void:
+	print("don't click on the cards emrys")
+	assert(false)
 	if _card.pile == hand_pile:
 		discard(_card)
 	elif _card.pile == draw_pile:
@@ -163,6 +172,9 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD and old_state != Model.InputState.TARGET_CURSOR:
 		# Should only trigger in situations where there was no previously selected card
 		_selected_card_index = int(hand_pile.count / 2)
+	if new_state == Model.InputState.TARGET_CARD or old_state == Model.InputState.TARGET_CARD:
+		if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
+			$Layout/DiscardCardLabel.visible = !$Layout/DiscardCardLabel.visible
 		
 func _on_card_played(_card:Card):
 	card_being_played = null

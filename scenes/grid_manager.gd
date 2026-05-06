@@ -326,6 +326,9 @@ func move_object(object, tile_coord:Vector2, _level:int):
 		#if the tile the character is trying to move to isn't connected by a path from their current tile they can't move to it
 		if is_directly_connected(_level, object.grid_coordinates, tile_coord) == false:
 			return false
+		elif floor_maps[_level][tile_coord.x][tile_coord.y].characters.is_empty() == false:
+			#if the tile you are trying to move to contains another character prevent that movement
+			return false
 		else:
 			#clearing out movement (setting it to 1 so it drops to 0) after entering an unexplored tile
 			if floor_maps[_level][tile_coord.x][tile_coord.y].is_tile_explored == false:

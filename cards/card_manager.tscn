@@ -112,4 +112,11 @@ text = "Press 'v' to bring up your cards"
 horizontal_alignment = 1
 vertical_alignment = 2
 
+[node name="DiscardCardLabel" type="Label" parent="Layout" unique_id=625249770]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select a card to discard"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="Layout/HBoxContainer/DrawPile/DrawButton" to="." method="_on_draw_button_pressed"]
