@@ -37,7 +37,7 @@ func _ready() -> void:
 
 		
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == Model.InputState.CARD:
+	if input_state_machine.current_state == Model.InputState.CARD or input_state_machine.current_state == Model.InputState.TARGET_CARD:
 		_handle_input()
 #endregion
 
@@ -118,12 +118,12 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
-				hand_pile.ordered_cards[_selected_card_index].discard()
-				hand_pile.ordered_cards[_selected_card_index].highlight_return()
-				discard(hand_pile.ordered_cards[_selected_card_index])
-				_selected_card_index -= 1
-				Events.request_input_state_transition.emit(Model.InputState.CARD, card_being_played.owning_character)
+			if input_state_machine.current_state == Model.InputState.TARGET_CARD:
+				if card_being_played == hand_pile.ordered_cards[_selected_card_index]:
+					print("select a different card")
+				else:
+					card_being_played.targets.append(hand_pile.ordered_cards[_selected_card_index])
+					card_being_played.check_targetting_finished()
 			else:
 				if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
 					card_being_played = hand_pile.ordered_cards[_selected_card_index]
@@ -132,7 +132,7 @@ func _handle_input():
 				else:
 					Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
 					#card can't be played due to not enough values
-			print("finished playing card")
+				print("finished playing card")
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
@@ -175,6 +175,7 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.TARGET_CARD or old_state == Model.InputState.TARGET_CARD:
 		if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
 			$Layout/DiscardCardLabel.visible = !$Layout/DiscardCardLabel.visible
+			_toggle_visibility()
 		
 func _on_card_played(_card:Card):
 	card_being_played = null
