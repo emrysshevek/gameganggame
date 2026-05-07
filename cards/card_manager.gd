@@ -120,6 +120,7 @@ func _handle_input():
 		elif input_man.is_action_just_released(Model.Action.SELECT):
 			if input_state_machine.current_state == Model.InputState.TARGET_CARD:
 				if card_being_played == hand_pile.ordered_cards[_selected_card_index]:
+					character.play_error_pop_up("select a different card")
 					print("select a different card")
 				else:
 					card_being_played.targets.append(hand_pile.ordered_cards[_selected_card_index])
@@ -150,6 +151,18 @@ func swap_discard_and_hand_piles():
 		hand_pile.add_card(each_card)
 	for each_card in current_hand_pile_cards:
 		discard_pile.add_card(each_card)
+
+func swap_draw_and_hand_piles():
+	var current_hand_pile_cards:Array[Card] = hand_pile.cards.duplicate(true)
+	var current_draw_pile_cards:Array[Card] = draw_pile.cards.duplicate(true)
+	for each_card in current_hand_pile_cards:
+		hand_pile.remove_card(each_card)
+	for each_card in current_draw_pile_cards:
+		draw_pile.remove_card(each_card)
+	for each_card in current_draw_pile_cards:
+		hand_pile.add_card(each_card)
+	for each_card in current_hand_pile_cards:
+		draw_pile.add_card(each_card)
 
 #endregion
 	
@@ -194,9 +207,18 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 				_toggle_visibility()
 				swap_discard_and_hand_piles()
 			else:
+				character.play_error_pop_up("empty discard, no effect")
 				print("empty discard, no effect")
-				Events.request_input_state_transition.emit(Model.InputState.CARD, character)
-
+				Events.request_input_state_transition.emit(Model.InputState.MOVE, character)
+		elif card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_DRAW:
+			if discard_pile.count > 0:
+				$Layout/GetDrawPileCardLabel.visible = !$Layout/GetDrawPileCardLabel.visible
+				_toggle_visibility()
+				swap_draw_and_hand_piles()
+			else:
+				character.play_error_pop_up("empty draw pile, no effect")
+				print("empty draw pile, no effect")
+				Events.request_input_state_transition.emit(Model.InputState.MOVE, character)
 		
 func _on_card_played(_card:Card):
 	card_being_played = null

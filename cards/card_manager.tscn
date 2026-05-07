@@ -126,4 +126,11 @@ theme_override_font_sizes/font_size = 20
 text = "Select a card to return to hand from discard"
 horizontal_alignment = 1
 
+[node name="GetDrawPileCardLabel" type="Label" parent="Layout" unique_id=718930711]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select a card from your draw pile to add to your hand"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="Layout/HBoxContainer/DrawPile/DrawButton" to="." method="_on_draw_button_pressed"]
