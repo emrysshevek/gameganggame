@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://cwu27t77xpy8" path="res://cards/cards/caution/caution_card.tscn" id="9_j8rf1"]
 [ext_resource type="PackedScene" uid="uid://n258lqdbijua" path="res://cards/cards/lucky_look/lucky_look_card.tscn" id="10_j8rf1"]
 [ext_resource type="PackedScene" uid="uid://4lciaujlj1m2" path="res://cards/cards/adapt/adapt_card.tscn" id="12_60ltf"]
+[ext_resource type="PackedScene" uid="uid://cws33j6o0c65w" path="res://cards/cards/recover/recover_card.tscn" id="13_7jtia"]
 
 [resource]
 script = ExtResource("1_p6edn")
@@ -27,6 +28,7 @@ cards = Dictionary[String, PackedScene]({
 "lucky_look": ExtResource("10_j8rf1"),
 "no_time_to_waste": ExtResource("8_khsxp"),
 "pathbreaker": ExtResource("6_5t7bn"),
+"recover": ExtResource("13_7jtia"),
 "sprint": ExtResource("3_4e6cq"),
 "well_prepared": ExtResource("2_r4ysr")
 })

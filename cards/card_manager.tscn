@@ -119,4 +119,11 @@ theme_override_font_sizes/font_size = 20
 text = "Select a card to discard"
 horizontal_alignment = 1
 
+[node name="RecoverCardLabel" type="Label" parent="Layout" unique_id=1056676956]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Select a card to return to hand from discard"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="Layout/HBoxContainer/DrawPile/DrawButton" to="." method="_on_draw_button_pressed"]

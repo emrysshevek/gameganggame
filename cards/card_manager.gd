@@ -138,6 +138,18 @@ func _handle_input():
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
 			_selected_card_index -= 1
+			
+func swap_discard_and_hand_piles():
+	var current_hand_pile_cards:Array[Card] = hand_pile.cards.duplicate(true)
+	var current_discard_pile_cards:Array[Card] = discard_pile.cards.duplicate(true)
+	for each_card in current_hand_pile_cards:
+		hand_pile.remove_card(each_card)
+	for each_card in current_discard_pile_cards:
+		discard_pile.remove_card(each_card)
+	for each_card in current_discard_pile_cards:
+		hand_pile.add_card(each_card)
+	for each_card in current_hand_pile_cards:
+		discard_pile.add_card(each_card)
 
 #endregion
 	
@@ -176,10 +188,19 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 		if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
 			$Layout/DiscardCardLabel.visible = !$Layout/DiscardCardLabel.visible
 			_toggle_visibility()
+		elif card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_DISCARD:
+			if discard_pile.count > 0:
+				$Layout/RecoverCardLabel.visible = !$Layout/RecoverCardLabel.visible
+				_toggle_visibility()
+				swap_discard_and_hand_piles()
+			else:
+				print("empty discard, no effect")
+				Events.request_input_state_transition.emit(Model.InputState.CARD, character)
+
 		
 func _on_card_played(_card:Card):
 	card_being_played = null
-	discard(hand_pile.ordered_cards[_selected_card_index])
+	discard(_card)
 	_selected_card_index -= 1
 #endregion
 	
