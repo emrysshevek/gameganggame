@@ -8,6 +8,8 @@ func _input(event: InputEvent) -> void:
 		$PlayerCount.value += $PlayerCount.step
 	elif player_count_focused and Input.is_action_just_released("move_down"):
 		$PlayerCount.value -= $PlayerCount.step
+	if Input.is_action_just_pressed("select"):
+		_on_start_button_pressed()
 
 
 func _on_player_count_value_changed(value: float) -> void:

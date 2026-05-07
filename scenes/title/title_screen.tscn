@@ -21,6 +21,14 @@ offset_bottom = 396.0
 theme_override_font_sizes/font_size = 30
 text = "Number of Players: "
 
+[node name="Label3" type="Label" parent="." unique_id=1420094802]
+offset_left = 427.0
+offset_top = 537.0
+offset_right = 722.0
+offset_bottom = 577.0
+theme_override_font_sizes/font_size = 29
+text = "(Press Select to start)"
+
 [node name="PlayerCount" type="SpinBox" parent="." unique_id=211331943]
 offset_left = 667.0
 offset_top = 358.0
@@ -38,6 +46,7 @@ max_value = 4.0
 value = 1.0
 
 [node name="StartButton" type="Button" parent="." unique_id=1887879890]
+visible = false
 offset_left = 456.0
 offset_top = 472.0
 offset_right = 653.0
