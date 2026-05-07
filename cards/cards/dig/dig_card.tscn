@@ -15,5 +15,8 @@ metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
 [node name="DigCard" unique_id=693299294 instance=ExtResource("1_m5h04")]
 script = ExtResource("2_mjwju")
+cost = Dictionary[int, int]({
+1: 1
+})
 description = "Dig"
 targets_required = SubResource("Resource_is6xo")

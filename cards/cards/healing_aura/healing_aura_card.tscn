@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://ncwhp71mgugu"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_w0ut5"]
+[ext_resource type="Script" uid="uid://b1180hc6ixros" path="res://cards/cards/healing_aura/healing_aura_card.gd" id="2_btdx2"]
+
+[node name="HealingAuraCard" unique_id=693299294 instance=ExtResource("1_w0ut5")]
+script = ExtResource("2_btdx2")
+target_range = 3
+heal_amount = 3
+cost = Dictionary[int, int]({
+4: 3
+})
+description = "Healing Aura"
+targets_required = null

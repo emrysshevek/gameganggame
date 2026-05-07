@@ -5,5 +5,8 @@
 
 [node name="FeelzNoPainzCard" unique_id=693299294 instance=ExtResource("1_cuevx")]
 script = ExtResource("2_vidt5")
+cost = Dictionary[int, int]({
+1: 1
+})
 description = "Feelz No Painz"
 targets_required = null

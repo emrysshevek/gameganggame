@@ -5,5 +5,8 @@
 
 [node name="WellPreparedCard" unique_id=693299294 instance=ExtResource("1_xao22")]
 script = ExtResource("2_kggf1")
+cost = Dictionary[int, int]({
+3: 3
+})
 description = "Well Prepared"
 targets_required = null

@@ -39,7 +39,12 @@ var health_current:int = health_max
 var grid_coordinates:Vector2
 var current_floor:int
 #movement starts at 3 so character can move a big right at the game start, for testing
-var movement:int = 3
+var movement:int = 3 :
+	set(new_val):
+		var old_val := movement
+		movement = new_val
+		Events.character_movement_value_changed.emit(self, old_val, new_val)
+		
 #colors define color of the sprite and minimap icon
 var character_color:Color
 var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
@@ -174,7 +179,7 @@ func get_my_current_playing_card():
 
 #region Signal Functions
 func _on_state_machine_switched(old_state:String, new_state:String):
-	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR or new_state == Model.InputState.TARGET || old_state == Model.InputState.TARGET:
+	if new_state == Model.InputState.CURSOR or old_state == Model.InputState.CURSOR or new_state == Model.InputState.TARGET_CURSOR || old_state == Model.InputState.TARGET_CURSOR:
 		#if the new or old state are CURSOR or TARGETTING we want to flip the visibility of the cursor
 		#and move the cursor to the characters location
 		cursor_sprite.move(grid_coordinates, character_sprite.position)
@@ -186,11 +191,11 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 			#otherwise camera follows the character sprite
 			character_sprite.set_remote_camera_transform(my_screen.player_sub_viewport.camera)
 			
-	if new_state == Model.InputState.TARGET:
+	if new_state == Model.InputState.TARGET_CURSOR:
 		#when switching to target state we want to highlight tiles the card can target
 		Utils.try_get_grid_man().highlight_targettable_tiles(get_my_current_playing_card(), grid_coordinates, 0)
 		
-	if old_state == Model.InputState.TARGET:
+	if old_state == Model.InputState.TARGET_CURSOR:
 		#and when exiting target state we want those highlights cleared
 		Utils.try_get_grid_man().clear_highlights(character_id, 0)
 

@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://n258lqdbijua"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_f70yk"]
+[ext_resource type="Script" uid="uid://crajcn7eshvdy" path="res://cards/cards/lucky_look/lucky_look_card.gd" id="2_ky7m1"]
+
+[node name="LuckyLookCard" unique_id=693299294 instance=ExtResource("1_f70yk")]
+script = ExtResource("2_ky7m1")
+cost = Dictionary[int, int]({
+2: 1
+})
+description = "Lucky Look"
+targets_required = null

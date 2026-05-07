@@ -5,5 +5,8 @@
 
 [node name="SprintCard" unique_id=693299294 instance=ExtResource("1_2pbdu")]
 script = ExtResource("2_c7l72")
+cost = Dictionary[int, int]({
+0: 1
+})
 description = "Sprint"
 targets_required = null

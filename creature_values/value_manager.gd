@@ -3,6 +3,7 @@ extends Node
 
 
 #region Properties
+@export var starting_value_count := 5
 static var _creature_values: Dictionary[Model.CreatureValue, int] = {}
 static var _reserved_values: Dictionary[Model.CreatureValue, int] = {}
 #endregion
@@ -11,8 +12,8 @@ static var _reserved_values: Dictionary[Model.CreatureValue, int] = {}
 #region Public Methods
 func _ready() -> void:
 	for i in range(Config.CREATURE_VALUE_COUNT):
-		_creature_values[i as Model.CreatureValue] = 0
-		_reserved_values[i as Model.CreatureValue] = 0
+		_creature_values[i as Model.CreatureValue] = starting_value_count
+		_reserved_values[i as Model.CreatureValue] = starting_value_count
 	add_to_group(Config.VALUE_MANAGER_GROUP)
 
 

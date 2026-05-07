@@ -32,6 +32,7 @@ signal character_damaged(_character: Character, _amount:int, effect_source)
 signal character_moved(_character: Character, old_coords: Vector2i, new_coords: Vector2i)
 signal looted_cards(_character: Character)
 signal forced_discard(_character: Character, effect_source)
+signal character_movement_value_changed(_character: Character, old_value: int, new_value: int)
 #endregion
 
 #region Tile
@@ -40,6 +41,8 @@ signal tile_exited(_tile: Tile, _character: Character)
 signal tile_revealed(_tile: Tile, _character: Character)
 signal tile_explored(_tile: Tile, _character: Character)
 #endregion
+
+signal hazard_will_trigger(_hazard: Hazard, _character: Character)
 
 #region Status
 signal status_applied(_status: Status, target: Node)

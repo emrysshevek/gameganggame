@@ -5,5 +5,8 @@
 
 [node name="PathbreakerCard" unique_id=693299294 instance=ExtResource("1_mab87")]
 script = ExtResource("2_0vbsl")
+cost = Dictionary[int, int]({
+1: 1
+})
 description = "Pathbreaker"
 targets_required = null
