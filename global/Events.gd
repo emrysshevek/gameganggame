@@ -31,6 +31,7 @@ signal request_input_state_transition(new_state:String, requesting_character:Cha
 
 #region Character
 signal character_damaged(_character: Character, _amount:int, effect_source)
+signal character_died(_character: Character)
 signal character_moved(_character: Character, old_coords: Vector2i, new_coords: Vector2i)
 signal looted_cards(_character: Character)
 signal forced_discard(_character: Character, effect_source)
