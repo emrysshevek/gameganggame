@@ -222,9 +222,12 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 				print("empty draw pile, no effect")
 				Events.request_input_state_transition.emit(Model.InputState.MOVE, character)
 		
-func _on_card_played(_card:Card):
+func _on_card_played(card:Card):
+	if card.owning_character != character:
+		return
+		
 	card_being_played = null
-	discard(_card)
+	discard(card)
 	_selected_card_index -= 1
 #endregion
 	
