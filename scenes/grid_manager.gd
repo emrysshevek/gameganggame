@@ -8,7 +8,7 @@ enum directions{north, east, south, west}
 
 #region properties
 #loading scenes
-var _tile_scene = preload("res://scenes/Tile.tscn")
+var _tile_scene = preload("res://scenes/tiles/Tile.tscn")
 
 #odds that a path will be generated for each tile, starting with odds for 1 path, 2 paths, etc
 var _path_number_odds = [75,75,60,40]
@@ -21,6 +21,8 @@ var _a_star_floor_map = {}
 
 #map of the grid, setup as [floor][grid_coordinate_x][grid_coordinate_y]
 var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors
+var starting_tiles: Array[StartingTile]
+var cache_tile: CacheTile
 
 #level is not currently in use as we only have one floor levels right now
 var level:int = 0 #dummy
@@ -28,6 +30,7 @@ var level:int = 0 #dummy
 #width and height of the map in tiles
 var map_width:int = 20
 var map_height:int = 20
+
 
 #size of each tile in pixels
 var tile_size:Vector2 = Vector2(64,64)
@@ -53,14 +56,18 @@ func _ready() -> void:
 
 	#initialize blank map grid
 	var new_map_grid = []
+	var unique_tiles = _generate_unique_tile_positions()
 	for x in range(map_width):
 		new_map_grid.append([])
 		new_map_grid[x] = []
 		for y in range(map_height):
-			var new_tile = _tile_scene.instantiate()
+			var new_tile: Tile = unique_tiles.get(Vector2i(x,y))
+			if new_tile == null:
+				new_tile = _tile_scene.instantiate()
 			self.add_child(new_tile)
 			new_map_grid[x].append([])
 			new_map_grid[x][y]=new_tile
+			
 			#setup Tile for A*. need to modiy this for multi-floors later, as it requires the level to be entered currently
 			var a_star_point_id = _a_star_floor_map[0].get_available_point_id()
 			_a_star_floor_map[0].add_point(a_star_point_id, Vector2(new_tile.grid_coordinates.x, new_tile.grid_coordinates.y), 0)
@@ -71,6 +78,7 @@ func _ready() -> void:
 			new_tile.position = Vector2(x * 64, y * 64)
 	#adding the newly generated map to the floor map grid
 	floor_maps[level] = new_map_grid
+	
 	#generating all the parts of the map
 	if test_map_on == false:
 		generate_map(0)
@@ -78,6 +86,37 @@ func _ready() -> void:
 		generate_loot_piles(0, 2)
 	else:
 		setup_test_map(0)
+		
+func _generate_unique_tile_positions() -> Dictionary[Vector2i, Tile]:
+	var position_to_tile: Dictionary[Vector2i, Tile] = {}
+	
+	# generate starting positions in the center of the map
+	var center_tile := Vector2i(map_width/2, map_height/2)
+	var starting_positions: Array[Vector2i] = [
+		center_tile,
+		center_tile + Vector2i.RIGHT,
+		center_tile + Vector2i.DOWN,
+		center_tile + Vector2i.RIGHT + Vector2i.DOWN
+	]
+	for i in Config.player_count:
+		var start_tile: StartingTile = preload("res://scenes/tiles/starting_tile/starting_tile.tscn").instantiate()
+		start_tile.player_id = i
+		starting_tiles.append(start_tile)
+		position_to_tile[starting_positions[i]] = start_tile
+		print("Added start tile for player ", str(i), " at position ", str(starting_positions[i]))
+		
+	# generate random cache position at least half the radius of the map away in both directions
+	var radius := Vector2i(map_width/2, map_height/2)
+	var min_dist := radius/2
+	var quadrant := Vector2i([-1, 1].pick_random(), [-1,1].pick_random())
+	var cache_pos := Vector2i(randi_range(min_dist.x, radius.x), randi_range(min_dist.y, radius.y))
+	cache_pos = (quadrant * cache_pos) + radius
+	cache_tile = preload("res://scenes/tiles/cache/cache_tile.tscn").instantiate()
+	position_to_tile[cache_pos] = cache_tile
+	print("Added cache tile at position ", str(cache_pos))
+	
+	return position_to_tile
+	
 	
 func add_path(tile1:Tile, tile2:Tile):
 	var connection_direction = get_path_direction(tile1, tile2)
@@ -112,7 +151,7 @@ func _get_all_tiles(_level:int):
 	return all_tiles
 
 func generate_map(level:int):
-	for each_tile in _get_all_tiles(0):
+	for each_tile: Tile in _get_all_tiles(0):
 		var possible_tile_connections_by_path:Dictionary
 		#check which directions could have new paths added to them
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
@@ -123,6 +162,7 @@ func generate_map(level:int):
 			possible_tile_connections_by_path[directions.east] = floor_maps[level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
 			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
+		
 		var possible_new_path_num = possible_tile_connections_by_path.size()
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
@@ -134,6 +174,14 @@ func generate_map(level:int):
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
+		
+		# Make sure all starting tiles are connected to each other
+		if each_tile is StartingTile:
+			for neighbor_offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+				var neighbor = get_tile(Vector2i(each_tile.grid_coordinates) + neighbor_offset)
+				if neighbor is StartingTile and get_path_direction(each_tile, neighbor) not in each_tile.paths.keys():
+					add_path(each_tile, neighbor)
+					
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 

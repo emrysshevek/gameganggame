@@ -5,7 +5,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 
 #region Properties
 #modify this to set number of players manually, max 4
-@export var number_of_players:int = 1
+@onready var number_of_players:int = Config.player_count
 
 @export var card_list: CardList
 
@@ -44,6 +44,7 @@ var _player_turn_end: Array[bool] = []
 func _ready() -> void:
 	start_game()
 	Events.player_turn_ended.connect(_on_player_turn_ended)
+	Events.game_won.connect(_on_game_won)
 #endregion
 
 
@@ -102,7 +103,7 @@ func setup_players() -> void:
 			$PlayerAreas/Control/VBoxContainer/BotRow.add_child(new_player_area)
 
 		#setup new character and their input manager and state machines
-		var new_character = preload("res://character/character.tscn").instantiate()
+		var new_character = preload("res://character/Character.tscn").instantiate()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
 		new_character.setup_new_character(i, pis_machine)
@@ -187,4 +188,8 @@ func _on_player_turn_ended(_character: Character) -> void:
 	_player_turn_end[_character.character_id] = true
 	if _player_turn_end.all(func(x): return x):
 		end_round()
+		
+		
+func _on_game_won() -> void:
+	print("GAME WON")
 #endregion
