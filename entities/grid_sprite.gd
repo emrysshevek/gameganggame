@@ -24,13 +24,13 @@ func set_visual_position(coords:Vector2):
 	#this may not be necessary anymore but could be helpful for adjusting sprite position independent of grid
 	position = coords
 	move_remote_camera(coords)
-	
+
 func set_input_man(input_manager:PlayerInputManager) -> void:
 	input_man = input_manager
-	
+
 func set_sprite(sprite_to_load:Resource):
 	texture = sprite_to_load
-	
+
 func set_minimap_sprite(sprite_to_load:Resource, color_to_set:Color):
 	#sets up the sprite that will represent this grid sprite on the minimap
 	#if not set then the grid sprite will just appear all tiny on the minimap and might be hard to identify
@@ -41,25 +41,25 @@ func set_minimap_sprite(sprite_to_load:Resource, color_to_set:Color):
 	new_minimap_sprite.scale = Vector2(2,2)
 	new_minimap_sprite.self_modulate = color_to_set
 	add_child(new_minimap_sprite)
-	
+
 func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	#used for movement of grid sprite on grid
 	#this is called from grid_man->move object and shouldn't be called directly
 	grid_coordinates = new_grid_position
 	position = new_screen_position
 	move_remote_camera(position)
-	
+
 func set_sprite_scale(new_scale:Vector2):
 	scale = new_scale
-	
+
 func set_custom_offset(offset_amount:Vector2):
 	#used for correctly centering the sprite on the tile, or moving it off center if desired
 	offset = offset_amount
-	
+
 func get_scaled_size():
 	#useful if you need to determine how much space the grid sprite takes up visually
 	return texture.get_size() * scale
-	
+
 func set_remote_camera_transform(following_camera:Camera2D):
 	#this causes the camera to track this grid sprite object
 	#currently used for characters and cursor sprite moving on the map
@@ -69,17 +69,17 @@ func set_remote_camera_transform(following_camera:Camera2D):
 	new_transform.remote_path = following_camera.get_path()
 	_remote_camera_transform = new_transform
 	add_child(_remote_camera_transform)
-	
+
 func move_remote_camera(new_position:Vector2):
 	#moves the aforementioned remote camera via the transform
 	if _remote_camera_transform != null:
 		_remote_camera_transform.global_position = new_position
-		
+
 func set_type(type_to_set:Model.ObjectTypes):
 	#type of the grid sprite, currently used for card targetting
 	types.append(type_to_set)
-	
-	
+
+
 func damage_animation():
 	#simple little 'animation' that happens when a character is damaged
 	var new_tween = self.create_tween()
