@@ -206,6 +206,7 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 				$Layout/RecoverCardLabel.visible = !$Layout/RecoverCardLabel.visible
 				_toggle_visibility()
 				swap_discard_and_hand_piles()
+				_selected_card_index = int(hand_pile.count / 2)
 			else:
 				character.play_error_pop_up("empty discard, no effect")
 				print("empty discard, no effect")
@@ -215,6 +216,7 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 				$Layout/GetDrawPileCardLabel.visible = !$Layout/GetDrawPileCardLabel.visible
 				_toggle_visibility()
 				swap_draw_and_hand_piles()
+				_selected_card_index = int(hand_pile.count / 2)
 			else:
 				character.play_error_pop_up("empty draw pile, no effect")
 				print("empty draw pile, no effect")
