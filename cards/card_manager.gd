@@ -37,7 +37,7 @@ func _ready() -> void:
 
 		
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == Model.InputState.CARD:
+	if input_state_machine.current_state == Model.InputState.CARD or input_state_machine.current_state == Model.InputState.TARGET_CARD:
 		_handle_input()
 #endregion
 
@@ -118,19 +118,51 @@ func _handle_input():
 		elif input_man.is_action_just_released("move_right"):
 			_selected_card_index += 1
 		elif input_man.is_action_just_released(Model.Action.SELECT):
-			if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
-				card_being_played = hand_pile.ordered_cards[_selected_card_index]
-				hand_pile.ordered_cards[_selected_card_index].play()
-				pass
+			if input_state_machine.current_state == Model.InputState.TARGET_CARD:
+				if card_being_played == hand_pile.ordered_cards[_selected_card_index]:
+					character.play_error_pop_up("select a different card")
+					print("select a different card")
+				else:
+					card_being_played.targets.append(hand_pile.ordered_cards[_selected_card_index])
+					card_being_played.check_targetting_finished()
 			else:
-				Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
-				#card can't be played due to not enough values
-			print("finished playing card")
+				if hand_pile.ordered_cards[_selected_card_index].value_check() == true:
+					card_being_played = hand_pile.ordered_cards[_selected_card_index]
+					hand_pile.ordered_cards[_selected_card_index].play()
+					pass
+				else:
+					Events.missing_values.emit(hand_pile.ordered_cards[_selected_card_index])
+					#card can't be played due to not enough values
+				print("finished playing card")
 		elif input_man.is_action_just_released(Model.Action.DISCARD):
 			hand_pile.ordered_cards[_selected_card_index].discard()
 			hand_pile.ordered_cards[_selected_card_index].highlight_return()
 			discard(hand_pile.ordered_cards[_selected_card_index])
 			_selected_card_index -= 1
+			
+func swap_discard_and_hand_piles():
+	var current_hand_pile_cards:Array[Card] = hand_pile.cards.duplicate(true)
+	var current_discard_pile_cards:Array[Card] = discard_pile.cards.duplicate(true)
+	for each_card in current_hand_pile_cards:
+		hand_pile.remove_card(each_card)
+	for each_card in current_discard_pile_cards:
+		discard_pile.remove_card(each_card)
+	for each_card in current_discard_pile_cards:
+		hand_pile.add_card(each_card)
+	for each_card in current_hand_pile_cards:
+		discard_pile.add_card(each_card)
+
+func swap_draw_and_hand_piles():
+	var current_hand_pile_cards:Array[Card] = hand_pile.cards.duplicate(true)
+	var current_draw_pile_cards:Array[Card] = draw_pile.cards.duplicate(true)
+	for each_card in current_hand_pile_cards:
+		hand_pile.remove_card(each_card)
+	for each_card in current_draw_pile_cards:
+		draw_pile.remove_card(each_card)
+	for each_card in current_draw_pile_cards:
+		hand_pile.add_card(each_card)
+	for each_card in current_hand_pile_cards:
+		draw_pile.add_card(each_card)
 
 #endregion
 	
@@ -146,6 +178,8 @@ func _on_deck_card_removed(_card) -> void:
 	
 	
 func _on_card_clicked(_card) -> void:
+	print("don't click on the cards emrys")
+	assert(false)
 	if _card.pile == hand_pile:
 		discard(_card)
 	elif _card.pile == draw_pile:
@@ -163,10 +197,34 @@ func _on_state_machine_switched(old_state:String, new_state:String):
 	if new_state == Model.InputState.CARD and old_state != Model.InputState.TARGET_CURSOR:
 		# Should only trigger in situations where there was no previously selected card
 		_selected_card_index = int(hand_pile.count / 2)
+	if new_state == Model.InputState.TARGET_CARD or old_state == Model.InputState.TARGET_CARD:
+		if card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_HAND:
+			$Layout/DiscardCardLabel.visible = !$Layout/DiscardCardLabel.visible
+			_toggle_visibility()
+		elif card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_DISCARD:
+			if discard_pile.count > 0:
+				$Layout/RecoverCardLabel.visible = !$Layout/RecoverCardLabel.visible
+				_toggle_visibility()
+				swap_discard_and_hand_piles()
+				_selected_card_index = int(hand_pile.count / 2)
+			else:
+				character.play_error_pop_up("empty discard, no effect")
+				print("empty discard, no effect")
+				Events.request_input_state_transition.emit(Model.InputState.MOVE, character)
+		elif card_being_played.targets_required.type == Model.ObjectTypes.CARD_IN_DRAW:
+			if discard_pile.count > 0:
+				$Layout/GetDrawPileCardLabel.visible = !$Layout/GetDrawPileCardLabel.visible
+				_toggle_visibility()
+				swap_draw_and_hand_piles()
+				_selected_card_index = int(hand_pile.count / 2)
+			else:
+				character.play_error_pop_up("empty draw pile, no effect")
+				print("empty draw pile, no effect")
+				Events.request_input_state_transition.emit(Model.InputState.MOVE, character)
 		
 func _on_card_played(_card:Card):
 	card_being_played = null
-	discard(hand_pile.ordered_cards[_selected_card_index])
+	discard(_card)
 	_selected_card_index -= 1
 #endregion
 	

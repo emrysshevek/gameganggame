@@ -20,10 +20,14 @@
 [ext_resource type="PackedScene" uid="uid://bf7q5wtxvr7p1" path="res://cards/cards/cycle/cycle_card.tscn" id="17_pely2"]
 [ext_resource type="PackedScene" uid="uid://cb57hwhxnsg4g" path="res://cards/cards/free_draw/free_draw_card.tscn" id="18_edkv0"]
 [ext_resource type="PackedScene" uid="uid://djehepjb3ffgx" path="res://cards/cards/extra_bandages/extra_bandages_card.tscn" id="19_kosrf"]
+[ext_resource type="PackedScene" uid="uid://4lciaujlj1m2" path="res://cards/cards/adapt/adapt_card.tscn" id="12_60ltf"]
+[ext_resource type="PackedScene" uid="uid://cws33j6o0c65w" path="res://cards/cards/recover/recover_card.tscn" id="13_7jtia"]
+[ext_resource type="PackedScene" uid="uid://dlf8xa7mp2tnu" path="res://cards/cards/perfect_timing/perfect_timing_card.tscn" id="14_k1gya"]
 
 [resource]
 script = ExtResource("1_p6edn")
 cards = Dictionary[String, PackedScene]({
+"adapt": ExtResource("12_60ltf"),
 "caution": ExtResource("9_j8rf1"),
 "clean_house": ExtResource("13_oh1rx"),
 "cycle": ExtResource("17_pely2"),
@@ -39,6 +43,8 @@ cards = Dictionary[String, PackedScene]({
 "no_time_to_waste": ExtResource("8_khsxp"),
 "pathbreaker": ExtResource("6_5t7bn"),
 "replenish": ExtResource("16_gwu1y"),
+"perfect_timing": ExtResource("14_k1gya"),
+"recover": ExtResource("13_7jtia"),
 "sprint": ExtResource("3_4e6cq"),
 "strong_back": ExtResource("15_0ivhn"),
 "trade": ExtResource("12_l3oq2"),

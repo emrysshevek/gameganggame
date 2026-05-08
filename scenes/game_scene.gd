@@ -5,7 +5,7 @@ enum viewport_names{p1, p2, p3, p4, origin, minimap}
 
 #region Properties
 #modify this to set number of players manually, max 4
-@export var number_of_players:int = 1
+@onready var number_of_players:int = Config.player_count
 
 @export var card_list: CardList
 
@@ -17,7 +17,7 @@ var characters: Array[Character] = []
 @onready var player_viewport_scene := preload("res://scenes/player_subviewport.tscn")
 @onready var card_manager_scene: PackedScene = preload("res://cards/card_manager.tscn")
 @onready var deck_scene := preload("res://cards/Deck.tscn")
-@onready var character_sprite_scene := preload("res://entities/character_sprite.tscn")
+@onready var character_sprite_scene := preload("res://character/character_sprite.tscn")
 @onready var pism_scene := preload("res://input/state_machine/PlayerInputStateMachine.tscn")
 @onready var card_scene :=preload("res://cards/card.tscn")
 
@@ -44,6 +44,7 @@ var _player_turn_end: Array[bool] = []
 func _ready() -> void:
 	start_game()
 	Events.player_turn_ended.connect(_on_player_turn_ended)
+	Events.game_won.connect(_on_game_won)
 #endregion
 
 
@@ -51,15 +52,15 @@ func _ready() -> void:
 func start_game() -> void:
 	#setting up tile size variable as it is used frequently to determine screen placement of objects
 	_tile_size = Utils.try_get_grid_man().tile_size
-	
+
 	#create character object, character sprite, cursor, deck, etc
 	setup_players()
-	
+
 	#setup minimap and add it to the tree + in the correct location on the screen
 	var minimap:PlayerSubViewport = setup_minimap()
 	minimap.name = "minimap"
 	minimap.reparent($PlayerAreas/Control)
-	
+
 	#setup notif log that appears under the minimap
 	var notif_log = notification_log_scene.instantiate()
 	$PlayerAreas/Control.add_child(notif_log)
@@ -70,19 +71,19 @@ func start_game() -> void:
 		notif_log.position = Vector2(minimap.position.x, minimap.position.y - _minimap_size.y)
 	Events.game_started.emit()
 	start_round()
-	
-	
+
+
 func start_round() -> void:
 	for i in characters.size():
 		characters[i].start_turn()
 		_player_turn_end[i] = false
 	Events.round_started.emit()
-	
-	
+
+
 func end_round() -> void:
 	for character in characters:
 		character.end_turn()
-		
+
 	Events.round_ended.emit()
 	start_round()
 
@@ -104,15 +105,15 @@ func setup_players() -> void:
 			$PlayerAreas/Control/VBoxContainer/TopRow.add_child(new_player_area)
 		else:
 			$PlayerAreas/Control/VBoxContainer/BotRow.add_child(new_player_area)
-			
+
 		#setup new character and their input manager and state machines
-		var new_character = preload("res://entities/character.tscn").instantiate()
+		var new_character = preload("res://character/Character.tscn").instantiate()
 		var player_input_manager := InputManager.get_player_input_manager(i)
 		var pis_machine: PlayerInputStateMachine = pism_scene.instantiate()
 		new_character.setup_new_character(i, pis_machine)
 		new_character.bind_pis_machine(pis_machine)
 		characters.append(new_character)
-		
+
 		#deck setup
 		var new_deck = deck_scene.instantiate()
 		new_character.bind_deck(new_deck)
@@ -123,12 +124,12 @@ func setup_players() -> void:
 
 		#adds the new character to the viewport so they are visible on the map
 		origin_viewport.add_character(new_character)
-		
+
 		# pis machine setup
 		pis_machine.character = new_character
 		add_child(pis_machine)
 		pis_machine.owner = self
-		
+
 		#creating the players screen, which hosts the card manager and deck
 		var player_screen: PlayerScreen = player_screen_scene.instantiate()
 		player_screen.card_manager.deck = new_deck
@@ -136,10 +137,11 @@ func setup_players() -> void:
 		player_screen.card_manager.input_state_machine = pis_machine
 		player_screen.origin_viewport = origin_viewport
 		player_screen.player_id = i
+		player_screen.character_info.set_character(new_character)
 		player_areas[i].add_child(player_screen)
 		player_screen.card_manager.shuffle_draw()
 		player_screens.append(player_screen)
-		
+
 		# character setup
 		new_character.bind_screen(player_screen)
 		new_character.character_sprite.set_remote_camera_transform(player_screen.player_sub_viewport.camera)
@@ -166,11 +168,11 @@ func setup_minimap():
 	minimap_viewport.set_fade(0.8)
 	minimap_viewport.set_stretch(false)
 	minimap_viewport.position = minimap_coords[player_areas.size() - 1]
-	
+
 	#culling dictionary determines what is visible in each players viewport and in the minimap
 	#to make something visible to only one player or only on the minimap set its visibility layer per below
 	var culling_dictionary:Dictionary[Model.CullingLayers,bool] = {
-		Model.CullingLayers.VISIBLE_ALL:true, 
+		Model.CullingLayers.VISIBLE_ALL:true,
 		Model.CullingLayers.VISIBLE_MINIMAP_ONLY:true,
 		Model.CullingLayers.VISIBLE_P1_ONLY:false,
 		Model.CullingLayers.VISIBLE_P2_ONLY:false,
@@ -178,12 +180,12 @@ func setup_minimap():
 		Model.CullingLayers.VISIBLE_P4_ONLY:false,
 	}
 	minimap_viewport.set_layers_visible(culling_dictionary)
-	
+
 	#set the minimap camera so that it is looking at the middle of the map
 	var minimap_camera_center_position = Vector2((Utils.try_get_grid_man().map_width * _tile_size.x) / 2, ( (Utils.try_get_grid_man().map_height * _tile_size.y)) / 2)
 	minimap_viewport.move_camera(minimap_camera_center_position)
 	_player_sub_viewports[viewport_names.minimap] = minimap_viewport
-	return minimap_viewport	
+	return minimap_viewport
 #endregion
 
 
@@ -192,4 +194,8 @@ func _on_player_turn_ended(_character: Character) -> void:
 	_player_turn_end[_character.character_id] = true
 	if _player_turn_end.all(func(x): return x):
 		end_round()
+		
+		
+func _on_game_won() -> void:
+	print("GAME WON")
 #endregion
