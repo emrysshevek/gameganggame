@@ -36,7 +36,7 @@ var map_height:int = 20
 var tile_size:Vector2 = Vector2(64,64)
 
 #Testing
-var test_map_on:bool = true
+@export var test_map_on:bool = false
 var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 #endregion
 
@@ -150,40 +150,44 @@ func _get_all_tiles(_level:int):
 			all_tiles.append(floor_maps[_level][each_x][each_y])
 	return all_tiles
 
-func generate_map(level:int):
-	for each_tile: Tile in _get_all_tiles(0):
-		var possible_tile_connections_by_path:Dictionary
-		#check which directions could have new paths added to them
-		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
-			possible_tile_connections_by_path[directions.west] = floor_maps[level][each_tile.grid_coordinates.x - 1][each_tile.grid_coordinates.y]
-		if each_tile.grid_coordinates.y != 0 && each_tile.paths.keys().has(directions.north) == false:
-			possible_tile_connections_by_path[directions.north] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y - 1]
-		if each_tile.grid_coordinates.x != map_width - 1 && each_tile.paths.keys().has(directions.east) == false:
-			possible_tile_connections_by_path[directions.east] = floor_maps[level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
-		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
-			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
+func generate_map(_level:int):
+	var noise: FastNoiseLite = $NoiseMap.texture.noise
+	#noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	#noise.seed = randi()
+	#noise.frequency = .0095
+	#noise.fractal_type = FastNoiseLite.FRACTAL_RIDGED
+	#noise.fractal_octaves = 4
+	#noise.fractal_lacunarity = 1.0
+	#noise.fractal_gain = .53
+	#noise.fractal_weighted_strength = .68
+	#seed(0)
+	for x in range(map_width):
+		for y in range(map_height):
+			var tile: Tile = get_tile(Vector2(x,y))
+			if x < map_width - 1:
+				_try_add_path(tile, get_tile(Vector2(x+1, y)), noise)
+			if y < map_height - 1:
+				_try_add_path(tile, get_tile(Vector2(x, y+1)), noise)
+
 		
-		var possible_new_path_num = possible_tile_connections_by_path.size()
-		for each_num in possible_new_path_num:
-			if possible_new_path_num > 0:
-				#new paths are added if a random 'roll' is within a set range
-				var roll_for_new_path = randi_range(1,100)
-				if roll_for_new_path <= _path_number_odds[4 - possible_new_path_num]:
-					var connecting_tile_direction_from_origin_tile = possible_tile_connections_by_path.keys().pick_random()
-					add_path(each_tile, possible_tile_connections_by_path[connecting_tile_direction_from_origin_tile])
-				else:
-					possible_new_path_num = 0
-					#roll for new path failed, so process to check for creating new paths for current Tile ends here
+	# Make sure all starting tiles are connected to each other
+	for tile1: Tile in starting_tiles:
+		for tile2: Tile in starting_tiles:
+			if is_directly_connected(0, tile1.grid_coordinates, tile2.grid_coordinates):
+				add_path(tile1, tile2)
+
+	for tile in _get_all_tiles(0):
+		tile.reset_to_hidden()
 		
-		# Make sure all starting tiles are connected to each other
-		if each_tile is StartingTile:
-			for neighbor_offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
-				var neighbor = get_tile(Vector2i(each_tile.grid_coordinates) + neighbor_offset)
-				if neighbor is StartingTile and get_path_direction(each_tile, neighbor) not in each_tile.paths.keys():
-					add_path(each_tile, neighbor)
-					
-		each_tile.reset_to_hidden()
 	map_generated.emit()
+	
+func _try_add_path(tile1: Tile, tile2: Tile, noise: FastNoiseLite) -> void:
+	var noise1 = noise.get_noise_2d(tile1.grid_coordinates.x, tile1.grid_coordinates.y)
+	var noise2 = noise.get_noise_2d(tile2.grid_coordinates.x, tile2.grid_coordinates.y)
+	var connection_strength = (noise1 + noise2) / 2.0
+	print("Connection strength: %f" % [connection_strength])
+	if connection_strength > .5:
+		add_path(tile1, tile2)
 
 func setup_test_map(level:int):
 	var current_floor_tiles = floor_maps[level]

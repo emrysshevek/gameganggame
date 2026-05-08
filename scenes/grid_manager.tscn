@@ -2,5 +2,26 @@
 
 [ext_resource type="Script" uid="uid://ddvmkx2jpdp8g" path="res://scenes/grid_manager.gd" id="1_l7jj3"]
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_l7jj3"]
+noise_type = 3
+seed = 12
+frequency = 0.22
+fractal_type = 2
+fractal_octaves = 2
+fractal_lacunarity = 2.235
+fractal_gain = 0.63
+fractal_weighted_strength = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kl8jp"]
+width = 20
+height = 20
+generate_mipmaps = false
+noise = SubResource("FastNoiseLite_l7jj3")
+
 [node name="GridManager" type="Node2D" unique_id=1720207153]
 script = ExtResource("1_l7jj3")
+
+[node name="NoiseMap" type="TextureRect" parent="." unique_id=912844985]
+offset_right = 40.0
+offset_bottom = 40.0
+texture = SubResource("NoiseTexture2D_kl8jp")

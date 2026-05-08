@@ -72,6 +72,10 @@ func start_game() -> void:
 		notif_log.position = Vector2(minimap.position.x, minimap.position.y - _minimap_size.y)
 	Events.game_started.emit()
 	start_round()
+	
+	## TODO: REMOVE THIS
+	for tile in grid_man._get_all_tiles(0):
+		tile.explore(characters[0])
 
 
 func start_round() -> void:
