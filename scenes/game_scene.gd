@@ -45,6 +45,7 @@ func _ready() -> void:
 	start_game()
 	Events.player_turn_ended.connect(_on_player_turn_ended)
 	Events.game_won.connect(_on_game_won)
+	Events.character_died.connect(_on_character_died)
 #endregion
 
 
@@ -192,4 +193,14 @@ func _on_player_turn_ended(_character: Character) -> void:
 		
 func _on_game_won() -> void:
 	print("GAME WON")
+	var end = preload("res://scenes/end/end_screen.tscn").instantiate()
+	end.won = true
+	get_tree().change_scene_to_node(end)
+	
+	
+func _on_character_died(_character) -> void:
+	print("GAME LOST")
+	var end = preload("res://scenes/end/end_screen.tscn").instantiate()
+	end.won = false
+	get_tree().change_scene_to_node(end)
 #endregion

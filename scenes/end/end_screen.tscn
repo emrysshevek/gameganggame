@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dmkea227eeam1"]
+
+[ext_resource type="Script" uid="uid://dvlq0mjsekthy" path="res://scenes/end/end_screen.gd" id="1_ihaqn"]
+
+[node name="EndScreen" type="Node2D" unique_id=731215211]
+script = ExtResource("1_ihaqn")
+
+[node name="WinLabel" type="Label" parent="." unique_id=1249088436]
+visible = false
+offset_left = 328.0
+offset_top = 92.0
+offset_right = 725.0
+offset_bottom = 234.0
+theme_override_font_sizes/font_size = 78
+text = "You Win!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LoseLabel" type="Label" parent="." unique_id=679434938]
+visible = false
+offset_left = 328.0
+offset_top = 92.0
+offset_right = 725.0
+offset_bottom = 234.0
+theme_override_font_sizes/font_size = 78
+text = "You LOSE!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="." unique_id=302875316]
+offset_left = 368.0
+offset_top = 510.0
+offset_right = 756.0
+offset_bottom = 542.0
+theme_override_font_sizes/font_size = 23
+text = "(press any button to return to title)"

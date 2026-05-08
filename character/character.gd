@@ -34,7 +34,7 @@ var character_id:int
 
 #character basic info
 var health_max:int = 5
-var health_current:int
+var health_current:int = health_max
 var grid_coordinates:Vector2
 var current_floor:int
 #movement starts at 3 so character can move a big right at the game start, for testing
@@ -113,6 +113,7 @@ func heal(amount:int):
 func die():
 	#don't think we're using this yet
 	died.emit(self)
+	Events.character_died.emit(self)
 
 func forced_random_discard(number_of_cards:int):
 	#the test hazard is set up to force a player to discard a random card from hand
