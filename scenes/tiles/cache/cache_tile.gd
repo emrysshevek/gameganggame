@@ -8,7 +8,7 @@ extends Tile
 @export var required_cards_per_player := 1
 var total_count := 0
 
-@onready var label: Label = $Label
+@onready var label: Label = $Front/Label
 
 
 func _ready() -> void:
