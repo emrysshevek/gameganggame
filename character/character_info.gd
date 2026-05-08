@@ -4,14 +4,14 @@ extends HBoxContainer
 
 var _character: Character
 
-var _health_info: CharacterInfoItem
-var _movement_info: CharacterInfoItem
+@onready
+var _health_info: CharacterInfoItem = $HealthInfo
+
+@onready
+var _movement_info: CharacterInfoItem = $MovementInfo
 
 
 func _ready() -> void:
-	_health_info = $HealthInfo
-	_movement_info = $MovementInfo
-
 	if _character:
 		_health_info.set_item_value(str(_character.health_current))
 		_movement_info.set_item_value(str(_character.movement))

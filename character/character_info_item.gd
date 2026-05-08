@@ -5,14 +5,14 @@ extends VBoxContainer
 @export
 var item_name: String
 
-var _item_name_label: Label
+@onready
+var _item_name_label: Label = $ItemNameLabel
 
-var _item_value_label: Label
+@onready
+var _item_value_label: Label = $ItemValueLabel
 
 
 func _ready() -> void:
-	_item_name_label = $ItemNameLabel
-	_item_value_label = $ItemValueLabel
 	set_item_name(item_name)
 
 
