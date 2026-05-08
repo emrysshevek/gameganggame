@@ -174,6 +174,9 @@ func _handle_input():
 func get_my_current_playing_card():
 	#used when in targetting mode to check which card is actively doing the targetting
 	return my_screen.card_manager.card_being_played
+	
+func play_error_pop_up(text:String):
+	character_sprite.play_pop_up(text, Color("b82d1d"))
 #endregion
 
 

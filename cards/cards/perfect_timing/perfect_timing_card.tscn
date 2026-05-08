@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dlf8xa7mp2tnu"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_ve80n"]
+[ext_resource type="Script" uid="uid://dpbif6c66ojq4" path="res://cards/cards/perfect_timing/perfect_timing_card.gd" id="2_lwm0x"]
+[ext_resource type="Script" uid="uid://c53pw6ymaxio3" path="res://cards/target_requirement.gd" id="3_07xvo"]
+
+[sub_resource type="Resource" id="Resource_axbll"]
+script = ExtResource("3_07xvo")
+mode = 2
+type = 11
+min_count = 1
+max_count = 1
+metadata/_custom_type_script = "uid://c53pw6ymaxio3"
+
+[node name="PerfectTimingCard" unique_id=693299294 instance=ExtResource("1_ve80n")]
+script = ExtResource("2_lwm0x")
+description = "Perfect Timing"
+targets_required = SubResource("Resource_axbll")
