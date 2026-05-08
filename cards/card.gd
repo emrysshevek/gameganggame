@@ -41,14 +41,14 @@ func _ready() -> void:
 	else:
 		_frontside.hide()
 		_backside.show()
-		
+
 	for cv in cost.keys():
 		var letter = Model.CreatureValue.keys()[cv].left(1)
 		var label: Label = Label.new()
 		label.text = "{0}{1}".format([cost[cv], letter])
 		label.add_theme_color_override("font_color", Color.BLACK)
 		_costs_hbox.add_child(label)
-		
+
 	#testing
 	#targets_required[Model.ObjectTypes.TILE] = 1
 #endregion
@@ -62,7 +62,7 @@ func flip() -> void:
 	else:
 		_frontside.show()
 		_backside.hide()
-	is_faceup = !is_faceup	
+	is_faceup = !is_faceup
 
 
 func value_check() -> bool:
@@ -99,29 +99,29 @@ func play() -> void:
 func try_add_target(potential_target: Node) -> bool:
 	if not validate_target(potential_target):
 		return false
-		
+
 	targets.append(potential_target)
 	check_targetting_finished()
 	return true
-	
 
-func validate_target(potential_target: Node) -> bool: 
+
+func validate_target(potential_target: Node) -> bool:
 	# Overwrite this for sub-class cards
 	# Called from grid_man when trying to find tiles to highlight
 
 	if targets.size() >= targets_required.max_count:
 		return false
-	
+
 	if not("types" in potential_target and targets_required.type in potential_target.types):
 		return false
-		
+
 	var owners_location = owning_character.grid_coordinates
 	var distance:int = Utils.try_get_grid_man().get_crow_flies_distance(potential_target.grid_coordinates, owners_location)
 	if distance > targets_required.max_range or distance < targets_required.min_range:
 		return false
-		
+
 	return true
-	
+
 
 func check_targetting_finished():
 	if targets.size() == targets_required.min_count:
@@ -135,11 +135,11 @@ func get_my_target_types():
 
 func highlight_react() -> void:
 	scale = Vector2(1.5, 1.5)
-	
-	
+
+
 func highlight_return():
 	scale = Vector2(1,1)
-	
+
 func fail_to_play():
 	var new_tween = self.create_tween()
 	new_tween.tween_property(self, "rotation_degrees", 15, Config.animation_speed * 0.1)
@@ -165,12 +165,12 @@ func _trigger_discard_ability() -> void:
 #region Signal Connections
 func _on_button_pressed() -> void:
 	pass
-	
-	
+
+
 func _on_focus_entered() -> void:
 	pass
-	
-	
+
+
 func _on_focus_exited() -> void:
 	pass
 #endregion

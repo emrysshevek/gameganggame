@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://cws33j6o0c65w"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_opgax"]
+[ext_resource type="Script" uid="uid://dvtaad41xhhe8" path="res://cards/cards/recover/recover_card.gd" id="2_ioa4v"]
+[ext_resource type="Script" uid="uid://c53pw6ymaxio3" path="res://cards/target_requirement.gd" id="3_pnko0"]
+
+[sub_resource type="Resource" id="Resource_o2hga"]
+script = ExtResource("3_pnko0")
+mode = 2
+type = 10
+min_count = 1
+max_count = 1
+metadata/_custom_type_script = "uid://c53pw6ymaxio3"
+
+[node name="RecoverCard" unique_id=693299294 instance=ExtResource("1_opgax")]
+script = ExtResource("2_ioa4v")
+description = "Recover"
+targets_required = SubResource("Resource_o2hga")

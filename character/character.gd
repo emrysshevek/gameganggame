@@ -1,7 +1,6 @@
 class_name Character extends Node2D
 
 #region signals
-signal health_changed(which_player, old_value, new_value)
 signal move_request(which_sprite, requested_position)
 signal moved(which_player, old_coord, new_coord)
 signal died(which_player)
@@ -13,8 +12,8 @@ signal started_turn(which_player)
 #setting type of character object
 @export var status_manager: StatusManager
 @export var types: Array[Model.ObjectTypes] = [
-	Model.ObjectTypes.ENTITY, 
-	Model.ObjectTypes.CHARACTER, 
+	Model.ObjectTypes.ENTITY,
+	Model.ObjectTypes.CHARACTER,
 	Model.ObjectTypes.PLAYER_CHARACTER
 ]
 
@@ -44,7 +43,7 @@ var movement:int = 3 :
 		var old_val := movement
 		movement = new_val
 		Events.character_movement_value_changed.emit(self, old_val, new_val)
-		
+
 #colors define color of the sprite and minimap icon
 var character_color:Color
 var testing_player_colors:Array = [Color("23b9d6"), Color("f164e8"), Color("e0b81e"), Color("8084fd")]
@@ -70,13 +69,13 @@ func setup_new_character(input_character_id:int, input_state_machine:PlayerInput
 func bind_screen(input_screen:PlayerScreen):
 	my_screen = input_screen
 	my_screen.card_manager.character = self
-	
+
 func bind_character_sprite(input_sprite:CharacterSprite):
 	character_sprite = input_sprite
 	character_sprite.input_man = input_man
 	character_sprite.self_modulate = testing_player_colors[character_id]
 	add_child(character_sprite)
-	
+
 func bind_cursor_sprite(input_sprite:CursorSprite):
 	cursor_sprite = input_sprite
 	cursor_sprite.input_man = input_man
@@ -99,18 +98,18 @@ func bind_pis_machine(input_pis_machine:PlayerInputStateMachine):
 func take_damage(amount:int):
 	#call this when the player takes damage to adjust their hp and play the 'animation' and popup
 	health_current -= amount
-	health_changed.emit(self, health_current + amount, health_current)
+	Events.character_health_changed.emit(self, health_current)
 	character_sprite.damage_animation()
 	character_sprite.play_pop_up("-" + str(amount) + "hp", Color("b82d1d"))
 	if health_current <= 0:
 		die()
-		
+
 func heal(amount:int):
 	#no pop-up or animation for this yet
 	health_current += amount
 	if health_current > health_max:
 		health_current = health_max
-	
+
 func die():
 	#don't think we're using this yet
 	died.emit(self)
@@ -132,7 +131,7 @@ func end_turn():
 func start_turn():
 	my_screen.card_manager.turn_start_draw()
 	started_turn.emit(self)
-	
+
 func _process(_delta: float) -> void:
 	if pis_machine.current_state == Model.InputState.MOVE:
 		_handle_input()
@@ -158,7 +157,7 @@ func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	print("Character ", str(character_id), " moved to tile ", str(grid_coordinates))
 	Events.character_moved.emit(self, old_grid_position, new_grid_position)
 	moved.emit(self, old_grid_position, new_grid_position)
-	
+
 func _handle_input():
 	#allows character to move if in the correct PISM state
 	#character signals to grid manager that it wants to move, grid manager checks if move is valid and then
@@ -176,6 +175,9 @@ func _handle_input():
 func get_my_current_playing_card():
 	#used when in targetting mode to check which card is actively doing the targetting
 	return my_screen.card_manager.card_being_played
+	
+func play_error_pop_up(text:String):
+	character_sprite.play_pop_up(text, Color("b82d1d"))
 #endregion
 
 

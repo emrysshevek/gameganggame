@@ -32,6 +32,9 @@ enum ObjectTypes {
 	NON_PLAYER_CHARACTER,
 	CARD,
 	HAZARD,
+	CARD_IN_HAND,
+	CARD_IN_DISCARD,
+	CARD_IN_DRAW,
 }
 
 enum CullingLayers {
