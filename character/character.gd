@@ -113,6 +113,7 @@ func heal(amount:int):
 func die():
 	#don't think we're using this yet
 	died.emit(self)
+	Events.character_died.emit(self)
 
 func forced_random_discard(number_of_cards:int):
 	#the test hazard is set up to force a player to discard a random card from hand
