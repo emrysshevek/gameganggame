@@ -14,5 +14,8 @@ metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
 [node name="RecoverCard" unique_id=693299294 instance=ExtResource("1_opgax")]
 script = ExtResource("2_ioa4v")
+cost = Dictionary[int, int]({
+3: 1
+})
 description = "Recover"
 targets_required = SubResource("Resource_o2hga")

@@ -5,5 +5,8 @@
 
 [node name="CycleCard" unique_id=693299294 instance=ExtResource("1_cttry")]
 script = ExtResource("2_8w4pl")
+cost = Dictionary[int, int]({
+0: 2
+})
 description = "Cycle"
 targets_required = null

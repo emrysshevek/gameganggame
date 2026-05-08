@@ -14,5 +14,8 @@ metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
 [node name="AdaptCard" unique_id=693299294 instance=ExtResource("1_wm40k")]
 script = ExtResource("2_rbai4")
+cost = Dictionary[int, int]({
+0: 1
+})
 description = "Adapt"
 targets_required = SubResource("Resource_7devm")

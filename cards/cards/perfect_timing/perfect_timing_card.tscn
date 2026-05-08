@@ -14,5 +14,8 @@ metadata/_custom_type_script = "uid://c53pw6ymaxio3"
 
 [node name="PerfectTimingCard" unique_id=693299294 instance=ExtResource("1_ve80n")]
 script = ExtResource("2_lwm0x")
+cost = Dictionary[int, int]({
+2: 2
+})
 description = "Perfect Timing"
 targets_required = SubResource("Resource_axbll")

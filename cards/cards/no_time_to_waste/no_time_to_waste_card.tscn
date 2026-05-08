@@ -5,5 +5,8 @@
 
 [node name="NoTimeToWasteCard" unique_id=693299294 instance=ExtResource("1_2firj")]
 script = ExtResource("2_utroa")
+cost = Dictionary[int, int]({
+3: 2
+})
 description = "No Time To Waste"
 targets_required = null
