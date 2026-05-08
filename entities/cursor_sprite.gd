@@ -9,7 +9,7 @@ var character_ref:Character
 #endregion
 
 func _process(_delta: float) -> void:
-	if input_state_machine.current_state == Model.InputState.CURSOR || input_state_machine.current_state == Model.InputState.TARGET:
+	if input_state_machine.current_state == Model.InputState.CURSOR || input_state_machine.current_state == Model.InputState.TARGET_CURSOR:
 		_handle_input()
 
 func toggle_visibility():
@@ -25,7 +25,7 @@ func _handle_input():
 			move_request.emit(self, Vector2(grid_coordinates.x, grid_coordinates.y + 1))
 		elif input_man.is_action_just_released("move_left"):
 			move_request.emit(self, Vector2(grid_coordinates.x - 1, grid_coordinates.y))
-		elif input_man.is_action_just_released(Model.Action.SELECT) && input_state_machine.current_state == Model.InputState.TARGET:
+		elif input_man.is_action_just_released(Model.Action.SELECT) && input_state_machine.current_state == Model.InputState.TARGET_CURSOR:
 			var current_card = character_ref.get_my_current_playing_card()
 			if current_card != null:
 				var grid_man = Utils.try_get_grid_man()

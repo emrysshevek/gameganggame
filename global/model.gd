@@ -63,4 +63,6 @@ class InputState:
 	const CARD = "Card"
 	const CURSOR = "Cursor"
 	const END = "End"
-	const TARGET = "Target"
+	const TARGET_CURSOR = "TargetCursor"
+	const TARGET_PLAYER = "TargetPlayer"
+	const TARGET_CARD = "TargetCard"
