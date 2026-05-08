@@ -153,6 +153,7 @@ func move(new_grid_position:Vector2, new_screen_position:Vector2):
 	grid_coordinates = new_grid_position
 	movement -= 1
 	character_sprite.position = new_screen_position
+	print("Character ", str(character_id), " moved to tile ", str(grid_coordinates))
 	Events.character_moved.emit(self, old_grid_position, new_grid_position)
 	moved.emit(self, old_grid_position, new_grid_position)
 

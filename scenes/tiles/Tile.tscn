@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dw0fkomkoklma"]
 
-[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tile.gd" id="1_vhibn"]
+[ext_resource type="Script" uid="uid://431unh07ua2d" path="res://scenes/tiles/tile.gd" id="1_vhibn"]
 [ext_resource type="Texture2D" uid="uid://cikbsxsog7ku5" path="res://art/test_tile.png" id="2_r3gf4"]
 
 [node name="Tile" type="Node2D" unique_id=477134848]
