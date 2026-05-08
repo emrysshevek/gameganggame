@@ -8,7 +8,7 @@ enum directions{north, east, south, west}
 
 #region properties
 #loading scenes
-var _tile_scene = preload("res://scenes/Tile.tscn")
+var _tile_scene = preload("res://scenes/tiles/Tile.tscn")
 
 #odds that a path will be generated for each tile, starting with odds for 1 path, 2 paths, etc
 var _path_number_odds = [75,75,60,40]
@@ -20,7 +20,9 @@ var _direction_opposites:Dictionary
 var _a_star_floor_map = {}
 
 #map of the grid, setup as [floor][grid_coordinate_x][grid_coordinate_y]
-var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors 
+var floor_maps = {} #dictionary of arrays of tiles, to allow multiple floors
+var starting_tiles: Array[StartingTile]
+var cache_tile: CacheTile
 
 #level is not currently in use as we only have one floor levels right now
 var level:int = 0 #dummy
@@ -28,6 +30,7 @@ var level:int = 0 #dummy
 #width and height of the map in tiles
 var map_width:int = 20
 var map_height:int = 20
+
 
 #size of each tile in pixels
 var tile_size:Vector2 = Vector2(64,64)
@@ -41,40 +44,79 @@ var _loot_card_scene = preload("res://cards/cards/loot_card/loot_card.tscn")
 func _ready() -> void:
 	#adding grid man to group in case anyone calls for grid man from utils
 	add_to_group(Config.GRID_MANAGER_GROUP)
-	
+
 	#setting up the direction opposites
 	_direction_opposites[directions.north] = directions.south
 	_direction_opposites[directions.east] = directions.west
 	_direction_opposites[directions.south] = directions.north
 	_direction_opposites[directions.west] = directions.east
-	
+
 	#initializing A* for map
 	_a_star_floor_map[level] = AStar2D.new()
-	
+
 	#initialize blank map grid
 	var new_map_grid = []
+	var unique_tiles = _generate_unique_tile_positions()
 	for x in range(map_width):
 		new_map_grid.append([])
 		new_map_grid[x] = []
 		for y in range(map_height):
-			var new_tile = _tile_scene.instantiate()
+			var new_tile: Tile = unique_tiles.get(Vector2i(x,y))
+			if new_tile == null:
+				new_tile = _tile_scene.instantiate()
 			self.add_child(new_tile)
 			new_map_grid[x].append([])
 			new_map_grid[x][y]=new_tile
+			
 			#setup Tile for A*. need to modiy this for multi-floors later, as it requires the level to be entered currently
 			var a_star_point_id = _a_star_floor_map[0].get_available_point_id()
 			_a_star_floor_map[0].add_point(a_star_point_id, Vector2(new_tile.grid_coordinates.x, new_tile.grid_coordinates.y), 0)
 			new_tile.a_star_id = a_star_point_id
-			
+
 			#setting up visible position of tiles
 			new_tile.set_coordinates(Vector2(x,y))
 			new_tile.position = Vector2(x * 64, y * 64)
 	#adding the newly generated map to the floor map grid
 	floor_maps[level] = new_map_grid
+	
 	#generating all the parts of the map
-	generate_map(0)
-	generate_hazards(0, 10)
-	generate_loot_piles(0, 2)
+	if test_map_on == false:
+		generate_map(0)
+		generate_hazards(0, 10)
+		generate_loot_piles(0, 2)
+	else:
+		setup_test_map(0)
+		
+func _generate_unique_tile_positions() -> Dictionary[Vector2i, Tile]:
+	var position_to_tile: Dictionary[Vector2i, Tile] = {}
+	
+	# generate starting positions in the center of the map
+	var center_tile := Vector2i(map_width/2, map_height/2)
+	var starting_positions: Array[Vector2i] = [
+		center_tile,
+		center_tile + Vector2i.RIGHT,
+		center_tile + Vector2i.DOWN,
+		center_tile + Vector2i.RIGHT + Vector2i.DOWN
+	]
+	for i in Config.player_count:
+		var start_tile: StartingTile = preload("res://scenes/tiles/starting_tile/starting_tile.tscn").instantiate()
+		start_tile.player_id = i
+		starting_tiles.append(start_tile)
+		position_to_tile[starting_positions[i]] = start_tile
+		print("Added start tile for player ", str(i), " at position ", str(starting_positions[i]))
+		
+	# generate random cache position at least half the radius of the map away in both directions
+	var radius := Vector2i(map_width/2, map_height/2)
+	var min_dist := radius/2
+	var quadrant := Vector2i([-1, 1].pick_random(), [-1,1].pick_random())
+	var cache_pos := Vector2i(randi_range(min_dist.x, radius.x), randi_range(min_dist.y, radius.y))
+	cache_pos = (quadrant * cache_pos) + radius
+	cache_tile = preload("res://scenes/tiles/cache/cache_tile.tscn").instantiate()
+	position_to_tile[cache_pos] = cache_tile
+	print("Added cache tile at position ", str(cache_pos))
+	
+	return position_to_tile
+	
 	
 func add_path(tile1:Tile, tile2:Tile):
 	var connection_direction = get_path_direction(tile1, tile2)
@@ -84,10 +126,10 @@ func add_path(tile1:Tile, tile2:Tile):
 	tile2.add_path(_direction_opposites[connection_direction], new_path)
 	if new_path.blocked == false: #blocked paths will not be connected by A* to ensure they aren't considered for pathing
 		_a_star_floor_map[level].connect_points(tile1.a_star_id, tile2.a_star_id,true)
-	
+
 func remove_path(tile1:Tile, tile2:Tile):
 	pass
-	
+
 func get_path_direction(tile1:Tile, tile2:Tile) -> directions:
 	var connection_direction:directions
 	if tile1.grid_coordinates.x < tile2.grid_coordinates.x:
@@ -99,7 +141,7 @@ func get_path_direction(tile1:Tile, tile2:Tile) -> directions:
 	else:
 		connection_direction = directions.north
 	return connection_direction
-	
+
 func _get_all_tiles(_level:int):
 	#just gets all the tiles on the map :)
 	var all_tiles:Array[Tile]
@@ -107,9 +149,9 @@ func _get_all_tiles(_level:int):
 		for each_x in map_width:
 			all_tiles.append(floor_maps[_level][each_x][each_y])
 	return all_tiles
-	
+
 func generate_map(level:int):
-	for each_tile in _get_all_tiles(0):
+	for each_tile: Tile in _get_all_tiles(0):
 		var possible_tile_connections_by_path:Dictionary
 		#check which directions could have new paths added to them
 		if each_tile.grid_coordinates.x != 0 && each_tile.paths.keys().has(directions.west) == false:
@@ -120,6 +162,7 @@ func generate_map(level:int):
 			possible_tile_connections_by_path[directions.east] = floor_maps[level][each_tile.grid_coordinates.x + 1][each_tile.grid_coordinates.y]
 		if each_tile.grid_coordinates.y != map_height - 1 && each_tile.paths.keys().has(directions.south) == false:
 			possible_tile_connections_by_path[directions.south] = floor_maps[level][each_tile.grid_coordinates.x][each_tile.grid_coordinates.y + 1]
+		
 		var possible_new_path_num = possible_tile_connections_by_path.size()
 		for each_num in possible_new_path_num:
 			if possible_new_path_num > 0:
@@ -131,9 +174,69 @@ func generate_map(level:int):
 				else:
 					possible_new_path_num = 0
 					#roll for new path failed, so process to check for creating new paths for current Tile ends here
+		
+		# Make sure all starting tiles are connected to each other
+		if each_tile is StartingTile:
+			for neighbor_offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+				var neighbor = get_tile(Vector2i(each_tile.grid_coordinates) + neighbor_offset)
+				if neighbor is StartingTile and get_path_direction(each_tile, neighbor) not in each_tile.paths.keys():
+					add_path(each_tile, neighbor)
+					
 		each_tile.reset_to_hidden()
 	map_generated.emit()
 
+func setup_test_map(level:int):
+	var current_floor_tiles = floor_maps[level]
+	var tiles:Array[Tile] = _get_all_tiles(level)
+	##setting up blank, fully connected outer tiles
+	for each_tile in tiles:
+		if each_tile.grid_coordinates.x < 8 or each_tile.grid_coordinates.x > 13 and each_tile.grid_coordinates.y < 8 or each_tile.grid_coordinates.y > 13:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+		##setting up accessible player spawn rooms
+		elif each_tile.grid_coordinates.x == 10 or each_tile.grid_coordinates.x == 11 and each_tile.grid_coordinates.y == 10 or each_tile.grid_coordinates.y == 11:
+			for connecting_tile in get_tiles_in_crow_flies_range(level, each_tile.grid_coordinates, 1):
+				if connecting_tile != each_tile:
+					add_path(each_tile, connecting_tile)
+	##setting up inaccessable room at 9,9
+	#for each_tile in get_tiles_in_crow_flies_range(level, Vector2i(9,9), 1):
+		#remove_path(current_floor_tiles[9][9], each_tile)
+	##loot pile rooms at 10,9 + 11,9 + 11,12
+	add_loot_pile(current_floor_tiles[10][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[11][9])
+	add_path(current_floor_tiles[10][9], current_floor_tiles[10][10])
+	add_loot_pile(current_floor_tiles[11][9])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[11][10])
+	add_path(current_floor_tiles[11][9], current_floor_tiles[12][9])
+	add_loot_pile(current_floor_tiles[11][12])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[11][11])
+	add_path(current_floor_tiles[11][12], current_floor_tiles[12][12])
+	##hazards in rooms 12,9 + 12,10 + 12,12
+	add_hazard(current_floor_tiles[12][9])
+	add_path(current_floor_tiles[12][9], current_floor_tiles[12][10])
+	add_hazard(current_floor_tiles[12][10])
+	add_path(current_floor_tiles[12][10], current_floor_tiles[11][10])
+	##other testing room connections 9,10 + 9,11 + 9,12 + 10,11 + 10,12
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[8][10])
+	add_path(current_floor_tiles[9][10], current_floor_tiles[10][10])
+	add_path(current_floor_tiles[9][11], current_floor_tiles[10][11])
+	add_path(current_floor_tiles[9][12], current_floor_tiles[10][12])
+	add_path(current_floor_tiles[10][11], current_floor_tiles[10][12])
+	for each_tile in tiles:
+		each_tile.reset_to_hidden()
+	map_generated.emit()
+
+func add_hazard(tile:Tile) -> void:
+	var new_hazard = Hazard.new()
+	tile.add_hazard(new_hazard)
+
+func add_loot_pile(tile:Tile) -> void:
+	for i in randi_range(1,3):
+		var new_card:LootCard = _loot_card_scene.instantiate()
+		new_card.is_faceup = false
+		tile.add_grid_card(new_card)	
 
 func generate_hazards(_level:int, frequency:int):
 	#makes hazards in random tiles. higher frequency value means fewer hazards
@@ -149,37 +252,37 @@ func generate_loot_piles(_level:int, frequency:int):
 			for i in randi_range(1,3):
 				var new_card:LootCard = _loot_card_scene.instantiate()
 				new_card.is_faceup = false
-				each_tile.add_grid_card(new_card)	
+				each_tile.add_grid_card(new_card)
 
 func is_reachable(_level:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	#uses A* to determine if paths exist between the 'from' tile to the 'to' tile
 	var from_tile = floor_maps[_level][from_tile_coords.x][from_tile_coords.y]
 	var to_tile = floor_maps[_level][to_tile_coords.x][to_tile_coords.y]
-	
+
 	#get_id_path returns the array of A* id's of the piles in the shortest path
 	var path_between_points:Array = _a_star_floor_map[floor].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	if path_between_points.is_empty() == true:
 		return false
 	else:
 		return true
-	
+
 func get_reachable_tiles(_level:int, starting_tile_coords:Vector2, _range:int):
 	var starting_tile = floor_maps[_level][starting_tile_coords.x][starting_tile_coords.y]
-	
+
 	#verifying _range entered is possible
 	if _range <= 0 || _range >= map_width || _range >= map_height:
 		#eventually change this to just filter the input to a valid max or min value
 		print("can't get reachable tiles for _range: " + str(_range))
 		assert(false)
-		
+
 	var return_array:Array[Tile]
 	var reachable_tile_ids:Array[int]
 	var starting_tile_ids:Array[int]
-	
+
 	#get the ids of the 4 or less tiles surrounding the starting Tile and the reachable tiles
 	starting_tile_ids.append(starting_tile.a_star_id)
 	reachable_tile_ids.append_array(_a_star_floor_map[_level].get_point_connections(starting_tile.a_star_id))
-	
+
 	#search through path connections of each tile connected to the initial 4 (or less) that surround the starting tile
 	#and so on until '_range' is reached
 	for i in _range:
@@ -224,7 +327,7 @@ func get_distance(_level:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	var to_tile = floor_maps[_level][to_tile_coords.x][to_tile_coords.y]
 	var path_between_points:Array = _a_star_floor_map[_level].get_id_path(from_tile.a_star_id, to_tile.a_star_id, false)
 	return path_between_points.size()
-		
+
 func is_directly_connected(_level:int, from_tile_coords:Vector2, to_tile_coords:Vector2):
 	#determines if two tiles are connected to each other using A*
 	var from_tile = floor_maps[_level][from_tile_coords.x][from_tile_coords.y]
@@ -247,7 +350,7 @@ func is_in_bounds(position_to_check:Vector2):
 	if position_to_check.y > (map_height - 1):
 		return false
 	return true
-		
+
 func highlight_targettable_tiles(evaluating_card:Card, origin_point:Vector2, floor:int):
 	#causes each tile that is a valid target or contains a valid target to become highlighted during targetting
 	#highlight is only visible to the player doing the highlighting
@@ -272,22 +375,25 @@ func move_object(object, tile_coord:Vector2, _level:int, ignore_paths:bool=false
 		# current tile they can't move to it (unless ignore_paths is set)
 		if ignore_paths or is_directly_connected(_level, object.grid_coordinates, tile_coord) == false:
 			return false
+		elif floor_maps[_level][tile_coord.x][tile_coord.y].characters.is_empty() == false:
+			#if the tile you are trying to move to contains another character prevent that movement
+			return false
 		else:
 			#clearing out movement (setting it to 1 so it drops to 0) after entering an unexplored tile
 			if floor_maps[_level][tile_coord.x][tile_coord.y].is_tile_explored == false:
 				object.movement = 1
-			
+
 			#calling exit for the object in its former tiles
 			floor_maps[_level][object.grid_coordinates.x][object.grid_coordinates.y].exit(object)
-			
+
 			#and enter for its new tiles
 			floor_maps[_level][tile_coord.x][tile_coord.y].enter(object)
-			
+
 			#drawing object in its new location
 			var new_sprite_tile_position:Vector2 = tile_coord
 			var new_sprite_screen_position:Vector2 = tile_coord * tile_size
 			object.move(new_sprite_tile_position, new_sprite_screen_position)
-			
+
 			return true
 	else: #should be for ui elements, like the cursor
 		#ensures cursor doesn't move out of bounds of map
@@ -304,13 +410,13 @@ func get_tile(grid_coordinates:Vector2) -> Tile:
 	#return array of all objects + the tile itself that match these grid coordinates and type
 	#just returning the selected tile for now
 	return floor_maps[0][grid_coordinates.x][grid_coordinates.y]
-	
+
 func _on_get_tile_request(type, grid_coordinates:Vector2):
-	get_tile(grid_coordinates)	
-		
+	get_tile(grid_coordinates)
+
 func _on_object_move_request(object, new_tile_position:Vector2):
-	move_object(object, new_tile_position, 0)	
-		
+	move_object(object, new_tile_position, 0)
+
 func _import_pre_baked_map_section(): #not used yet
 	pass
 #endregion

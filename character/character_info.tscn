@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://oimmuh4xymu6"]
+
+[ext_resource type="Script" uid="uid://bn7efd1dkixmm" path="res://character/character_info.gd" id="1_p6pnj"]
+[ext_resource type="PackedScene" uid="uid://fxxnjq8e4rfd" path="res://character/character_info_item.tscn" id="1_pghuw"]
+
+[node name="CharacterInfo" type="HBoxContainer" unique_id=869043649]
+script = ExtResource("1_p6pnj")
+
+[node name="HealthInfo" parent="." unique_id=1525419520 instance=ExtResource("1_pghuw")]
+layout_mode = 2
+item_name = "Health"
+
+[node name="MovementInfo" parent="." unique_id=1846791139 instance=ExtResource("1_pghuw")]
+layout_mode = 2
+item_name = "Movement"

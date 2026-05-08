@@ -18,6 +18,8 @@ signal card_removed_from_deck(_card: Card, _deck: Deck)
 #region Turn
 signal game_started()
 signal game_ended()
+signal game_won()
+signal game_lost()
 signal round_started()
 signal round_ended()
 signal player_turn_ended(_character: Character)
@@ -29,10 +31,13 @@ signal request_input_state_transition(new_state:String, requesting_character:Cha
 
 #region Character
 signal character_damaged(_character: Character, _amount:int, effect_source)
+signal character_died(_character: Character)
 signal character_moved(_character: Character, old_coords: Vector2i, new_coords: Vector2i)
 signal looted_cards(_character: Character)
 signal forced_discard(_character: Character, effect_source)
 signal character_movement_value_changed(_character: Character, old_value: int, new_value: int)
+signal character_health_changed(_character: Character, new_value: int)
+
 #endregion
 
 #region Tile
@@ -50,3 +55,5 @@ signal status_added(_status: Status, target: Node)
 signal status_removed(_status: Status, target: Node)
 signal status_triggered(_status: Status, target: Node)
 #endregion
+
+signal resources_cached(_count:int)

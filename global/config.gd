@@ -3,6 +3,8 @@ extends Node
 
 
 const MAX_PLAYER_COUNT = 4
+var player_count = 1
+
 const CREATURE_VALUE_COUNT = len(Model.CreatureValue)
 
 const VALUE_MANAGER_GROUP = 'value_manager'

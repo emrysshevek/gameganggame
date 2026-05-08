@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://2242fimj4tsm"]
+
+[ext_resource type="Script" uid="uid://c1u42y0mdrfre" path="res://scenes/title/title_screen.gd" id="1_05wk3"]
+
+[node name="TitleScreen" type="Node2D" unique_id=873879552]
+script = ExtResource("1_05wk3")
+
+[node name="Label" type="Label" parent="." unique_id=1312453257]
+offset_left = 115.0
+offset_top = 77.0
+offset_right = 1023.0
+offset_bottom = 183.0
+theme_override_font_sizes/font_size = 77
+text = "Game Gang's First Game"
+
+[node name="Label2" type="Label" parent="." unique_id=405208934]
+offset_left = 372.0
+offset_top = 354.0
+offset_right = 658.0
+offset_bottom = 396.0
+theme_override_font_sizes/font_size = 30
+text = "Number of Players: "
+
+[node name="Label3" type="Label" parent="." unique_id=1420094802]
+offset_left = 427.0
+offset_top = 537.0
+offset_right = 722.0
+offset_bottom = 577.0
+theme_override_font_sizes/font_size = 29
+text = "(Press Select to start)"
+
+[node name="PlayerCount" type="SpinBox" parent="." unique_id=211331943]
+offset_left = 667.0
+offset_top = 358.0
+offset_right = 772.0
+offset_bottom = 394.0
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../StartButton")
+focus_neighbor_bottom = NodePath("../StartButton")
+focus_next = NodePath("../StartButton")
+focus_previous = NodePath(".")
+theme_override_constants/buttons_width = 48
+min_value = 1.0
+max_value = 4.0
+value = 1.0
+
+[node name="StartButton" type="Button" parent="." unique_id=1887879890]
+visible = false
+offset_left = 456.0
+offset_top = 472.0
+offset_right = 653.0
+offset_bottom = 569.0
+focus_neighbor_left = NodePath("../PlayerCount")
+focus_neighbor_top = NodePath("../PlayerCount")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath(".")
+focus_previous = NodePath("../PlayerCount")
+theme_override_colors/icon_focus_color = Color(0.34084305, 0.4217055, 0.6692174, 1)
+theme_override_font_sizes/font_size = 40
+text = "START"
+
+[connection signal="focus_entered" from="PlayerCount" to="." method="_on_player_count_focus_entered"]
+[connection signal="focus_exited" from="PlayerCount" to="." method="_on_player_count_focus_exited"]
+[connection signal="value_changed" from="PlayerCount" to="." method="_on_player_count_value_changed"]
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
