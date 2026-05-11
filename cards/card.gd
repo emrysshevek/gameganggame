@@ -99,7 +99,7 @@ func play() -> void:
 func try_add_target(potential_target: Node) -> bool:
 	if not validate_target(potential_target):
 		return false
-
+	
 	targets.append(potential_target)
 	check_targetting_finished()
 	return true

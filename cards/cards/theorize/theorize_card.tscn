@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://duwjtx4f1xvp0"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_2kxia"]
+[ext_resource type="Script" uid="uid://cqu3ejdpehuov" path="res://cards/cards/theorize/theorize_card.gd" id="2_k1spa"]
+
+[node name="TheorizeCard" unique_id=693299294 instance=ExtResource("1_2kxia")]
+script = ExtResource("2_k1spa")
+cost = Dictionary[int, int]({
+2: 2
+})
+description = "Theorize"
+targets_required = null

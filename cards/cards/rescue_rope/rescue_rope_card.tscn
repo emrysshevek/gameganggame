@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://byiq8tentcwr4"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_gjo6c"]
+[ext_resource type="Script" uid="uid://b6uw5x7mejooa" path="res://cards/cards/rescue_rope/rescue_rope_card.gd" id="2_5op8a"]
+[ext_resource type="Script" uid="uid://c53pw6ymaxio3" path="res://cards/target_requirement.gd" id="3_symci"]
+
+[sub_resource type="Resource" id="Resource_hq0ig"]
+script = ExtResource("3_symci")
+type = 5
+min_count = 1
+max_count = 1
+min_range = 1
+max_range = 5
+metadata/_custom_type_script = "uid://c53pw6ymaxio3"
+
+[node name="RescueRopeCard" unique_id=693299294 instance=ExtResource("1_gjo6c")]
+script = ExtResource("2_5op8a")
+cost = Dictionary[int, int]({
+4: 2
+})
+description = "Rescue Rope"
+targets_required = SubResource("Resource_hq0ig")
