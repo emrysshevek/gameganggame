@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://suaigog8joah"]
+
+[ext_resource type="PackedScene" uid="uid://bnv5dqpc4y8xb" path="res://cards/card.tscn" id="1_8hirr"]
+[ext_resource type="Script" uid="uid://dw1bd6hoi4aw2" path="res://cards/cards/transfusion/transfusion_card.gd" id="2_omy0w"]
+[ext_resource type="Script" uid="uid://c53pw6ymaxio3" path="res://cards/target_requirement.gd" id="3_x3ayd"]
+
+[sub_resource type="Resource" id="Resource_fddqb"]
+script = ExtResource("3_x3ayd")
+type = 5
+min_count = 1
+max_count = 1
+min_range = 1
+max_range = 5
+metadata/_custom_type_script = "uid://c53pw6ymaxio3"
+
+[node name="TransfusionCard" unique_id=693299294 instance=ExtResource("1_8hirr")]
+script = ExtResource("2_omy0w")
+cost = Dictionary[int, int]({
+4: 1
+})
+description = "Transfusion"
+targets_required = SubResource("Resource_fddqb")
