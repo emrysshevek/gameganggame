@@ -45,7 +45,8 @@ func add_character(new_character:Character) -> CharacterSprite:
 	var new_character_sprite = character_sprite.instantiate()
 	new_character.bind_character_sprite(new_character_sprite)
 	new_character.move_request.connect(grid_man._on_object_move_request)
-	new_character_sprite.set_sprite(load("res://art/test_cat.png"))
+	var character_sprite_strings:Array[String] = ["res://art/test_cat.png", "res://art/test_bird.png", "res://art/rat.png", "res://art/frog.png"]
+	new_character_sprite.set_sprite(load(character_sprite_strings[new_character.character_id]))
 	new_character_sprite.set_sprite_scale(Vector2(0.5,0.5))
 	new_character_sprite.set_custom_offset(_tile_size - new_character_sprite.get_scaled_size())
 	character_sprites.append(new_character_sprite)
