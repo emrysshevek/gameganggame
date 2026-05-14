@@ -151,23 +151,56 @@ func _get_all_tiles(_level:int):
 	return all_tiles
 
 func generate_map(_level:int):
-	var noise: FastNoiseLite = $NoiseMap.texture.noise
-	#noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
-	#noise.seed = randi()
-	#noise.frequency = .0095
-	#noise.fractal_type = FastNoiseLite.FRACTAL_RIDGED
-	#noise.fractal_octaves = 4
-	#noise.fractal_lacunarity = 1.0
-	#noise.fractal_gain = .53
-	#noise.fractal_weighted_strength = .68
-	#seed(0)
-	for x in range(map_width):
-		for y in range(map_height):
-			var tile: Tile = get_tile(Vector2(x,y))
-			if x < map_width - 1:
-				_try_add_path(tile, get_tile(Vector2(x+1, y)), noise)
-			if y < map_height - 1:
-				_try_add_path(tile, get_tile(Vector2(x, y+1)), noise)
+	  #- weighting increases past the minimum necessary number of tiles to reach from one to the other
+	#- repeat with tiles chosen either from the border or other path tiles
+	#- stop when a certain density of paths has been reached
+	var rng = RandomNumberGenerator.new()
+	
+	var available_nodes: Array[Vector2] = []
+	available_nodes.append_array(range(map_width).map(func(x): return Vector2(x,0)))
+	available_nodes.append_array(range(map_width).map(func(x): return Vector2(x,map_height-1)))
+	available_nodes.append_array(range(1, map_height-1).map(func(y): return Vector2(0,y)))
+	available_nodes.append_array(range(1, map_height-1).map(func(y): return Vector2(map_width-1,y)))
+	
+	var path_count := 0
+	var start := Vector2.ZERO
+	var dest := Vector2.ZERO
+	#while path_count / float(map_width * map_height) < .7:
+	for i in range(5):
+		# choose a random start node and a random destination node with some minimum distance between
+		start = available_nodes.pick_random()
+		dest = start
+		while dest == start or abs(start.x - dest.x) + abs(start.y - dest.y) < map_width * .75:
+			dest = available_nodes.pick_random()
+		print("START=%s\tDEST=%s" % [str(start), str(dest)])
+		# perform a random walk from one tile to another, weighted in the direction of the destination tile
+		var curr := start
+		var prev := curr
+		while curr != dest:
+			var next_nodes: Array[Vector2] = [curr+Vector2.UP, curr+Vector2.RIGHT, curr+Vector2.DOWN, curr+Vector2.LEFT]
+			next_nodes.erase(prev)
+			
+			var dest_dir := curr.direction_to(dest)
+			var cont_dir := prev.direction_to(curr)
+			var weights = next_nodes.map(
+				func(x: Vector2): 
+					var directness = (curr.direction_to(x).dot(dest_dir) + 1) / 2
+					#var straightess = (curr.direction_to(x).dot(cont_dir) + 1) / 2
+					return pow(directness, 5)
+			)
+			weights = softmax(weights)
+			
+			prev = curr
+			curr = next_nodes[rng.rand_weighted(weights)]
+			#curr = next_nodes[weights.find(weights.max())]
+			if curr not in available_nodes:
+				available_nodes.append(curr)
+				
+			print("\tNext step: %s (dist=%f)" % [str(curr), curr.distance_to(dest)])
+			if prev.x >= 0 and prev.x < map_width  and prev.y >= 0 and prev.y < map_height \
+			   and curr.x >= 0 and curr.x < map_width and curr.y >= 0 and curr.y < map_height:
+				add_path(get_tile(prev), get_tile(curr))
+				path_count += 1
 
 		
 	# Make sure all starting tiles are connected to each other
@@ -180,14 +213,13 @@ func generate_map(_level:int):
 		tile.reset_to_hidden()
 		
 	map_generated.emit()
-	
-func _try_add_path(tile1: Tile, tile2: Tile, noise: FastNoiseLite) -> void:
-	var noise1 = noise.get_noise_2d(tile1.grid_coordinates.x, tile1.grid_coordinates.y)
-	var noise2 = noise.get_noise_2d(tile2.grid_coordinates.x, tile2.grid_coordinates.y)
-	var connection_strength = (noise1 + noise2) / 2.0
-	print("Connection strength: %f" % [connection_strength])
-	if connection_strength > .5:
-		add_path(tile1, tile2)
+
+func softmax(values: Array):
+	#Compute softmax values for each sets of scores in x.
+	var e_x = values.map(func(x): return exp(x - values.max()))
+	var sum = e_x.reduce(func(x, total): return x + total, 0)
+	return e_x.map(func(x): return x / sum)
+
 
 func setup_test_map(level:int):
 	var current_floor_tiles = floor_maps[level]
