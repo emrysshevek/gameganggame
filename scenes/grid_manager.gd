@@ -368,11 +368,12 @@ func clear_highlights(for_character_id:int, _level:int):
 	for each_tile in _get_all_tiles(_level):
 		each_tile.set_highlight(for_character_id, false)
 
-func move_object(object, tile_coord:Vector2, _level:int):
+func move_object(object, tile_coord:Vector2, _level:int, ignore_paths:bool=false):
 	#moves a grid_sprite (like a character or cursor) around the map
 	if Model.ObjectTypes.PLAYER_CHARACTER in object.types:
-		#if the tile the character is trying to move to isn't connected by a path from their current tile they can't move to it
-		if is_directly_connected(_level, object.grid_coordinates, tile_coord) == false:
+		# if the tile the character is trying to move to isn't connected by a path from their 
+		# current tile they can't move to it (unless ignore_paths is set)
+		if ignore_paths or is_directly_connected(_level, object.grid_coordinates, tile_coord) == false:
 			return false
 		elif floor_maps[_level][tile_coord.x][tile_coord.y].characters.is_empty() == false:
 			#if the tile you are trying to move to contains another character prevent that movement

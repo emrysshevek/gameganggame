@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://do7xr2it6xfih" path="res://cards/cards/no_time_to_waste/no_time_to_waste_card.tscn" id="8_khsxp"]
 [ext_resource type="PackedScene" uid="uid://cwu27t77xpy8" path="res://cards/cards/caution/caution_card.tscn" id="9_j8rf1"]
 [ext_resource type="PackedScene" uid="uid://n258lqdbijua" path="res://cards/cards/lucky_look/lucky_look_card.tscn" id="10_j8rf1"]
+[ext_resource type="PackedScene" uid="uid://c3pf6quamcsq0" path="res://cards/cards/meet_up/meet_up_card.tscn" id="12_7jtia"]
+[ext_resource type="PackedScene" uid="uid://ern8fpw14agn" path="res://cards/cards/triage/triage_card.tscn" id="13_k1gya"]
 [ext_resource type="PackedScene" uid="uid://ww4t00vbsf14" path="res://cards/cards/trade/trade_card.tscn" id="12_l3oq2"]
 [ext_resource type="PackedScene" uid="uid://cs10s4igty4ad" path="res://cards/cards/clean_house/clean_house_card.tscn" id="13_oh1rx"]
 [ext_resource type="PackedScene" uid="uid://b5yi5nqgjiud5" path="res://cards/cards/money_move/money_move_card.tscn" id="14_7kqg7"]
@@ -23,6 +25,7 @@
 [ext_resource type="PackedScene" uid="uid://4lciaujlj1m2" path="res://cards/cards/adapt/adapt_card.tscn" id="12_60ltf"]
 [ext_resource type="PackedScene" uid="uid://cws33j6o0c65w" path="res://cards/cards/recover/recover_card.tscn" id="13_7jtia"]
 [ext_resource type="PackedScene" uid="uid://dlf8xa7mp2tnu" path="res://cards/cards/perfect_timing/perfect_timing_card.tscn" id="14_k1gya"]
+
 
 [resource]
 script = ExtResource("1_p6edn")
@@ -39,6 +42,7 @@ cards = Dictionary[String, PackedScene]({
 "free_draw": ExtResource("18_edkv0"),
 "healing_aura": ExtResource("8_4im7e"),
 "lucky_look": ExtResource("10_j8rf1"),
+"meet_up": ExtResource("12_7jtia"),
 "money_move": ExtResource("14_7kqg7"),
 "no_time_to_waste": ExtResource("8_khsxp"),
 "pathbreaker": ExtResource("6_5t7bn"),
@@ -46,6 +50,7 @@ cards = Dictionary[String, PackedScene]({
 "perfect_timing": ExtResource("14_k1gya"),
 "recover": ExtResource("13_7jtia"),
 "sprint": ExtResource("3_4e6cq"),
+"triage": ExtResource("13_k1gya"),
 "strong_back": ExtResource("15_0ivhn"),
 "trade": ExtResource("12_l3oq2"),
 "well_prepared": ExtResource("2_r4ysr")
